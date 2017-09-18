@@ -17,10 +17,10 @@ int main(int argc, char*argv[]){
 	pdu_create();
 
 
-	pdu_wrapper *REG_MESSAGE = create_REG(9,2000);
-	((pdu_REG*)REG_MESSAGE->message)->add_server_name(REG_MESSAGE,"arschlocsfasdh");
-	printf("%s", ((pdu_REG*)REG_MESSAGE->message)->server_name);
-	free_type(REG_MESSAGE);
+	pdu_REG *REG_MESSAGE = create_REG(9,2000);
+	REG_MESSAGE->add_server_name(REG_MESSAGE,"arschloch");
+	printf("%s", REG_MESSAGE->server_name);
+	free_pdu_reg(REG_MESSAGE);
 
 
 	return 0;

@@ -6,78 +6,17 @@
  */
 #include "pdu_templates.h"
 
-int get_type(pdu_wrapper pdu){
-	return pdu.type;
-}
-
-int create_type(pdu_wrapper *pdu, int type){
-
-
-	(*pdu).type = type;
-
-	switch(type) {
-	case 0:
-		(*pdu).message = malloc(sizeof(pdu_REG));
-		break;
-	case 1:
-		(*pdu).message = malloc(sizeof(pdu_ACK));
-		break;
-	case 2:
-		(*pdu).message = malloc(sizeof(pdu_ALIVE));
-		break;
-	case 100:
-		(*pdu).message = malloc(sizeof(pdu_NOTREG));
-		break;
-	case 3:
-		(*pdu).message = malloc(sizeof(pdu_GETLIST));
-		break;
-	case 4:
-		(*pdu).message = malloc(sizeof(pdu_SLIST));
-		break;
-	case 10:
-		(*pdu).message = malloc(sizeof(pdu_MESS));
-		break;
-	case 11:
-		(*pdu).message = malloc(sizeof(pdu_QUIT));
-		break;
-	case 12:
-		(*pdu).message = malloc(sizeof(pdu_JOIN));
-		break;
-	case 16:
-		(*pdu).message = malloc(sizeof(pdu_PJOIN));
-		break;
-	case 17:
-		(*pdu).message = malloc(sizeof(pdu_PLEAVE));
-		break;
-	case 19:
-		(*pdu).message = malloc(sizeof(pdu_PARTICIPANTS));
-		break;
-	default:
-		//
-		break;
-	}
-
-	return 0;
+int get_type(void *message){
+	return ((pdu_prototype*) message)->type;
 }
 
 
-int free_type(pdu_wrapper *pdu){
+int free_type(pdu_prototype *pdu){
 	unsigned char type;
-
-	if ((*pdu).message == NULL){
-		perror("PDU is not configured configured");
-		return -1;
-	}
 
 	type = (*pdu).type;
 
 	switch(type) {
-	case 0:
-		if(((pdu_REG*)pdu->message)->server_name != NULL){
-			free(((pdu_REG*)pdu->message)->server_name);
-		}
-		free(pdu->message);
-		break;
 
 	case 4:
 		if(((pdu_SLIST *)pdu->message)->number_servers !=0){
@@ -137,26 +76,34 @@ int free_server_entry(pdu_server_entry server){
 }
 
 
-pdu_wrapper* create_REG(unsigned servername_length, unsigned int tcp_port){
-	pdu_wrapper *pdu = malloc(sizeof(pdu_wrapper));
-	pdu->type = 0;
-	create_type(pdu, 0);
+pdu_REG* create_REG(unsigned servername_length, unsigned int tcp_port){
+	pdu_REG *pdu = malloc(sizeof(pdu_REG));
+	pdu->type = PDU_REG;
+	pdu->server_name_length = 10;
 
-
-	((pdu_REG*)pdu->message)->server_name_length = servername_length;
-	((pdu_REG*)pdu->message)->tcp_port = tcp_port;
-	((pdu_REG*)pdu->message)->add_server_name = add_server_name;
+	pdu->server_name_length = servername_length;
+	pdu->tcp_port = tcp_port;
+	pdu->add_server_name = add_server_name;
 	return pdu;
 }
 
-int add_server_name(pdu_wrapper *pdu, char* server_name){
-	if(strlen(server_name) == ((pdu_REG*)pdu->message)->server_name_length){
-		((pdu_REG *)pdu->message)->server_name = malloc(((pdu_REG*)pdu->message)->server_name_length*sizeof(char));
-		strcpy(((pdu_REG*)pdu->message)->server_name, server_name);
+int add_server_name(pdu_REG *pdu, char* server_name){
+	if(strlen(server_name) == pdu->server_name_length){
+		pdu->server_name = malloc(pdu->server_name_length*sizeof(char));
+		strcpy(pdu->server_name, server_name);
 	} else {
 		perror("server_name length missmatch\n");
 		return -1;
 	}
+	return 0;
+}
+
+int free_pdu_reg(pdu_REG *pdu){
+
+	if(pdu->server_name != NULL){
+		free(pdu->server_name);
+	}
+	free(pdu);
 	return 0;
 }
 
