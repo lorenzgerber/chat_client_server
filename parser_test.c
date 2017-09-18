@@ -14,12 +14,14 @@
 int main(int argc, char*argv[]){
 
 	pdu_parse();
-	pdu_create();
 
-
+	// create REG message with args server name length and tcp-port
 	pdu_REG *REG_MESSAGE = create_REG(9,2000);
+	// configure server name
 	REG_MESSAGE->add_server_name(REG_MESSAGE,"arschloch");
+	// test access
 	printf("%s", REG_MESSAGE->server_name);
+	// free memory
 	free_pdu_reg(REG_MESSAGE);
 
 

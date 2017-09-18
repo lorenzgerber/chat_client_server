@@ -19,6 +19,8 @@ int free_type(pdu_prototype *pdu){
 	switch(type) {
 
 	case 4:
+
+
 		if(((pdu_SLIST *)pdu->message)->number_servers !=0){
 			for(int i = 0; i < ((pdu_SLIST *)pdu->message)->number_servers;i++){
 				free_server_entry(((pdu_SLIST*)pdu->message)->current_servers[i]);

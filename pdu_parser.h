@@ -8,7 +8,6 @@
 #ifndef PDU_PARSER_H_
 #define PDU_PARSER_H_
 
-int pdu_create(void);
 
 int pdu_parse(void);
 
