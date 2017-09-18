@@ -97,4 +97,13 @@ typedef struct pdu_PLEAVE {
 	char *client_identity;
 } pdu_PLEAVE;
 
+
+int get_type(base_pdu pdu);
+
+int create_type(base_pdu pdu, int type);
+
+
+
+
+
 #endif /* PDU_TEMPLATES_H_ */

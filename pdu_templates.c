@@ -10,7 +10,7 @@ int get_type(base_pdu pdu){
 	return pdu.type;
 }
 
-int specify_type(base_pdu pdu, int type){
+int create_type(base_pdu pdu, int type){
 
 	if (pdu.type != NULL){
 		perror("PDU is already configured");
