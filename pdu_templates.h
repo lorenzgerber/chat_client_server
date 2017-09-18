@@ -10,16 +10,18 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-typedef struct base_pdu {
+typedef struct pdu_wrapper {
 	unsigned char type;
 	void* message;
-} base_pdu;
+} pdu_wrapper;
 
 typedef struct pdu_REG {
-	unsigned char server_length;
+	unsigned char server_name_length;
 	unsigned int tcp_port;
 	char* server_name;
+	int (*add_server_name)(pdu_wrapper *self, char*);
 } pdu_REG;
 
 typedef struct pdu_ALIVE {
@@ -41,19 +43,21 @@ typedef struct pdu_GETLIST {
 	unsigned char padding[3];
 } pdu_GETLIST;
 
-typedef struct pdu_SLIST {
-	unsigned char padding[1];
-	unsigned int number_servers;
-	struct server* current_servers[];
-} pdu_SLIST;
-
-typedef struct server_entry {
+typedef struct pdu_server_entry {
 	unsigned char address[4];
 	unsigned int port;
 	unsigned char number_clients;
 	unsigned char name_length;
 	char *name;
 } pdu_server_entry;
+
+typedef struct pdu_SLIST {
+	unsigned char padding[1];
+	unsigned int number_servers;
+	pdu_server_entry *current_servers;
+} pdu_SLIST;
+
+
 
 typedef struct pdu_JOIN {
 	unsigned char identity_length;
@@ -77,7 +81,7 @@ typedef struct pdu_MESS {
 	unsigned char identity_length;
 	unsigned char checksum;
 	unsigned int message_length;
-	unsigned char patting2[2];
+	unsigned char padding2[2];
 	unsigned long time_stamp;
 	char *message;
 	char *client_identity;
@@ -98,11 +102,17 @@ typedef struct pdu_PLEAVE {
 } pdu_PLEAVE;
 
 
-int get_type(base_pdu pdu);
+int get_type(pdu_wrapper pdu);
 
-int create_type(base_pdu pdu, int type);
+int create_type(pdu_wrapper *pdu, int type);
 
+int free_type(pdu_wrapper *pdu);
 
+int free_server_entry(pdu_server_entry server);
+
+pdu_wrapper* create_REG(unsigned server_name_length, unsigned int tcp_port);
+
+int add_server_name(pdu_wrapper* pdu, char* server_name);
 
 
 
