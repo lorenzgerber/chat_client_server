@@ -12,7 +12,7 @@ int get_type(void *message){
 
 
 int free_type(pdu_prototype *pdu){
-	unsigned char type;
+	uint8_t type;
 
 	type = (*pdu).type;
 
@@ -78,7 +78,7 @@ int free_server_entry(pdu_server_entry server){
 }
 
 
-pdu_REG* create_REG(unsigned servername_length, unsigned int tcp_port){
+pdu_REG* create_REG(uint8_t servername_length, uint16_t tcp_port){
 	pdu_REG *pdu = malloc(sizeof(pdu_REG));
 	pdu->type = PDU_REG;
 	pdu->server_name_length = 10;
@@ -107,6 +107,12 @@ int free_pdu_reg(pdu_REG *pdu){
 	}
 	free(pdu);
 	return 0;
+}
+
+pdu_ALIVE* create_ALIVE(){
+	pdu_ALIVE *pdu = malloc(sizeof(pdu_ALIVE));
+	pdu->type = PDU_ALIVE;
+	return pdu;
 }
 
 
