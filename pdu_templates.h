@@ -27,8 +27,9 @@
 
 
 typedef struct pdu_prototype {
-	unsigned char type;
-	void* message;
+	uint8_t type;
+	uint8_t server_name_length;
+	char* server_name;
 } pdu_prototype;
 
 typedef struct pdu_REG {
@@ -68,13 +69,16 @@ typedef struct pdu_server_entry {
 	uint8_t number_clients;
 	uint8_t name_length;
 	char *name;
+	int (*add_server_name)(struct pdu_server_entry *self, char*);
 } pdu_server_entry;
 
 typedef struct pdu_SLIST {
 	uint8_t type;
 	uint8_t padding[1];
 	uint16_t number_servers;
-	pdu_server_entry *current_servers;
+	int (*add_server_entry)(struct pdu_SLIST *self, pdu_server_entry*);
+	int server_assigned;
+	pdu_server_entry **current_servers;
 } pdu_SLIST;
 
 
@@ -128,17 +132,42 @@ typedef struct pdu_PLEAVE {
 } pdu_PLEAVE;
 
 
+int get_type(void *message);
 
-
-int free_server_entry(pdu_server_entry server);
+int pdu_reg_add_server_name(pdu_REG *pdu, char* server_name);
 
 pdu_REG* create_REG(uint8_t server_name_length, uint16_t tcp_port);
 
-int add_server_name(pdu_REG* pdu, char* server_name);
-
 int free_pdu_reg(pdu_REG *pdu);
 
-pdu_ALIVE* create_ALIVE();
+pdu_ALIVE* create_ALIVE(uint16_t id_number);
 
+int free_pdu_alive(pdu_ALIVE* pdu);
+
+pdu_ALIVE* create_ACK(uint16_t id_number);
+
+int free_pdu_ack(pdu_ACK* pdu);
+
+pdu_NOTREG* create_NOTREG(uint16_t id_number);
+
+int free_pdu_notreg(pdu_NOTREG* pdu);
+
+pdu_GETLIST* create_GETLIST(void);
+
+int free_pdu_getlist(pdu_GETLIST* pdu);
+
+
+int server_entry_add_server_name(pdu_server_entry* pdu, char* server_name);
+
+pdu_server_entry *create_server_entry(uint8_t address[4], uint16_t port, uint8_t number_clients, uint8_t name_length);
+
+int add_server_entry(pdu_SLIST *pdu, pdu_server_entry* server_entry);
+
+pdu_SLIST* create_SLIST(uint16_t number_servers);
+
+
+int free_server_entry(pdu_server_entry *server);
+
+int free_pdu_slist(pdu_SLIST *pdu);
 
 #endif /* PDU_TEMPLATES_H_ */
