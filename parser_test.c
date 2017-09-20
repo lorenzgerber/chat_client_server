@@ -32,6 +32,18 @@ int main(int argc, char*argv[]){
 	printf("%s\n", SLIST_MESSAGE->current_servers[0]->name);
 	free_pdu_slist(SLIST_MESSAGE);
 
+
+	//Example create PARTICIPANTS
+	pdu_PARTICIPANTS *PARTICIPANTS = create_PARTICIPANTS(3, 15);
+	PARTICIPANTS->add_identities(PARTICIPANTS, "bull\0shit\0crap\0");
+	for(int i = 0; i < PARTICIPANTS->number_identities;i++){
+		printf("%s\n", PARTICIPANTS->identities[i]);
+	}
+
+
+
+
+
 	return 0;
 }
 

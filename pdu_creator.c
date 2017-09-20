@@ -213,18 +213,20 @@ int free_pdu_join(pdu_JOIN *pdu){
 int pdu_participants_add_identities(pdu_PARTICIPANTS *pdu, char* identities){
 
 	//Check length of provided string
+	/*
 	if(strlen(identities) != pdu->length){
 		perror("identities length missmatch\n");
 		return -1;
-	}
+	}*/
 
 	int lower, found = 0;
 	for(int i = 0 ; i < pdu->length;i++){
 		//read until null termination (detect length)
 		if(identities[i]=='\0'){
-			pdu->identities[i] = malloc(i-lower*sizeof(char));
-			strncpy(pdu->identities[i], &identities[lower], i-lower);
-			lower = i;
+
+			pdu->identities[found] = malloc((i-lower+1)*sizeof(char));
+			strncpy(pdu->identities[found], &identities[lower], i-lower);
+			lower = i+1;
 			found++;
 		}
 	}
@@ -236,11 +238,12 @@ int pdu_participants_add_identities(pdu_PARTICIPANTS *pdu, char* identities){
 	return 0;
 }
 
-pdu_PARTICIPANTS* create_PARTICIPANTS(uint8_t number_identities){
+pdu_PARTICIPANTS* create_PARTICIPANTS(uint8_t number_identities, uint16_t length){
 	pdu_PARTICIPANTS *pdu = malloc(sizeof(pdu_PARTICIPANTS));
 	pdu->type = PDU_PARTICIPANTS;
 	pdu->number_identities = number_identities;
-	*pdu->identities = (char*)malloc(number_identities * sizeof(char*));
+	pdu->length = length;
+	pdu->identities = malloc(number_identities * sizeof(char*));
 	pdu->add_identities = pdu_participants_add_identities;
 	return pdu;
 }
