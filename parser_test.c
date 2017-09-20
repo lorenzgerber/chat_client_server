@@ -39,6 +39,7 @@ int main(int argc, char*argv[]){
 	for(int i = 0; i < PARTICIPANTS->number_identities;i++){
 		printf("%s\n", PARTICIPANTS->identities[i]);
 	}
+	free_pdu_participants(PARTICIPANTS);
 
 
 

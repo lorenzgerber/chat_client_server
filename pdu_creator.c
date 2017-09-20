@@ -248,11 +248,14 @@ pdu_PARTICIPANTS* create_PARTICIPANTS(uint8_t number_identities, uint16_t length
 	return pdu;
 }
 
-int free_pdu_participant(pdu_PARTICIPANTS *pdu){
+int free_pdu_participants(pdu_PARTICIPANTS *pdu){
 
-	if(pdu->identities != NULL){
-		free(pdu->identities);
+	if(pdu->number_identities !=0){
+		for(int i = 0; i < pdu->number_identities;i++){
+			free(pdu->identities[i]);
+		}
 	}
+
 	free(pdu);
 	return 0;
 }
