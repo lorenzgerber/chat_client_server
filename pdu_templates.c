@@ -107,10 +107,11 @@ int free_pdu_getlist(pdu_GETLIST* pdu){
 }
 
 
+
+
 /*
  * pdu_SLIST
  */
-
 int server_entry_add_server_name(pdu_server_entry *pdu, char* server_name){
 	if(strlen(server_name) == pdu->name_length){
 		 pdu->name = malloc(pdu->name_length*sizeof(char));
@@ -136,7 +137,6 @@ pdu_server_entry* create_server_entry(uint8_t address[4], uint16_t port, uint8_t
 	return pdu;
 }
 
-
 int add_server_entry(pdu_SLIST *pdu, pdu_server_entry* server_entry){
 	if(pdu->server_assigned == pdu->number_servers){
 		perror("all servers already assigned\n");
@@ -146,7 +146,6 @@ int add_server_entry(pdu_SLIST *pdu, pdu_server_entry* server_entry){
 	pdu->server_assigned++;
  	return pdu->server_assigned;
 }
-
 
 pdu_SLIST* create_SLIST(uint16_t number_servers){
 	pdu_SLIST *pdu = malloc(sizeof(pdu_SLIST));
@@ -176,6 +175,38 @@ int free_pdu_slist(pdu_SLIST *pdu){
 	return 0;
 }
 
+
+
+/*
+ * pdu_JOIN
+ */
+int pdu_join_add_identity(pdu_JOIN *pdu, char* identity){
+	if(strlen(identity) == pdu->identity_length){
+		pdu->identity = malloc(pdu->identity_length*sizeof(char));
+		strcpy(pdu->identity, identity);
+	} else {
+		perror("identity length missmatch\n");
+		return -1;
+	}
+	return 0;
+}
+
+pdu_JOIN* create_JOIN(uint8_t identity_length){
+	pdu_JOIN *pdu = malloc(sizeof(pdu_JOIN));
+	pdu->type = PDU_JOIN;
+	pdu->identity_length = identity_length;
+	pdu->add_identity = pdu_join_add_identity;
+	return pdu;
+}
+
+int free_pdu_(pdu_JOIN *pdu){
+
+	if(pdu->identity != NULL){
+		free(pdu->identity);
+	}
+	free(pdu);
+	return 0;
+}
 
 
 
