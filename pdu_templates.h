@@ -118,6 +118,10 @@ typedef struct pdu_MESS {
 	uint32_t time_stamp;
 	char *message;
 	char *client_identity;
+	int (*add_message)(struct pdu_MESS *self, uint16_t, uint32_t, char*);
+	int (*add_identity)(struct pdu_MESS *self, char*);
+	int (*calc_checksum)(struct pdu_MESS *self);
+	int (*padded_message_length)(struct pdu_MESS *self);
 } pdu_MESS;
 
 typedef struct pdu_PJOIN {

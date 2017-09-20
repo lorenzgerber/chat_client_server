@@ -211,13 +211,7 @@ int free_pdu_join(pdu_JOIN *pdu){
  * pdu_PARTICIPANTS
  */
 int pdu_participants_add_identities(pdu_PARTICIPANTS *pdu, char* identities){
-
-	//Check length of provided string
-	/*
-	if(strlen(identities) != pdu->length){
-		perror("identities length missmatch\n");
-		return -1;
-	}*/
+	// need to implement check of length
 
 	int lower, found = 0;
 	for(int i = 0 ; i < pdu->length;i++){
@@ -273,4 +267,60 @@ int free_pdu_quit(pdu_QUIT* pdu){
 	free(pdu);
 	return 0;
 }
+
+/*
+ * MESS
+ */
+int pdu_mess_padded_message_length(pdu_MESS *pdu){
+	int result = pdu->message_length + (pdu->message_length % 4) - 4;
+	return result;
+}
+
+int pdu_mess_calc_checksum(pdu_MESS *pdu){
+
+	return 0;
+}
+
+int pdu_mess_add_identity(pdu_MESS *pdu, char* identity){
+	pdu->client_identity = malloc(pdu->identity_length*sizeof(char));
+	strcpy(pdu->client_identity, identity);
+
+	return 0;
+}
+
+int pdu_mess_add_message(pdu_MESS *pdu, uint16_t message_length, uint32_t time_stamp, char* message){
+	pdu->time_stamp = time_stamp;
+	pdu->message_length = message_length;
+	pdu->message = calloc(pdu->padded_message_length(pdu), sizeof(char));
+	strcpy(pdu->message, message);
+
+ 	return 0;
+}
+
+
+pdu_MESS* create_MESS(uint8_t identity_length, uint8_t checksum){
+	pdu_MESS *pdu = malloc(sizeof(pdu_MESS));
+	pdu->type = PDU_MESS;
+	pdu->identity_length = identity_length;
+	pdu->checksum = checksum;
+	pdu->add_message = pdu_mess_add_message;
+	pdu->add_identity = pdu_mess_add_identity;
+	pdu->calc_checksum = pdu_mess_calc_checksum;
+	pdu->padded_message_length = pdu_mess_padded_message_length;
+	return pdu;
+}
+
+int free_pdu_mess(pdu_MESS *pdu){
+
+	if(pdu->identity_length !=0){
+		free(pdu->client_identity);
+	}
+	if(pdu->message_length >0){
+		free(pdu->message);
+	}
+
+	free(pdu);
+	return 0;
+}
+
 
