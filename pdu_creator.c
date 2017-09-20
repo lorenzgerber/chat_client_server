@@ -148,6 +148,7 @@ pdu_SLIST* create_SLIST(uint16_t number_servers){
 	pdu_SLIST *pdu = malloc(sizeof(pdu_SLIST));
 	pdu->type = PDU_SLIST;
 	pdu->number_servers = number_servers;
+	pdu->server_assigned = 0;
 	pdu->current_servers = malloc(sizeof(pdu_server_entry*)*number_servers); //probably wrong
 	*pdu->current_servers = (pdu_server_entry*)malloc(number_servers * sizeof(pdu_server_entry*));
 	pdu->add_server_entry = add_server_entry;
