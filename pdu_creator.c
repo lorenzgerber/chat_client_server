@@ -260,3 +260,17 @@ int free_pdu_participants(pdu_PARTICIPANTS *pdu){
 	return 0;
 }
 
+/*
+ * pdu_QUIT
+ */
+pdu_QUIT* create_QUIT(void){
+	pdu_QUIT *pdu = malloc(sizeof(pdu_QUIT));
+	pdu->type = PDU_QUIT;
+	return pdu;
+}
+
+int free_pdu_quit(pdu_QUIT* pdu){
+	free(pdu);
+	return 0;
+}
+

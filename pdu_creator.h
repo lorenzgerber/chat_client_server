@@ -69,4 +69,12 @@ pdu_PARTICIPANTS* create_PARTICIPANTS(uint8_t number_identities, uint16_t length
 
 int free_pdu_participants(pdu_PARTICIPANTS *pdu);
 
+
+// QUIT
+
+pdu_QUIT* create_QUIT(void);
+
+int free_pdu_quit(pdu_QUIT* pdu);
+
+
 #endif /* PDU_CREATOR_H_ */
