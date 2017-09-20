@@ -9,11 +9,11 @@
 #include <string.h>
 #include "pdu_parser.h"
 #include "pdu_templates.h"
+#include "pdu_creator.h"
 
 
 int main(int argc, char*argv[]){
 
-	pdu_parse();
 
 	// Example create REG and add server name
 	pdu_REG *REG_MESSAGE = create_REG(9,2000);

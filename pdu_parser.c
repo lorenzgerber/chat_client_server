@@ -2,15 +2,7 @@
 #include "pdu_parser.h"
 
 
-int pdu_parse(void){
-	printf("I'm the pdu parser\n");
-	// request first word
-	// determine type
-	// create pdu struct
-	// write initial data
-	// decide: finished, read_rest, read_iter
-	// call read_rest or read_iter
-	// decide: finished, read footer
-	// finished
-	return 0;
+char* pdu_reg_create_message(pdu_REG *self){
+	return "hello bullshit\n";
 }
+
