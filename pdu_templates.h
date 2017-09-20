@@ -119,7 +119,7 @@ typedef struct pdu_MESS {
 	char *message;
 	char *client_identity;
 	int (*add_message)(struct pdu_MESS *self, uint16_t, uint32_t, char*);
-	int (*add_identity)(struct pdu_MESS *self, char*);
+	int (*add_client_identity)(struct pdu_MESS *self, char*);
 	int (*calc_checksum)(struct pdu_MESS *self);
 	int (*padded_message_length)(struct pdu_MESS *self);
 } pdu_MESS;
@@ -130,6 +130,7 @@ typedef struct pdu_PJOIN {
 	uint8_t padding[2];
 	uint32_t time_stamp;
 	char *client_identity;
+	int (*add_client_identity)(struct pdu_PJOIN *self, uint32_t, char*);
 } pdu_PJOIN;
 
 typedef struct pdu_PLEAVE {
@@ -138,6 +139,7 @@ typedef struct pdu_PLEAVE {
 	uint8_t padding[2];
 	uint32_t time_stamp;
 	char *client_identity;
+	int (*add_client_identity)(struct pdu_PLEAVE *self, uint32_t, char*);
 } pdu_PLEAVE;
 
 

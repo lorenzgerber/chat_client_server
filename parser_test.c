@@ -44,7 +44,7 @@ int main(int argc, char*argv[]){
 
 	pdu_MESS *MESS = create_MESS(8, 45);
 	MESS->add_message(MESS, 64, 1505933137, "Now this is ä very funny story that I gonna unfold for you here.");
-	MESS->add_identity(MESS, "bullcrap");
+	MESS->add_client_identity(MESS, "bullcrap");
 	printf("%s\n", MESS->message);
 	free_pdu_mess(MESS);
 

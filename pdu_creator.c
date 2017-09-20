@@ -281,9 +281,9 @@ int pdu_mess_calc_checksum(pdu_MESS *pdu){
 	return 0;
 }
 
-int pdu_mess_add_identity(pdu_MESS *pdu, char* identity){
+int pdu_mess_add_client_identity(pdu_MESS *pdu, char* client_identity){
 	pdu->client_identity = malloc(pdu->identity_length*sizeof(char));
-	strcpy(pdu->client_identity, identity);
+	strcpy(pdu->client_identity, client_identity);
 
 	return 0;
 }
@@ -304,7 +304,7 @@ pdu_MESS* create_MESS(uint8_t identity_length, uint8_t checksum){
 	pdu->identity_length = identity_length;
 	pdu->checksum = checksum;
 	pdu->add_message = pdu_mess_add_message;
-	pdu->add_identity = pdu_mess_add_identity;
+	pdu->add_client_identity = pdu_mess_add_client_identity;
 	pdu->calc_checksum = pdu_mess_calc_checksum;
 	pdu->padded_message_length = pdu_mess_padded_message_length;
 	return pdu;
@@ -319,6 +319,61 @@ int free_pdu_mess(pdu_MESS *pdu){
 		free(pdu->message);
 	}
 
+	free(pdu);
+	return 0;
+}
+
+/*
+ * PJOIN
+ */
+int pdu_pjoin_add_client_identity(pdu_PJOIN *pdu, uint32_t time_stamp, char* client_identity){
+	pdu->time_stamp = time_stamp;
+	pdu->client_identity = malloc(pdu->identity_length*sizeof(char));
+	strcpy(pdu->client_identity, client_identity);
+	return 0;
+}
+
+
+pdu_PJOIN* create_PJOIN(uint8_t identity_length){
+	pdu_PJOIN *pdu = malloc(sizeof(pdu_PJOIN));
+	pdu->type = PDU_PJOIN;
+	pdu->identity_length = identity_length;
+	pdu->add_client_identity = pdu_pjoin_add_client_identity;
+	return pdu;
+}
+
+int free_pdu_pjoin(pdu_PJOIN *pdu){
+	if(pdu->identity_length != 0){
+		free(pdu->client_identity);
+	}
+	free(pdu);
+	return 0;
+}
+
+
+/*
+ * PLEAVE
+ */
+int pdu_pleave_add_client_identity(pdu_PLEAVE *pdu, uint32_t time_stamp, char* client_identity){
+	pdu->time_stamp = time_stamp;
+	pdu->client_identity = malloc(pdu->identity_length*sizeof(char));
+	strcpy(pdu->client_identity, client_identity);
+	return 0;
+}
+
+
+pdu_PLEAVE* create_PLEAVE(uint8_t identity_length){
+	pdu_PLEAVE *pdu = malloc(sizeof(pdu_PLEAVE));
+	pdu->type = PDU_PLEAVE;
+	pdu->identity_length = identity_length;
+	pdu->add_client_identity = pdu_pleave_add_client_identity;
+	return pdu;
+}
+
+int free_pdu_pleave(pdu_PLEAVE *pdu){
+	if(pdu->identity_length != 0){
+		free(pdu->client_identity);
+	}
 	free(pdu);
 	return 0;
 }
