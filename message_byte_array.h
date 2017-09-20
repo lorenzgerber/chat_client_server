@@ -16,7 +16,7 @@
 
 typedef struct message_byte_array {
 	uint8_t *array;
-	uint32_t current_position;
+	uint32_t current_write_position;
 	int (*add_uint8)(struct message_byte_array *self, uint8_t);
 	int (*add_uint16)(struct message_byte_array *self, uint16_t);
 	int (*add_uint32)(struct message_byte_array *self, uint32_t);

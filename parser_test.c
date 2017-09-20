@@ -10,6 +10,7 @@
 #include "pdu_parser.h"
 #include "pdu_templates.h"
 #include "pdu_creator.h"
+#include "message_byte_array.h"
 
 
 int main(int argc, char*argv[]){
@@ -47,6 +48,14 @@ int main(int argc, char*argv[]){
 	MESS->add_client_identity(MESS, "bullcrap");
 	printf("%s\n", MESS->message);
 	free_pdu_mess(MESS);
+
+	message_byte_array *array = create_message_byte_array(8);
+	array->add_uint32(array, 12312);
+	array->add_uint32(array, 23234);
+
+	for(int i = 0;i < 8;i++){
+		printf("%s", &array->array[i]);
+	}
 
 
 	return 0;
