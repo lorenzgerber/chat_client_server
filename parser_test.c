@@ -19,6 +19,7 @@ int main(int argc, char*argv[]){
 	pdu_REG *REG_MESSAGE = create_REG(9,2000);
 	REG_MESSAGE->add_server_name(REG_MESSAGE,"arschloch");
 	printf("%s\n", REG_MESSAGE->server_name);
+	printf("%s\n", REG_MESSAGE->create_message(REG_MESSAGE));
 	free_pdu_reg(REG_MESSAGE);
 
 

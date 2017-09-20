@@ -32,12 +32,15 @@ typedef struct pdu_prototype {
 	char* server_name;
 } pdu_prototype;
 
+
+
 typedef struct pdu_REG {
 	uint8_t type;
 	uint8_t server_name_length;
 	uint16_t tcp_port;
 	char* server_name;
 	int (*add_server_name)(struct pdu_REG *self, char*);
+	char* (*create_message)(struct pdu_REG *self);
 } pdu_REG;
 
 typedef struct pdu_ALIVE {
@@ -95,7 +98,8 @@ typedef struct pdu_PARTICIPANTS {
 	uint8_t type;
 	uint8_t number_identities;
 	uint16_t length;
-	char *identities;
+	char **identities;
+	int (*add_identities)(struct pdu_PARTICIPANTS *self, char*);
 } pdu_PARTICIPANTS;
 
 
@@ -137,6 +141,9 @@ int get_type(void *message);
 
 
 // REG
+
+char* pdu_reg_create_message(pdu_REG *self);
+
 int pdu_reg_add_server_name(pdu_REG *pdu, char* server_name);
 
 pdu_REG* create_REG(uint8_t server_name_length, uint16_t tcp_port);

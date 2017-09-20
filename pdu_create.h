@@ -10,4 +10,6 @@
 #include "pdu_templates.h"
 
 
+char* pdu_reg_create_message(void *self);
+
 #endif /* PDU_CREATE_H_ */

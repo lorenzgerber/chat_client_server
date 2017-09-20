@@ -14,6 +14,11 @@ int get_type(void *message){
 /*
  * pdu_REG
  */
+
+char* pdu_reg_create_message(pdu_REG *self){
+	return "hello bullshit\n";
+}
+
 int pdu_reg_add_server_name(pdu_REG *pdu, char* server_name){
 	if(strlen(server_name) == pdu->server_name_length){
 		pdu->server_name = malloc(pdu->server_name_length*sizeof(char));
@@ -31,6 +36,7 @@ pdu_REG* create_REG(uint8_t servername_length, uint16_t tcp_port){
 	pdu->server_name_length = servername_length;
 	pdu->tcp_port = tcp_port;
 	pdu->add_server_name = pdu_reg_add_server_name;
+	pdu->create_message = pdu_reg_create_message;
 	return pdu;
 }
 
@@ -199,10 +205,58 @@ pdu_JOIN* create_JOIN(uint8_t identity_length){
 	return pdu;
 }
 
-int free_pdu_(pdu_JOIN *pdu){
+int free_pdu_join(pdu_JOIN *pdu){
 
 	if(pdu->identity != NULL){
 		free(pdu->identity);
+	}
+	free(pdu);
+	return 0;
+}
+
+
+/*
+ * pdu_PARTICIPANTS
+ */
+int pdu_participants_add_identities(pdu_PARTICIPANTS *pdu, char* identities){
+
+	//Check length of provided string
+	if(strlen(identities) != pdu->length){
+		perror("identities length missmatch\n");
+		return -1;
+	}
+
+	int lower, found = 0;
+	for(int i = 0 ; i < pdu->length;i++){
+		//read until null termination (detect length)
+		if(identities[i]=='\0'){
+			pdu->identities[i] = malloc(i-lower*sizeof(char));
+			strncpy(pdu->identities[i], &identities[lower], i-lower);
+			lower = i;
+			found++;
+		}
+	}
+	if (found < pdu->number_identities){
+		perror("not enough identities provided");
+		return -1;
+	}
+
+	return 0;
+}
+
+pdu_PARTICIPANTS* create_PARTICIPANTS(uint8_t number_identities){
+	pdu_PARTICIPANTS *pdu = malloc(sizeof(pdu_PARTICIPANTS));
+	pdu->type = PDU_PARTICIPANTS;
+	pdu->number_identities = number_identities;
+	*pdu->identities = (char*)malloc(number_identities * sizeof(char*));
+	pdu->add_identities = pdu_participants_add_identities;
+	return pdu;
+}
+
+int free_pdu_participant(pdu_PARTICIPANTS *pdu){
+
+	if(pdu->identities != NULL){
+		free(pdu->identities);
 	}
 	free(pdu);
 	return 0;
