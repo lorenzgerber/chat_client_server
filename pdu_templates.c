@@ -36,7 +36,7 @@ uint32_t get_length_GETLIST(pdu_GETLIST pdu){
 
 uint32_t get_length_SLIST(pdu_SLIST pdu){
 	// todo
-    uint32_t length_of_slist = LENGTH_OP + LENGTH_PAD + LENGTH_NUMBER_SERVER;12
+    uint32_t length_of_slist = LENGTH_OP + LENGTH_PAD + LENGTH_NUMBER_SERVER;
     for(int i = 0; i < pdu.number_servers; i++){
         length_of_slist += LENGTH_ADDRESS +
                            LENGTH_PORT +
@@ -50,6 +50,10 @@ uint32_t get_length_SLIST(pdu_SLIST pdu){
 
 uint32_t get_length_JOIN(pdu_JOIN pdu){
 	// todo
+    uint32_t length_of_join = (uint32_t) (LENGTH_OP +
+                                          LENGTH_IDENTITY_LENGTH +
+                                          LENGTH_PAD * 3 +
+                                          (4 - pdu.identity_length % 4));
 	return 0;
 }
 
