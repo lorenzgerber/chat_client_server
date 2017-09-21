@@ -14,7 +14,7 @@ uint32_t get_length_REG(pdu_REG *pdu){
     uint32_t  length_of_reg = (uint32_t) (LENGTH_OP +
                                           LENGTH_SERVER_NAME_LENGTH +
                                           LENGTH_PORT +
-                                          (4 - (pdu->server_name_length % 4)));
+                                          (pdu->server_name_length + (pdu->server_name_length % 4)));
 	return length_of_reg;
 }
 
@@ -63,7 +63,7 @@ uint32_t get_length_JOIN(pdu_JOIN *pdu){
     uint32_t length_of_join = (uint32_t) (LENGTH_OP +
                                           LENGTH_IDENTITY_LENGTH +
                                           LENGTH_PAD * 2 +
-                                          (4 - pdu->identity_length % 4));
+                                          (pdu->identity_length + (pdu->identity_length % 4)));
 	return length_of_join;
 }
 
@@ -97,9 +97,9 @@ uint32_t get_length_MESS(pdu_MESS *pdu){
                               LENGTH_MESSAGE_LENGTH +
                               LENGTH_PAD * 2 +
                               LENGTH_TIME;
-    length_of_mess += pdu->message_length - (length_of_mess % 4);
+    length_of_mess += pdu->message_length + (length_of_mess % 4);
     if(pdu->identity_length > 0){
-        length_of_mess += pdu->identity_length - (length_of_mess % 4);
+        length_of_mess += pdu->identity_length + (length_of_mess % 4);
     }
 
 
@@ -113,7 +113,7 @@ uint32_t get_length_PJOIN(pdu_PJOIN *pdu){
                                            LENGTH_IDENTITY_LENGTH +
                                            LENGTH_PAD * 2 +
                                            LENGTH_TIME +
-                                           (4 - pdu->identity_length % 4));
+                                           (pdu->identity_length + (pdu->identity_length % 4)));
 	return length_of_pjoin;
 }
 
