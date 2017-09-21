@@ -90,8 +90,8 @@ uint32_t get_length_PARTICIPANTS(pdu_PARTICIPANTS *pdu){
         length_of_participants += (strlen(pdu->identities[i]) + 1);
     }
 
-    length_of_participants += length_of_participants -
-                              (length_of_participants % 4);
+    length_of_participants += length_of_participants +
+                              calc_word_padding(length_of_participants);
 
     return length_of_participants;
 }
@@ -109,9 +109,11 @@ uint32_t get_length_MESS(pdu_MESS *pdu){
                               LENGTH_MESSAGE_LENGTH +
                               LENGTH_PAD * 2 +
                               LENGTH_TIME;
-    length_of_mess += pdu->message_length + (length_of_mess % 4);
+    length_of_mess += pdu->message_length +
+                      calc_word_padding(length_of_mess);
     if(pdu->identity_length > 0){
-        length_of_mess += pdu->identity_length + (length_of_mess % 4);
+        length_of_mess += pdu->identity_length +
+                          calc_word_padding(length_of_mess);
     }
 
 
@@ -125,7 +127,8 @@ uint32_t get_length_PJOIN(pdu_PJOIN *pdu){
                                            LENGTH_IDENTITY_LENGTH +
                                            LENGTH_PAD * 2 +
                                            LENGTH_TIME +
-                                           (pdu->identity_length + (pdu->identity_length % 4)));
+                                           pdu->identity_length +
+                                           calc_word_padding(pdu->identity_length));
 	return length_of_pjoin;
 }
 
