@@ -52,7 +52,7 @@ uint32_t get_length_SLIST(pdu_SLIST *pdu){
                            LENGTH_PORT +
                            LENGTH_NUMBER_CLIENTS +
                            LENGTH_SERVER_NAME_LENGTH +
-                           (4 - (pdu->current_servers[i]->name_length % 4));
+                           (pdu->current_servers[i]->name_length + (pdu->current_servers[i]->name_length % 4));
 
     }
 	return length_of_slist;
