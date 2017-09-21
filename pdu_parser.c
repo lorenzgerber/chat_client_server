@@ -157,6 +157,7 @@ message_byte_array* pdu_mess_create_message(pdu_MESS *self){
 message_byte_array* pdu_pjoin_create_message(pdu_PJOIN *self){
 	int length = get_length_PJOIN(self);
 	message_byte_array* message = create_message_byte_array(length);
+    message->add_uint8(message, self->type);
 	message->add_uint8(message, self->identity_length);
 	message->add_uint16(message, 0);
 	message->add_uint32(message, self->time_stamp);
@@ -171,6 +172,7 @@ message_byte_array* pdu_pjoin_create_message(pdu_PJOIN *self){
 message_byte_array* pdu_pleave_create_message(pdu_PLEAVE *self){
 	int length = get_length_PLEAVE(self);
 	message_byte_array* message = create_message_byte_array(length);
+    message->add_uint8(message, self->type);
 	message->add_uint8(message, self->identity_length);
 	message->add_uint16(message, 0);
 	message->add_uint32(message, self->time_stamp);
