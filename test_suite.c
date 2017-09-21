@@ -221,7 +221,26 @@ int main(int argc, char*argv[]){
 	free_message_byte_array(MBA);
 
 
+	/*
+	 * QUIT
+	 */
+	printf("\n\nQUIT\n");
 
+	// Create QUIT struct
+	pdu_QUIT *QUIT = create_QUIT();
+
+	// Create GETLIST byte stream message to send
+	MBA = QUIT->create_message(QUIT);
+	length = get_length_QUIT(QUIT);
+
+	for(int i = 0;i < length;i++){
+		printf("%d, ", MBA->array[i]);
+	}
+
+
+	// free QUIT and MBA
+	free_pdu_quit(QUIT);
+	free_message_byte_array(MBA);
 
 
 	/*

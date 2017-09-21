@@ -100,13 +100,24 @@ message_byte_array* pdu_join_create_message(pdu_JOIN *self){
 
 message_byte_array* pdu_participants_create_message(pdu_PARTICIPANTS *self){
 	message_byte_array* message = create_message_byte_array(4);
-	//todo
+	message->add_uint8(message, self->type);
+	message->add_uint8(message, self->number_identities);
+	message->add_uint16(message, self->length);
+	for (int i = 0; i < self->number_identities;i++){
+		message->add_chars(message, self->identities[i], strlen(self->identities[i])+1);
+	}
+	int padding = calc_word_padding(self->length);
+	for (int i = 0; i < padding; i++){
+		message->add_uint8(message, 0);
+	}
 	return message;
 }
 
 message_byte_array* pdu_quit_create_message(pdu_QUIT *self){
 	message_byte_array* message = create_message_byte_array(4);
-	//todo
+	message->add_uint8(message, self->type);
+	message->add_uint8(message, 0);
+	message->add_uint16(message,0);
 	return message;
 }
 
