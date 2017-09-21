@@ -67,8 +67,20 @@ uint32_t get_length_PJOIN(pdu_PJOIN pdu){
 }
 
 uint32_t get_length_PLEAVE(pdu_PLEAVE pdu){
-	// todo
-	return 0;
+
+	// variable part
+	uint8_t length_client_identity =
+			(LENGTH_IDENTITY_LENGTH / 4)
+			+ 4 - (LENGTH_IDENTITY_LENGTH % 4);
+	// fixed part
+	uint32_t length = LENGTH_OP
+			+ LENGTH_IDENTITY_LENGTH
+			+ LENGTH_PAD * 2
+			+ LENGTH_TIME
+			+ length_client_identity;
+
+
+	return length;
 }
 
 
