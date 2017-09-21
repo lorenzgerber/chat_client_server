@@ -55,7 +55,7 @@ uint32_t get_length_SLIST(pdu_SLIST *pdu){
     uint32_t length_of_slist =
     		LENGTH_OP +
 			LENGTH_PAD +
-			LENGTH_NUMBER_SERVER; //12
+			LENGTH_NUMBER_SERVER;
 
     // variable length
     for(int i = 0; i < pdu->number_servers; i++){
@@ -63,7 +63,8 @@ uint32_t get_length_SLIST(pdu_SLIST *pdu){
                            LENGTH_PORT +
                            LENGTH_NUMBER_CLIENTS +
                            LENGTH_SERVER_NAME_LENGTH +
-                           (pdu->current_servers[i]->name_length + (pdu->current_servers[i]->name_length % 4));
+						   pdu->current_servers[i]->name_length +
+						   calc_word_padding(pdu->current_servers[i]->name_length);
 
     }
 	return length_of_slist;
