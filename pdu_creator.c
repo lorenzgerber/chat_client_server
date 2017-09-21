@@ -220,7 +220,7 @@ int free_pdu_join(pdu_JOIN *pdu){
 int pdu_participants_add_identities(pdu_PARTICIPANTS *pdu, char* identities){
 	// need to implement check of length
 
-	int lower, found = 0;
+	int lower = 0, found = 0;
 	for(int i = 0 ; i < pdu->length;i++){
 		//read until null termination (detect length)
 		if(identities[i]=='\0'){

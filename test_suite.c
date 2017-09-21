@@ -190,16 +190,41 @@ int main(int argc, char*argv[]){
 	free_pdu_join(JOIN);
 	free_message_byte_array(MBA);
 
+	/*
+	 * PARTICIPANTS
+	 */
 
-/*
-	//Example create PARTICIPANTS
+	printf("\n\nPARTICIPANTS");
+
+	//Create PARTICIPANTS and add some identities
 	pdu_PARTICIPANTS *PARTICIPANTS = create_PARTICIPANTS(3, 15);
-	PARTICIPANTS->add_identities(PARTICIPANTS, "bull\0shit\0crap\0");
+	PARTICIPANTS->add_identities(PARTICIPANTS, "partic\0ipa\0nts\0");
+
+	printf("\n");
 	for(int i = 0; i < PARTICIPANTS->number_identities;i++){
 		printf("%s\n", PARTICIPANTS->identities[i]);
 	}
-	free_pdu_participants(PARTICIPANTS);
 
+
+	// Create participants byte stream message to send
+	MBA = PARTICIPANTS->create_message(PARTICIPANTS);
+	length = get_length_PARTICIPANTS(PARTICIPANTS);
+	printf("Length of message = %d\n", length);
+
+	for(int i = 0; i < length; i++){
+		printf("%d, ", MBA->array[i]);
+	}
+
+
+	// free PARTICIPANTS and MBA
+	free_pdu_participants(PARTICIPANTS);
+	free_message_byte_array(MBA);
+
+
+
+
+
+	/*
 
 	pdu_MESS *MESS = create_MESS(8, 45);
 	MESS->add_message(MESS, 64, 1505933137, "Now this is ä very funny story that I gonna unfold for you here.");

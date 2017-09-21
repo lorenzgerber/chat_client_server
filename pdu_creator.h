@@ -7,6 +7,7 @@
 
 #ifndef PDU_CREATOR_H_
 #define PDU_CREATOR_H_
+#include <string.h>
 #include "pdu_templates.h"
 #include "pdu_parser.h"
 
