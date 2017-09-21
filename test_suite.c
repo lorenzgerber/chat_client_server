@@ -33,6 +33,8 @@ int main(int argc, char*argv[]){
 	// Create REG byte stream message to send
 	MBA = REG->create_message(REG);
 	length = get_length_REG(REG);
+	printf("Length of message = %d\n", length);
+
 
 	for(int i = 0;i < length;i++){
 		printf("%d, ", MBA->array[i]);
@@ -56,6 +58,7 @@ int main(int argc, char*argv[]){
 	// Create ALIVE byte stream message to send
 	MBA = ALIVE->create_message(ALIVE);
 	length = get_length_ALIVE(ALIVE);
+	printf("Length of message = %d\n", length);
 
 	for(int i = 0;i < length;i++){
 		printf("%d, ", MBA->array[i]);

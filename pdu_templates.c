@@ -10,11 +10,22 @@ int get_type(void *message){
 	return ((pdu_prototype*) message)->type;
 }
 
+int calc_word_padding(uint32_t length){
+	int padding = 4 - (length % 4);
+	if (padding == 4){
+		padding = 0;
+	}
+
+	return padding;
+}
+
+
 uint32_t get_length_REG(pdu_REG *pdu){
     uint32_t  length_of_reg = (uint32_t) (LENGTH_OP +
                                           LENGTH_SERVER_NAME_LENGTH +
                                           LENGTH_PORT +
-                                          (pdu->server_name_length + (pdu->server_name_length % 4)));
+										  pdu->server_name_length +
+										  calc_word_padding(pdu->server_name_length));
 	return length_of_reg;
 }
 
@@ -62,8 +73,8 @@ uint32_t get_length_JOIN(pdu_JOIN *pdu){
     uint32_t length_of_join = (uint32_t) (LENGTH_OP +
                                           LENGTH_IDENTITY_LENGTH +
                                           LENGTH_PAD * 2 +
-                                          (pdu->identity_length + (pdu->identity_length % 4)));
-
+										  pdu->identity_length +
+										  calc_word_padding(pdu->identity_length));
 	return length_of_join;
 }
 

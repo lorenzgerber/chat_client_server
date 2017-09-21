@@ -173,6 +173,9 @@ typedef struct pdu_PLEAVE {
 
 int get_type(void *message);
 
+int calc_word_padding(uint32_t length);
+
+
 uint32_t get_length_REG(pdu_REG *pdu);
 
 uint32_t get_length_ALIVE(pdu_ALIVE *pdu);

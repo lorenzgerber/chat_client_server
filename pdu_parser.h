@@ -7,8 +7,11 @@
 
 #ifndef PDU_PARSER_H_
 #define PDU_PARSER_H_
+#include <stdio.h>
 #include "pdu_templates.h"
 #include "message_byte_array.h"
+
+
 
 message_byte_array* pdu_reg_create_message(pdu_REG *self);
 
