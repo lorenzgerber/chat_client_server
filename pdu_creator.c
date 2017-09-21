@@ -280,10 +280,11 @@ int free_pdu_quit(pdu_QUIT* pdu){
 /*
  * MESS
  */
+/*
 int pdu_mess_padded_message_length(pdu_MESS *pdu){
 	int result = pdu->message_length + (pdu->message_length % 4) - 4;
 	return result;
-}
+}*/
 
 int pdu_mess_calc_checksum(pdu_MESS *pdu){
 
@@ -300,7 +301,7 @@ int pdu_mess_add_client_identity(pdu_MESS *pdu, char* client_identity){
 int pdu_mess_add_message(pdu_MESS *pdu, uint16_t message_length, uint32_t time_stamp, char* message){
 	pdu->time_stamp = time_stamp;
 	pdu->message_length = message_length;
-	pdu->message = calloc(pdu->padded_message_length(pdu), sizeof(char));
+	pdu->message = malloc(pdu->message_length* sizeof(char));
 	strcpy(pdu->message, message);
 
  	return 0;
@@ -315,7 +316,7 @@ pdu_MESS* create_MESS(uint8_t identity_length, uint8_t checksum){
 	pdu->add_message = pdu_mess_add_message;
 	pdu->add_client_identity = pdu_mess_add_client_identity;
 	pdu->calc_checksum = pdu_mess_calc_checksum;
-	pdu->padded_message_length = pdu_mess_padded_message_length;
+	//pdu->padded_message_length = pdu_mess_padded_message_length;
 	pdu->create_message = pdu_mess_create_message;
 	return pdu;
 }

@@ -194,13 +194,13 @@ int main(int argc, char*argv[]){
 	 * PARTICIPANTS
 	 */
 
-	printf("\n\nPARTICIPANTS");
+	printf("\n\nPARTICIPANTS\n");
 
 	//Create PARTICIPANTS and add some identities
 	pdu_PARTICIPANTS *PARTICIPANTS = create_PARTICIPANTS(3, 15);
 	PARTICIPANTS->add_identities(PARTICIPANTS, "partic\0ipa\0nts\0");
 
-	printf("\n");
+
 	for(int i = 0; i < PARTICIPANTS->number_identities;i++){
 		printf("%s\n", PARTICIPANTS->identities[i]);
 	}
@@ -244,12 +244,33 @@ int main(int argc, char*argv[]){
 
 
 	/*
+	 * MESS
+	 */
 
-	pdu_MESS *MESS = create_MESS(8, 45);
-	MESS->add_message(MESS, 64, 1505933137, "Now this is ä very funny story that I gonna unfold for you here.");
-	MESS->add_client_identity(MESS, "bullcrap");
+	printf("\n\nMESS\n");
+
+	//Create PARTICIPANTS and add some identities
+
+	pdu_MESS *MESS = create_MESS(8, 99);
+	MESS->add_message(MESS, 13, 1505933137, "Test Message.");
+	MESS->add_client_identity(MESS, "identity");
+
 	printf("%s\n", MESS->message);
-	free_pdu_mess(MESS);
+
+	// Create PARTICIPANTS byte stream for send
+	MBA = MESS->create_message(MESS);
+	length = get_length_MESS(MESS);
+	printf("Length of message = %d\n", length);
+
+	for(int i = 0;i < length;i++){
+		printf("%d, ", MBA->array[i]);
+	}
+
+
+	//free_pdu_mess(MESS);
+	free_message_byte_array(MBA);
+
+	/*
 
 	message_byte_array *array = create_message_byte_array(10);
     //char* cp = "z";

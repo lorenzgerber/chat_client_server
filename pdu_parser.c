@@ -3,7 +3,6 @@
 
 message_byte_array* pdu_reg_create_message(pdu_REG *self){
 	int length = get_length_REG(self);
-
     message_byte_array* message = create_message_byte_array(length);
     message->add_uint8(message, self->type);
     message->add_uint8(message, self->server_name_length);
@@ -19,7 +18,8 @@ message_byte_array* pdu_reg_create_message(pdu_REG *self){
 }
 
 message_byte_array* pdu_alive_create_message(pdu_ALIVE *self){
-	message_byte_array* message = create_message_byte_array(4);
+	int length = get_length_ALIVE(self);
+	message_byte_array* message = create_message_byte_array(length);
 	message->add_uint8(message, self->type);
 	message->add_uint8(message, self->number_clients);
 	message->add_uint16(message, self->id_number);
@@ -27,7 +27,8 @@ message_byte_array* pdu_alive_create_message(pdu_ALIVE *self){
 }
 
 message_byte_array* pdu_ack_create_message(pdu_ACK *self){
-	message_byte_array* message = create_message_byte_array(4);
+	int length = get_length_ACK(self);
+	message_byte_array* message = create_message_byte_array(length);
 	message->add_uint8(message, self->type);
 	message->add_uint8(message, 0);
 	message->add_uint16(message, self->id_number);
@@ -35,7 +36,8 @@ message_byte_array* pdu_ack_create_message(pdu_ACK *self){
 }
 
 message_byte_array* pdu_notreg_create_message(pdu_NOTREG *self){
-	message_byte_array* message = create_message_byte_array(4);
+	int length = get_length_NOTREG(self);
+	message_byte_array* message = create_message_byte_array(length);
 	message->add_uint8(message, self->type);
 	message->add_uint8(message, 0);
 	message->add_uint16(message, self->id_number);
@@ -51,9 +53,10 @@ message_byte_array* pdu_getlist_create_message(pdu_GETLIST *self){
 }
 
 message_byte_array* pdu_slist_create_message(pdu_SLIST *self){
+	int length = get_length_SLIST(self);
 
 	// build the Header
-	message_byte_array* message = create_message_byte_array(4);
+	message_byte_array* message = create_message_byte_array(length);
 	message->add_uint8(message, self->type);
 	message->add_uint8(message, 0);
 	message->add_uint16(message, self->number_servers);
@@ -84,7 +87,8 @@ message_byte_array* pdu_slist_create_message(pdu_SLIST *self){
 }
 
 message_byte_array* pdu_join_create_message(pdu_JOIN *self){
-	message_byte_array* message = create_message_byte_array(4);
+	int length = get_length_JOIN(self);
+	message_byte_array* message = create_message_byte_array(length);
 	message->add_uint8(message, self->type);
 	message->add_uint8(message, self->identity_length);
 	message->add_uint16(message, 0);
@@ -99,7 +103,8 @@ message_byte_array* pdu_join_create_message(pdu_JOIN *self){
 }
 
 message_byte_array* pdu_participants_create_message(pdu_PARTICIPANTS *self){
-	message_byte_array* message = create_message_byte_array(4);
+	int length = get_length_PARTICIPANTS(self);
+	message_byte_array* message = create_message_byte_array(length);
 	message->add_uint8(message, self->type);
 	message->add_uint8(message, self->number_identities);
 	message->add_uint16(message, self->length);
@@ -114,7 +119,8 @@ message_byte_array* pdu_participants_create_message(pdu_PARTICIPANTS *self){
 }
 
 message_byte_array* pdu_quit_create_message(pdu_QUIT *self){
-	message_byte_array* message = create_message_byte_array(4);
+	int length = get_length_QUIT(self);
+	message_byte_array* message = create_message_byte_array(length);
 	message->add_uint8(message, self->type);
 	message->add_uint8(message, 0);
 	message->add_uint16(message,0);
@@ -122,19 +128,42 @@ message_byte_array* pdu_quit_create_message(pdu_QUIT *self){
 }
 
 message_byte_array* pdu_mess_create_message(pdu_MESS *self){
-	message_byte_array* message = create_message_byte_array(4);
-	//todo
+	int length = get_length_MESS(self);
+	message_byte_array* message = create_message_byte_array(length);
+	message->add_uint8(message, self->type);
+	message->add_uint8(message, 0);
+	message->add_uint8(message, self->identity_length);
+	message->add_uint8(message, self->checksum);
+	message->add_uint16(message, self->message_length);
+	message->add_uint16(message, 0);
+	message->add_uint32(message, self->time_stamp);
+	message->add_chars(message, self->message, self->message_length);
+
+	int padding = calc_word_padding(self->message_length);
+	for(int i = 0; i < padding; i++){
+		message->add_uint8(message, 0);
+	}
+
+	if(self->identity_length > 0){
+		message->add_chars(message, self->client_identity, self->identity_length);
+		int padding = calc_word_padding(self->identity_length);
+		for(int i = 0; i < padding; i++){
+			message->add_uint8(message, 0);
+		}
+	}
 	return message;
 }
 
 message_byte_array* pdu_pjoin_create_message(pdu_PJOIN *self){
-	message_byte_array* message = create_message_byte_array(4);
+	int length = get_length_PJOIN(self);
+	message_byte_array* message = create_message_byte_array(length);
 	//todo
 	return message;
 }
 
 message_byte_array* pdu_pleave_create_message(pdu_PLEAVE *self){
-	message_byte_array* message = create_message_byte_array(4);
+	int length = get_length_PLEAVE(self);
+	message_byte_array* message = create_message_byte_array(length);
 	//todo
 	return message;
 }

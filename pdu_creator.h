@@ -81,7 +81,7 @@ int free_pdu_quit(pdu_QUIT* pdu);
 
 
 // MESS
-int pdu_padded_message_length(pdu_MESS *pdu);
+//int pdu_padded_message_length(pdu_MESS *pdu);
 
 int pdu_mess_calc_checksum(pdu_MESS *pdu);
 
