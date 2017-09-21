@@ -12,7 +12,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include "message_byte_array.h"
 
 #define PDU_REG 0
 #define PDU_ACK 1
@@ -42,7 +41,7 @@ typedef struct pdu_REG {
 	uint16_t tcp_port;
 	char* server_name;
 	int (*add_server_name)(struct pdu_REG *self, char*);
-	char* (*create_message)(struct pdu_REG *self);
+	struct message_byte_array* (*create_message)(struct pdu_REG *self);
 } pdu_REG;
 
 typedef struct pdu_ALIVE {
