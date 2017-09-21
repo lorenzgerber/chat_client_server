@@ -1,7 +1,7 @@
 /*
- * parser_test.c
+ * test_suite.c
  *
- *  Created on: Sep 18, 2017
+ *  Created on: Sep 21, 2017
  *      Author: lgerber
  */
 #include <stdio.h>
@@ -15,24 +15,40 @@
 
 int main(int argc, char*argv[]){
 
+	uint32_t length = 0;;
+
 
 	// Example create REG and add server name
-	pdu_REG *REG_MESSAGE = create_REG(9,2000);
-	REG_MESSAGE->add_server_name(REG_MESSAGE,"arschloch");
-	printf("%s\n", REG_MESSAGE->server_name);
-    //message_byte_array* arr = REG_MESSAGE->create_message(REG_MESSAGE);
-	//printf("%s\n", REG_MESSAGE->create_message(REG_MESSAGE));
-	free_pdu_reg(REG_MESSAGE);
+	pdu_REG *REG = create_REG(10,2000);
+	REG->add_server_name(REG,"servername");
+
+	// Create REG byte stream message to send
+	message_byte_array* arr = REG->create_message(REG);
+	length = get_length(REG);
+
+	for(int i = 0;i < length;i++){
+		printf("%d, ", arr->array[i]);
+	}
+
+	// free REG
+	free_pdu_reg(REG);
 
 
 	// Example create SLIST and populate with one server entry
-	pdu_SLIST *SLIST_MESSAGE = create_SLIST(1);
+	pdu_SLIST *SLIST = create_SLIST(1);
 	uint8_t address[4] = {127,0,0,1};
-	pdu_server_entry* server1 = create_server_entry(address,2000,10,4);
-	server1->add_server_name(server1, "depp");
-	SLIST_MESSAGE->add_server_entry(SLIST_MESSAGE, server1);
-	printf("%s\n", SLIST_MESSAGE->current_servers[0]->name);
-	free_pdu_slist(SLIST_MESSAGE);
+	pdu_server_entry* server1 = create_server_entry(address,2000,4,10);
+	server1->add_server_name(server1, "servername");
+	SLIST->add_server_entry(SLIST, server1);
+
+
+	length = get_length(SLIST);
+	for(int i = 0; i < length; i++){
+		printf("%d, ", arr->array[i]);
+	}
+
+	printf("%s\n", SLIST->current_servers[0]->name);
+	free_pdu_slist(SLIST);
 
 
 	//Example create PARTICIPANTS
@@ -54,16 +70,15 @@ int main(int argc, char*argv[]){
     //char* cp = "z";
 	array->add_uint32(array, 12312);
 	array->add_uint32(array, 23234);
-    array->add_chars(array,"abcd", 4);
+    array->add_chars(array,"abcd", 1);
 
 	for(int i = 0;i < 12;i++){
 		printf("%d, ", array->array[i]);
 	}
 
-	free(array);
+
 
 
 	return 0;
 }
-
 

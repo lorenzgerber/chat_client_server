@@ -33,5 +33,6 @@ int message_byte_array_add_chars(message_byte_array *self, char* data, uint32_t 
 
 message_byte_array* create_message_byte_array(uint32_t length);
 
+int free_message_byte_array(message_byte_array *mba);
 
 #endif /* MESSAGE_BYTE_ARRAY_H_ */

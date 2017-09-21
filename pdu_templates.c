@@ -35,8 +35,14 @@ uint32_t get_length_GETLIST(pdu_GETLIST pdu){
 }
 
 uint32_t get_length_SLIST(pdu_SLIST pdu){
-	// todo
-    uint32_t length_of_slist = LENGTH_OP + LENGTH_PAD + LENGTH_NUMBER_SERVER;
+
+	// fixed length
+    uint32_t length_of_slist =
+    		LENGTH_OP +
+			LENGTH_PAD +
+			LENGTH_NUMBER_SERVER; //12
+
+    // variable length
     for(int i = 0; i < pdu.number_servers; i++){
         length_of_slist += LENGTH_ADDRESS +
                            LENGTH_PORT +
@@ -83,6 +89,7 @@ uint32_t get_length_PLEAVE(pdu_PLEAVE pdu){
 	uint8_t length_client_identity =
 			(LENGTH_IDENTITY_LENGTH / 4)
 			+ 4 - (LENGTH_IDENTITY_LENGTH % 4);
+
 	// fixed part
 	uint32_t length = LENGTH_OP
 			+ LENGTH_IDENTITY_LENGTH

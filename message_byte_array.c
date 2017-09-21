@@ -54,28 +54,32 @@ int message_byte_array_add_uint32(message_byte_array *self, uint32_t data){
 
 int message_byte_array_add_chars(message_byte_array *self, char* data, uint32_t length){
 
-	for(int i = 0; i < length; i++){ // todo not sure if this has to be '* 4'
-        if(strlen(data) < i*4){
-            self->array[self->current_write_position]  = (unsigned char)data[i];
-            self->current_write_position++;
-        }
-
-		//self->array[self->current_write_position] = (unsigned char)data[i];
-		//self->current_write_position++; // todo need to advance the write position depending on number of written chars
+	for(int i = 0; i < length; i++){
+		self->array[self->current_write_position]  = (unsigned char)data[i];
+		self->current_write_position++;
 	}
 	return 0;
 }
 
 
 message_byte_array* create_message_byte_array(uint32_t length){
-	message_byte_array *array = malloc(length*sizeof(uint8_t));
-	array->add_uint8 = message_byte_array_add_uint8;
-	array->add_uint16 = message_byte_array_add_uint16;
-	array->add_uint32 = message_byte_array_add_uint32;
-	array->add_chars = message_byte_array_add_chars;
+	message_byte_array *mba = malloc(sizeof(message_byte_array));
+	mba->array = malloc(length*sizeof(uint8_t));
+	mba->add_uint8 = message_byte_array_add_uint8;
+	mba->add_uint16 = message_byte_array_add_uint16;
+	mba->add_uint32 = message_byte_array_add_uint32;
+	mba->add_chars = message_byte_array_add_chars;
 
-	array->current_write_position = 0;
+	mba->current_write_position = 0;
 
-	return array;
+	return mba;
 
 }
+
+int free_message_byte_array(message_byte_array *mba){
+	free(mba->array);
+	free(mba);
+	return 0;
+}
+
+
