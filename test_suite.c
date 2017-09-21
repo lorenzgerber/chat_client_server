@@ -19,11 +19,12 @@ int main(int argc, char*argv[]){
 	message_byte_array *MBA;
 
 
-	printf("\n\nREG\n");
+
 
 	/*
 	 * Test REG
 	 */
+	printf("\n\nREG\n");
 
 	// Create REG struct and add 1 server name
 	pdu_REG *REG = create_REG(10,2000);
@@ -42,11 +43,12 @@ int main(int argc, char*argv[]){
 	free_pdu_reg(REG);
 	free_message_byte_array(MBA);
 
-	printf("\n\nALIVE\n");
+
 
 	/*
 	 * Test ALIVE
 	 */
+	printf("\n\nALIVE\n");
 
 	// Create ALIVE struct
 	pdu_ALIVE *ALIVE = create_ALIVE(100, 10000);
@@ -65,12 +67,11 @@ int main(int argc, char*argv[]){
 	free_message_byte_array(MBA);
 
 
-	printf("\n\nACK\n");
-
 
 	/*
 	 * Test ACK
 	 */
+	printf("\n\nACK\n");
 
 	// Create ACK struct
 	pdu_ACK *ACK = create_ACK(10000);
@@ -89,11 +90,12 @@ int main(int argc, char*argv[]){
 	free_message_byte_array(MBA);
 
 
-	printf("\n\nNOTREG\n");
+
 
 	/*
 	 * Test NOTREG
 	 */
+	printf("\n\nNOTREG\n");
 
 	// Create NOTREG struct
 	pdu_NOTREG *NOTREG = create_NOTREG(10000);
@@ -111,11 +113,12 @@ int main(int argc, char*argv[]){
 	free_pdu_notreg(NOTREG);
 	free_message_byte_array(MBA);
 
-	printf("\n\nGETLIST\n");
+
 
 	/*
 	 * GETLIST
 	 */
+	printf("\n\nGETLIST\n");
 
 	// Create GETLIST struct
 	pdu_GETLIST *GETLIST = create_GETLIST();
@@ -134,11 +137,12 @@ int main(int argc, char*argv[]){
 	free_message_byte_array(MBA);
 
 
-	printf("\n\nSLIST\n");
+
 
 	/*
 	 * SLIST
 	 */
+	printf("\n\nSLIST\n");
 
 	// Create SLIST struct
 	pdu_SLIST *SLIST = create_SLIST(1);
@@ -157,6 +161,30 @@ int main(int argc, char*argv[]){
 
 	// free SLIST and MBA
 	free_pdu_slist(SLIST);
+	free_message_byte_array(MBA);
+
+
+
+	/*
+	 * JOIN
+	 */
+
+	printf("\n\nJOIN\n");
+
+	//Create JOIN and add identity
+	pdu_JOIN *JOIN = create_JOIN(8);
+	JOIN->add_identity(JOIN, "identity");
+
+	// Create join byte stream message to send
+	MBA = JOIN->create_message(JOIN);
+	length = get_length_JOIN(JOIN);
+
+	for(int i = 0; i < length; i++){
+		printf("%d, ", MBA->array[i]);
+	}
+
+	// free JOIN and MBA
+	free_pdu_join(JOIN);
 	free_message_byte_array(MBA);
 
 
