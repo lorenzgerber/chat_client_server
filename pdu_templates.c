@@ -90,8 +90,7 @@ uint32_t get_length_PARTICIPANTS(pdu_PARTICIPANTS *pdu){
         length_of_participants += (strlen(pdu->identities[i]) + 1);
     }
 
-    length_of_participants += length_of_participants +
-                              calc_word_padding(length_of_participants);
+    length_of_participants += calc_word_padding(length_of_participants);
 
     return length_of_participants;
 }
