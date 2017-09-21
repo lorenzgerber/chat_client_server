@@ -83,7 +83,7 @@ uint32_t get_length_PARTICIPANTS(pdu_PARTICIPANTS *pdu){
 	// todo
     uint32_t length_of_participants = LENGTH_OP +
                                       LENGTH_NUMBER_IDENTITIES +
-                                      pdu->length;
+                                      LENGTH_MESSAGE_LENGTH;
 
     for(int i = 0; i < pdu->number_identities; i++){
 
