@@ -179,6 +179,8 @@ uint32_t get_length_ALIVE(pdu_ALIVE *pdu);
 
 uint32_t get_length_ACK(pdu_ACK *pdu);
 
+uint32_t get_length_NOTREG(pdu_NOTREG *pdu);
+
 uint32_t get_length_GETLIST(pdu_GETLIST *pdu);
 
 uint32_t get_length_SLIST(pdu_SLIST *pdu);

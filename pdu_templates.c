@@ -28,6 +28,11 @@ uint32_t get_length_ACK(pdu_ACK *pdu){
 	return length_of_ack;
 }
 
+uint32_t get_length_NOTREG(pdu_NOTREG *pdu){
+	uint32_t length_of_notreg = 4;
+	return length_of_notreg;
+}
+
 uint32_t get_length_GETLIST(pdu_GETLIST *pdu){
 	uint32_t length_of_getlist = 4;
 	return length_of_getlist;

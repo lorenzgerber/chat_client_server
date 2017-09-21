@@ -18,6 +18,9 @@ int main(int argc, char*argv[]){
 	uint32_t length = 0;
 	message_byte_array *MBA;
 
+
+	printf("\n\nREG\n");
+
 	/*
 	 * Test REG
 	 */
@@ -33,13 +36,13 @@ int main(int argc, char*argv[]){
 	for(int i = 0;i < length;i++){
 		printf("%d, ", MBA->array[i]);
 	}
-	printf("\n");
+
 
 	// free REG and MBA
 	free_pdu_reg(REG);
 	free_message_byte_array(MBA);
 
-
+	printf("\n\nALIVE\n");
 
 	/*
 	 * Test ALIVE
@@ -55,12 +58,14 @@ int main(int argc, char*argv[]){
 	for(int i = 0;i < length;i++){
 		printf("%d, ", MBA->array[i]);
 	}
-	printf("\n");
+
 
 	// free REG and MBA
 	free_pdu_alive(ALIVE);
 	free_message_byte_array(MBA);
 
+
+	printf("\n\nACK\n");
 
 
 	/*
@@ -77,39 +82,85 @@ int main(int argc, char*argv[]){
 	for(int i = 0;i < length;i++){
 		printf("%d, ", MBA->array[i]);
 	}
-	printf("\n");
+
 
 	// free ACK and MBA
 	free_pdu_ack(ACK);
 	free_message_byte_array(MBA);
 
 
+	printf("\n\nNOTREG\n");
+
 	/*
 	 * Test NOTREG
 	 */
 
+	// Create NOTREG struct
+	pdu_NOTREG *NOTREG = create_NOTREG(10000);
+
+	// Create NOTREG byte stream message to send
+	MBA = NOTREG->create_message(NOTREG);
+	length = get_length_NOTREG(NOTREG);
+
+	for(int i = 0;i < length;i++){
+		printf("%d, ", MBA->array[i]);
+	}
 
 
+	// free NOTREG and MBA
+	free_pdu_notreg(NOTREG);
+	free_message_byte_array(MBA);
+
+	printf("\n\nGETLIST\n");
 
 	/*
-	// Example create SLIST and populate with one server entry
+	 * GETLIST
+	 */
+
+	// Create GETLIST struct
+	pdu_GETLIST *GETLIST = create_GETLIST();
+
+	// Create GETLIST byte stream message to send
+	MBA = GETLIST->create_message(GETLIST);
+	length = get_length_GETLIST(GETLIST);
+
+	for(int i = 0;i < length;i++){
+		printf("%d, ", MBA->array[i]);
+	}
+
+
+	// free GETLIST and MBA
+	free_pdu_getlist(GETLIST);
+	free_message_byte_array(MBA);
+
+
+	printf("\n\nSLIST\n");
+
+	/*
+	 * SLIST
+	 */
+
+	// Create SLIST struct
 	pdu_SLIST *SLIST = create_SLIST(1);
 	uint8_t address[4] = {127,0,0,1};
 	pdu_server_entry* server1 = create_server_entry(address,2000,4,10);
 	server1->add_server_name(server1, "servername");
 	SLIST->add_server_entry(SLIST, server1);
 
-
+	MBA = SLIST->create_message(SLIST);
 	length = get_length_SLIST(SLIST);
+	printf("Length of message = %d\n", length);
+
 	for(int i = 0; i < length; i++){
 		printf("%d, ", MBA->array[i]);
 	}
 
-	printf("%s\n", SLIST->current_servers[0]->name);
+	// free SLIST and MBA
 	free_pdu_slist(SLIST);
+	free_message_byte_array(MBA);
 
 
-
+/*
 	//Example create PARTICIPANTS
 	pdu_PARTICIPANTS *PARTICIPANTS = create_PARTICIPANTS(3, 15);
 	PARTICIPANTS->add_identities(PARTICIPANTS, "bull\0shit\0crap\0");
