@@ -132,8 +132,8 @@ uint32_t get_length_PLEAVE(pdu_PLEAVE *pdu){
 
 	// variable part
 	uint32_t length_client_identity = (uint32_t)
-                                      (LENGTH_IDENTITY_LENGTH +
-                                       calc_word_padding(LENGTH_IDENTITY_LENGTH));
+                                      (pdu->identity_length +
+                                       calc_word_padding(pdu->identity_length));
 
 	// fixed part
 	uint32_t length = LENGTH_OP
