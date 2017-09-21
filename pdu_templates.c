@@ -51,7 +51,7 @@ uint32_t get_length_SLIST(pdu_SLIST pdu){
                            (4 - (pdu.current_servers[i]->name_length % 4));
 
     }
-	return 0;
+	return length_of_slist;
 }
 
 uint32_t get_length_JOIN(pdu_JOIN pdu){
@@ -60,12 +60,17 @@ uint32_t get_length_JOIN(pdu_JOIN pdu){
                                           LENGTH_IDENTITY_LENGTH +
                                           LENGTH_PAD * 3 +
                                           (4 - pdu.identity_length % 4));
-	return 0;
+	return length_of_join;
 }
 
 uint32_t get_length_PARTICIPANTS(pdu_PARTICIPANTS pdu){
 	// todo
-	return 0;
+    uint32_t length_of_participants = LENGTH_OP + LENGTH_NUMBER_IDENTITIES + pdu.length;
+    for(int i = 0; i < pdu.number_identities; i++){
+        length_of_participants += (strlen(pdu.identities[i]) + 1);
+    }
+    length_of_participants += length_of_participants - (length_of_participants % 4);
+    return length_of_participants;
 }
 
 uint32_t get_length_QUIT(pdu_QUIT pdu){
