@@ -49,6 +49,7 @@ pdu_ALIVE* create_ALIVE(uint16_t id_number){
 	pdu_ALIVE *pdu = malloc(sizeof(pdu_ALIVE));
 	pdu->type = PDU_ALIVE;
 	pdu->id_number = id_number;
+	pdu->create_message = pdu_alive_create_message;
 	return pdu;
 }
 
@@ -60,10 +61,11 @@ int free_pdu_alive(pdu_ALIVE* pdu){
 /*
  * pdu_ACK
  */
-pdu_ALIVE* create_ACK(uint16_t id_number){
-	pdu_ALIVE *pdu = malloc(sizeof(pdu_ACK));
-	pdu->type = PDU_ALIVE;
+pdu_ACK* create_ACK(uint16_t id_number){
+	pdu_ACK *pdu = malloc(sizeof(pdu_ACK));
+	pdu->type = PDU_ACK;
 	pdu->id_number = id_number;
+	pdu->create_message = pdu_ack_create_message;
 	return pdu;
 }
 
@@ -79,6 +81,7 @@ pdu_NOTREG* create_NOTREG(uint16_t id_number){
 	pdu_NOTREG *pdu = malloc(sizeof(pdu_NOTREG));
 	pdu->type = PDU_NOTREG;
 	pdu->id_number = id_number;
+	pdu->create_message = pdu_notreg_create_message;
 	return pdu;
 }
 
@@ -95,6 +98,7 @@ int free_pdu_notreg(pdu_NOTREG* pdu){
 pdu_GETLIST* create_GETLIST(void){
 	pdu_GETLIST *pdu = malloc(sizeof(pdu_GETLIST));
 	pdu->type = PDU_GETLIST;
+	pdu->create_message = pdu_getlist_create_message;
 	return pdu;
 }
 
@@ -152,6 +156,7 @@ pdu_SLIST* create_SLIST(uint16_t number_servers){
 	pdu->current_servers = malloc(sizeof(pdu_server_entry*)*number_servers); //probably wrong
 	*pdu->current_servers = (pdu_server_entry*)malloc(number_servers * sizeof(pdu_server_entry*));
 	pdu->add_server_entry = add_server_entry;
+	pdu->create_message = pdu_slist_create_message;
 	return pdu;
 }
 
@@ -194,6 +199,7 @@ pdu_JOIN* create_JOIN(uint8_t identity_length){
 	pdu->type = PDU_JOIN;
 	pdu->identity_length = identity_length;
 	pdu->add_identity = pdu_join_add_identity;
+	pdu->create_message = pdu_join_create_message;
 	return pdu;
 }
 
@@ -239,6 +245,7 @@ pdu_PARTICIPANTS* create_PARTICIPANTS(uint8_t number_identities, uint16_t length
 	pdu->length = length;
 	pdu->identities = malloc(number_identities * sizeof(char*));
 	pdu->add_identities = pdu_participants_add_identities;
+	pdu->create_message = pdu_participants_create_message;
 	return pdu;
 }
 
@@ -260,6 +267,7 @@ int free_pdu_participants(pdu_PARTICIPANTS *pdu){
 pdu_QUIT* create_QUIT(void){
 	pdu_QUIT *pdu = malloc(sizeof(pdu_QUIT));
 	pdu->type = PDU_QUIT;
+	pdu->create_message = pdu_quit_create_message;
 	return pdu;
 }
 
@@ -307,6 +315,7 @@ pdu_MESS* create_MESS(uint8_t identity_length, uint8_t checksum){
 	pdu->add_client_identity = pdu_mess_add_client_identity;
 	pdu->calc_checksum = pdu_mess_calc_checksum;
 	pdu->padded_message_length = pdu_mess_padded_message_length;
+	pdu->create_message = pdu_mess_create_message;
 	return pdu;
 }
 
@@ -339,6 +348,7 @@ pdu_PJOIN* create_PJOIN(uint8_t identity_length){
 	pdu->type = PDU_PJOIN;
 	pdu->identity_length = identity_length;
 	pdu->add_client_identity = pdu_pjoin_add_client_identity;
+	pdu->create_message = pdu_pjoin_create_message;
 	return pdu;
 }
 
@@ -367,6 +377,7 @@ pdu_PLEAVE* create_PLEAVE(uint8_t identity_length){
 	pdu->type = PDU_PLEAVE;
 	pdu->identity_length = identity_length;
 	pdu->add_client_identity = pdu_pleave_add_client_identity;
+	pdu->create_message = pdu_pleave_create_message;
 	return pdu;
 }
 

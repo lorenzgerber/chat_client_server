@@ -24,7 +24,9 @@ pdu_ALIVE* create_ALIVE(uint16_t id_number);
 
 int free_pdu_alive(pdu_ALIVE* pdu);
 
-pdu_ALIVE* create_ACK(uint16_t id_number);
+
+// ACK
+pdu_ACK* create_ACK(uint16_t id_number);
 
 int free_pdu_ack(pdu_ACK* pdu);
 
