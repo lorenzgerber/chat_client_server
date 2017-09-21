@@ -15,23 +15,37 @@
 
 int main(int argc, char*argv[]){
 
-	uint32_t length = 0;;
+	uint32_t length = 0;
+	message_byte_array *MBA;
 
+	/*
+	 * Test REG
+	 */
 
-	// Example create REG and add server name
+	// Create REG struct and add 1 server name
 	pdu_REG *REG = create_REG(10,2000);
 	REG->add_server_name(REG,"servername");
 
 	// Create REG byte stream message to send
-	message_byte_array* arr = REG->create_message(REG);
-	length = get_length(REG);
+	MBA = REG->create_message(REG);
+	length = get_length_REG(REG);
 
 	for(int i = 0;i < length;i++){
-		printf("%d, ", arr->array[i]);
+		printf("%d, ", MBA->array[i]);
 	}
 
-	// free REG
+	// free REG and MBA
 	free_pdu_reg(REG);
+	free_message_byte_array(MBA);
+
+	/*
+	 * Test ALIVE
+	 */
+	// Create ALIVE Struct
+	//pdu_ALIVE *ALIVE = create_ALIVE(100, 10000);
+
+	// Create ALIVE byte stream message to send
+	//MBA =
 
 
 	// Example create SLIST and populate with one server entry
@@ -42,13 +56,14 @@ int main(int argc, char*argv[]){
 	SLIST->add_server_entry(SLIST, server1);
 
 
-	length = get_length(SLIST);
+	length = get_length_SLIST(SLIST);
 	for(int i = 0; i < length; i++){
-		printf("%d, ", arr->array[i]);
+		printf("%d, ", MBA->array[i]);
 	}
 
 	printf("%s\n", SLIST->current_servers[0]->name);
 	free_pdu_slist(SLIST);
+
 
 
 	//Example create PARTICIPANTS

@@ -173,26 +173,26 @@ typedef struct pdu_PLEAVE {
 
 int get_type(void *message);
 
-uint32_t get_length_REG(pdu_REG pdu);
+uint32_t get_length_REG(pdu_REG *pdu);
 
-uint32_t get_length_ALIVE(pdu_ALIVE pdu);
+uint32_t get_length_ALIVE(pdu_ALIVE *pdu);
 
-uint32_t get_length_ACK(pdu_ACK pdu);
+uint32_t get_length_ACK(pdu_ACK *pdu);
 
-uint32_t get_length_GETLIST(pdu_GETLIST pdu);
+uint32_t get_length_GETLIST(pdu_GETLIST *pdu);
 
-uint32_t get_length_SLIST(pdu_SLIST pdu);
+uint32_t get_length_SLIST(pdu_SLIST *pdu);
 
-uint32_t get_length_JOIN(pdu_JOIN pdu);
+uint32_t get_length_JOIN(pdu_JOIN *pdu);
 
-uint32_t get_length_PARTICIPANTS(pdu_PARTICIPANTS pdu);
+uint32_t get_length_PARTICIPANTS(pdu_PARTICIPANTS *pdu);
 
-uint32_t get_length_QUIT(pdu_QUIT pdu);
+uint32_t get_length_QUIT(pdu_QUIT *pdu);
 
-uint32_t get_length_MESS(pdu_MESS pdu);
+uint32_t get_length_MESS(pdu_MESS *pdu);
 
-uint32_t get_length_PJOIN(pdu_PJOIN pdu);
+uint32_t get_length_PJOIN(pdu_PJOIN *pdu);
 
-uint32_t get_length_PLEAVE(pdu_PLEAVE pdu);
+uint32_t get_length_PLEAVE(pdu_PLEAVE *pdu);
 
 #endif /* PDU_TEMPLATES_H_ */

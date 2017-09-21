@@ -20,7 +20,7 @@ int free_pdu_reg(pdu_REG *pdu);
 
 
 // ALIVE
-pdu_ALIVE* create_ALIVE(uint16_t id_number);
+pdu_ALIVE* create_ALIVE(uint8_t number_clients, uint16_t id_number);
 
 int free_pdu_alive(pdu_ALIVE* pdu);
 
