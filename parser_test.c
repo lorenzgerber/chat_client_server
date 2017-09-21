@@ -20,7 +20,8 @@ int main(int argc, char*argv[]){
 	pdu_REG *REG_MESSAGE = create_REG(9,2000);
 	REG_MESSAGE->add_server_name(REG_MESSAGE,"arschloch");
 	printf("%s\n", REG_MESSAGE->server_name);
-	printf("%s\n", REG_MESSAGE->create_message(REG_MESSAGE));
+    //message_byte_array* arr = REG_MESSAGE->create_message(REG_MESSAGE);
+	//printf("%s\n", REG_MESSAGE->create_message(REG_MESSAGE));
 	free_pdu_reg(REG_MESSAGE);
 
 
@@ -49,13 +50,17 @@ int main(int argc, char*argv[]){
 	printf("%s\n", MESS->message);
 	free_pdu_mess(MESS);
 
-	message_byte_array *array = create_message_byte_array(8);
+	message_byte_array *array = create_message_byte_array(10);
+    //char* cp = "z";
 	array->add_uint32(array, 12312);
 	array->add_uint32(array, 23234);
+    array->add_chars(array,"abcd", 1);
 
-	for(int i = 0;i < 8;i++){
+	for(int i = 0;i < 177;i++){
 		printf("%s", &array->array[i]);
 	}
+
+
 
 
 	return 0;

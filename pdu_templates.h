@@ -12,6 +12,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include "message_byte_array.h"
+
 #define PDU_REG 0
 #define PDU_ACK 1
 #define PDU_ALIVE 2

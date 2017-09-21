@@ -1,21 +1,17 @@
 #include <stdio.h>
 #include "pdu_parser.h"
+#include "message_byte_array.h"
 
 
-char* pdu_reg_create_message(pdu_REG *self){
+message_byte_array* pdu_reg_create_message(pdu_REG *self){
 
-    char type[1];
-    char port[4];
-    char nameLen[255];
-    sprintf(type, "%d", self->type);
-    sprintf(nameLen, "%d", self->server_name_length);
-    sprintf(port, "%d", self->tcp_port);
+    message_byte_array* message = create_message_byte_array(8);
+    message->add_uint8(message, self->type);
+    message->add_uint8(message, self->server_name_length);
+    message->add_uint16(message, self->tcp_port);
+    message->add_chars(message, self->server_name, 4);
 
-    char* mess = malloc(sizeof(char)*(strlen(type)+strlen(nameLen)+strlen(port)+strlen(self->server_name)));
-    strcat(mess, type);
-    strcat(mess, nameLen);
-    strcat(mess, port);
-    strcat(mess, self->server_name);
-	return mess;
+
+	return message;
 }
 
