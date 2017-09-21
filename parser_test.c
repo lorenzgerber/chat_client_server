@@ -56,8 +56,8 @@ int main(int argc, char*argv[]){
 	array->add_uint32(array, 23234);
     array->add_chars(array,"abcd", 1);
 
-	for(int i = 0;i < 177;i++){
-		printf("%s", &array->array[i]);
+	for(int i = 0;i < 12;i++){
+		printf("%d, ", array->array[i]);
 	}
 
 
