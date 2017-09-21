@@ -54,9 +54,14 @@ int message_byte_array_add_uint32(message_byte_array *self, uint32_t data){
 
 int message_byte_array_add_chars(message_byte_array *self, char* data, uint32_t length){
 
-	for(int i = 0; i < length*4; i++){ // todo not sure if this has to be '* 4'
-		self->array[self->current_write_position] = (unsigned char)data[i];
-		self->current_write_position++; // todo need to advance the write position depending on number of written chars
+	for(int i = 0; i < length; i++){ // todo not sure if this has to be '* 4'
+        if(strlen(data) < i*4){
+            self->array[self->current_write_position]  = (unsigned char)data[i];
+            self->current_write_position++;
+        }
+
+		//self->array[self->current_write_position] = (unsigned char)data[i];
+		//self->current_write_position++; // todo need to advance the write position depending on number of written chars
 	}
 	return 0;
 }
