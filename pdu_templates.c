@@ -12,7 +12,10 @@ int get_type(void *message){
 
 uint32_t get_length_REG(pdu_REG pdu){
 	// todo
-    uint32_t  length_of_reg = (uint32_t) (8 - (pdu.server_name_length % 4));
+    uint32_t  length_of_reg = (uint32_t) (LENGTH_OP +
+                                          LENGTH_SERVER_NAME_LENGTH +
+                                          LENGTH_PORT +
+                                          (4 - (pdu.server_name_length % 4)));
 	return length_of_reg;
 }
 
@@ -33,9 +36,13 @@ uint32_t get_length_GETLIST(pdu_GETLIST pdu){
 
 uint32_t get_length_SLIST(pdu_SLIST pdu){
 	// todo
-    uint32_t length_of_slist = 4;
+    uint32_t length_of_slist = LENGTH_OP + LENGTH_PAD + LENGTH_NUMBER_SERVER;12
     for(int i = 0; i < pdu.number_servers; i++){
-        length_of_slist += 12 - (pdu.current_servers[i]->name_length % 4);
+        length_of_slist += LENGTH_ADDRESS +
+                           LENGTH_PORT +
+                           LENGTH_NUMBER_CLIENTS +
+                           LENGTH_SERVER_NAME_LENGTH +
+                           (4 - (pdu.current_servers[i]->name_length % 4));
 
     }
 	return 0;
