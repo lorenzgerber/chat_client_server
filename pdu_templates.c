@@ -86,7 +86,11 @@ uint32_t get_length_MESS(pdu_MESS *pdu){
                               LENGTH_PAD * 2 +
                               LENGTH_TIME;
     length_of_mess += pdu->message_length - (length_of_mess % 4);
-    
+    if(pdu->identity_length > 0){
+        length_of_mess += pdu->identity_length - (length_of_mess % 4);
+    }
+
+
 	// todo
 	return length_of_mess;
 }
