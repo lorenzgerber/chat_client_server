@@ -18,13 +18,15 @@ message_byte_array* pdu_reg_create_message(pdu_REG *self){
 
 message_byte_array* pdu_alive_create_message(pdu_ALIVE *self){
 	message_byte_array* message = create_message_byte_array(4);
-	//todo
+	message->add_uint8(message, self->number_clients);
+	message->add_uint16(message, self->id_number);
 	return message;
 }
 
 message_byte_array* pdu_ack_create_message(pdu_ACK *self){
 	message_byte_array* message = create_message_byte_array(4);
-	//todo
+	message->add_uint8(message, 0);
+	message->add_uint16(message, self->id_number);
 	return message;
 }
 

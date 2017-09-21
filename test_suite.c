@@ -33,21 +33,65 @@ int main(int argc, char*argv[]){
 	for(int i = 0;i < length;i++){
 		printf("%d, ", MBA->array[i]);
 	}
+	printf("\n");
 
 	// free REG and MBA
 	free_pdu_reg(REG);
 	free_message_byte_array(MBA);
 
+
+
 	/*
 	 * Test ALIVE
 	 */
-	// Create ALIVE Struct
-	//pdu_ALIVE *ALIVE = create_ALIVE(100, 10000);
+
+	// Create ALIVE struct
+	pdu_ALIVE *ALIVE = create_ALIVE(100, 10000);
 
 	// Create ALIVE byte stream message to send
-	//MBA =
+	MBA = ALIVE->create_message(ALIVE);
+	length = get_length_ALIVE(ALIVE);
+
+	for(int i = 0;i < length;i++){
+		printf("%d, ", MBA->array[i]);
+	}
+	printf("\n");
+
+	// free REG and MBA
+	free_pdu_alive(ALIVE);
+	free_message_byte_array(MBA);
 
 
+
+	/*
+	 * Test ACK
+	 */
+
+	// Create ACK struct
+	pdu_ACK *ACK = create_ACK(10000);
+
+	// Create ACK byte stream message to send
+	MBA = ACK->create_message(ACK);
+	length = get_length_ACK(ACK);
+
+	for(int i = 0;i < length;i++){
+		printf("%d, ", MBA->array[i]);
+	}
+	printf("\n");
+
+	// free ACK and MBA
+	free_pdu_ack(ACK);
+	free_message_byte_array(MBA);
+
+
+	/*
+	 * Test NOTREG
+	 */
+
+
+
+
+	/*
 	// Example create SLIST and populate with one server entry
 	pdu_SLIST *SLIST = create_SLIST(1);
 	uint8_t address[4] = {127,0,0,1};
@@ -90,6 +134,7 @@ int main(int argc, char*argv[]){
 	for(int i = 0;i < 12;i++){
 		printf("%d, ", array->array[i]);
 	}
+	*/
 
 
 
