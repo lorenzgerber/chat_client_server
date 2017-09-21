@@ -267,21 +267,63 @@ int main(int argc, char*argv[]){
 	}
 
 
-	//free_pdu_mess(MESS);
+	free_pdu_mess(MESS);
 	free_message_byte_array(MBA);
 
 	/*
+	 * PJOIN
+	 */
 
-	message_byte_array *array = create_message_byte_array(10);
-    //char* cp = "z";
-	array->add_uint32(array, 12312);
-	array->add_uint32(array, 23234);
-    array->add_chars(array,"abcd", 1);
+	printf("\n\nPJOIN\n");
 
-	for(int i = 0;i < 12;i++){
-		printf("%d, ", array->array[i]);
+	//Create PJOIN and add some identities
+
+	pdu_PJOIN *PJOIN = create_PJOIN(8);
+	PJOIN->add_client_identity(PJOIN, 1505933137, "identity");
+
+	printf("%s\n", PJOIN->client_identity);
+
+	// Create PJOIN byte stream for send
+	MBA = PJOIN->create_message(PJOIN);
+	length = get_length_PJOIN(PJOIN);
+	printf("Length of message = %d\n", length);
+
+	for(int i = 0;i < length;i++){
+		printf("%d, ", MBA->array[i]);
 	}
-	*/
+
+
+	free_pdu_pjoin(PJOIN);
+	free_message_byte_array(MBA);
+
+
+	/*
+	 * PLEAVE
+	 */
+
+	printf("\n\nPLEAVE\n");
+
+	//Create PLEAVE and add some identities
+
+	pdu_PLEAVE *PLEAVE = create_PLEAVE(8);
+	PLEAVE->add_client_identity(PLEAVE, 1505933137, "identity");
+
+	printf("%s\n", PLEAVE->client_identity);
+
+	// Create PLEAVE byte stream for send
+	MBA = PLEAVE->create_message(PLEAVE);
+	length = get_length_PLEAVE(PLEAVE);
+	printf("Length of message = %d\n", length);
+
+	for(int i = 0;i < length;i++){
+		printf("%d, ", MBA->array[i]);
+	}
+
+
+	free_pdu_pleave(PLEAVE);
+	free_message_byte_array(MBA);
+
+
 
 
 

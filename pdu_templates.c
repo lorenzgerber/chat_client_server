@@ -115,13 +115,10 @@ uint32_t get_length_MESS(pdu_MESS *pdu){
                           calc_word_padding(length_of_mess);
     }
 
-
-	// todo
 	return length_of_mess;
 }
 
 uint32_t get_length_PJOIN(pdu_PJOIN *pdu){
-	// todo
     uint32_t length_of_pjoin = (uint32_t) (LENGTH_OP +
                                            LENGTH_IDENTITY_LENGTH +
                                            LENGTH_PAD * 2 +
