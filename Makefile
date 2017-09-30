@@ -1,32 +1,37 @@
-#COMPILER
+
 CC = gcc
+TARGET_EXEC ?= a.out
 
-VPATH = src/pdu src/test
+BUILD_DIR ?= ./build
+SRC_DIRS ?= ./src/pdu
+SRC_DIRS += ./src/test/$(EXEC)
 
-#CFlAGS AND LIBS
-CFLAGS = -std=c99 -Wall -Werror
-
-LIBS = -pthread -lm
-
-#SOURCE FILES
-SRCS := test_suite.c pdu_creator.c pdu_serializer.c pdu_templates.c message_byte_array.c pdu_parser.c
-
-#HEADER FILES
-HDRS = pdu_creator.h pdu_serializer.h pdu_templates.h message_byte_array.h pdu_parser.h
-
-#Rules
-OBJS := $(SRCS:.c=.o) $(HDRS)
-
+SRCS := $(shell find $(SRC_DIRS) -name *.c )
+OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
 
-TARGET = test_suite
+INC_DIRS := $(shell find $(SRC_DIRS) -type d)
+INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
-all: $(TARGET)
+CPPFLAGS ?= $(INC_FLAGS) -MMD -MP
 
-$(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) $(LIBS) $^ -o $@
+$(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
+	$(CC) $(OBJS) -o $@ $(LDFLAGS)
 
 
-#MISC CMDS:
+# c source
+$(BUILD_DIR)/%.c.o: %.c
+	$(MKDIR_P) $(dir $@)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+
+
+
+.PHONY: clean
+
 clean:
-	rm -vf *.o $(TARGET)
+	$(RM) -r $(BUILD_DIR)
+
+-include $(DEPS)
+
+MKDIR_P ?= mkdir -p
+
