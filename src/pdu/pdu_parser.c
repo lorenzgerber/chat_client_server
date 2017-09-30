@@ -8,5 +8,6 @@
 #include "pdu_parser.h"
 
 int test(void){
+	printf("I parse...");
 	return 0;
 }
