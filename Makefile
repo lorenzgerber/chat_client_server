@@ -1,7 +1,7 @@
 #COMPILER
 CC = gcc
 
-VPATH = src:src/pdu:src/test
+VPATH = src/pdu src/test
 
 #CFlAGS AND LIBS
 CFLAGS = -std=c99 -Wall -Werror

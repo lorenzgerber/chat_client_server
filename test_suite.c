@@ -324,10 +324,6 @@ int main(int argc, char*argv[]){
 	free_message_byte_array(MBA);
 
 
-
-
-
-
 	return 0;
 }
 
