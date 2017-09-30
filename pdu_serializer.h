@@ -5,8 +5,8 @@
  *      Author: lgerber
  */
 
-#ifndef PDU_PARSER_H_
-#define PDU_PARSER_H_
+#ifndef PDU_SERIALIZER_H_
+#define PDU_SERIALIZER_H_
 #include <stdio.h>
 #include "pdu_templates.h"
 #include "message_byte_array.h"
@@ -37,4 +37,4 @@ message_byte_array* pdu_pjoin_create_message(pdu_PJOIN *self);
 
 message_byte_array* pdu_pleave_create_message(pdu_PLEAVE *self);
 
-#endif /* PDU_PARSER_H_ */
+#endif /* PDU_SERIALIZER_H_ */
