@@ -17,7 +17,7 @@ io_handler* create_dummy_socket(int op_code, int socket_entity){
 	io_handler *dummy_socket = malloc(sizeof(io_handler));
 	dummy_socket->read_head = 0;
 	dummy_socket->request_n_word = dummy_socket_request_n_word;
-	dummy_socket->socket_entity = ENTITY_SERVER;
+	dummy_socket->socket_entity = socket_entity;
 
 	switch(op_code){
 		case PDU_MESS:
