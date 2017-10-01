@@ -7,6 +7,10 @@
 
 #ifndef SRC_NETCOM_SOCKET_TEMPLATES_H_
 #define SRC_NETCOM_SOCKET_TEMPLATES_H_
+
+#define ENTITY_SERVER 0
+#define ENTITY_CLIENT 1
+
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,6 +23,7 @@ typedef struct io_handler {
 	struct message_byte_array *buffer;
 	int socket;
 	int read_head;
+	int socket_entity;
 
 	// function: init_socket
 

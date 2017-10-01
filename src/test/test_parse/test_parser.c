@@ -21,7 +21,7 @@
 int main(int argc, char*argv[]){
 
 	io_handler *dummy_socket;
-	dummy_socket = create_dummy_socket(PDU_MESS);
+	dummy_socket = create_dummy_socket(PDU_MESS, ENTITY_SERVER);
 	parse_header(dummy_socket);
 
 

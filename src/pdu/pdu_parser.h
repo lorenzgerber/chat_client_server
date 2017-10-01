@@ -17,6 +17,6 @@ int parse_header(struct io_handler* socket);
 
 int parse_REG(struct io_handler* socket);
 
-int parse_MESS(struct io_handler* socket);
+int parse_MESS(struct io_handler* socket, uint8_t *read_position);
 
 #endif /* PDU_PARSER_H_ */

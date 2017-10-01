@@ -11,7 +11,7 @@
 #include "socket_templates.h"
 #include "dummy_sockets.h"
 
-io_handler* create_dummy_socket(int op_code);
+io_handler* create_dummy_socket(int op_code, int socket_entity);
 
 uint8_t* dummy_socket_request_n_word(struct io_handler *self, int n_word);
 
