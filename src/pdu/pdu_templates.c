@@ -61,15 +61,40 @@ uint32_t get_length_ACK(pdu_ACK *pdu){
 	return length_of_ack;
 }
 
+uint32_t get_length_ack(pdu *pdu){
+	uint32_t length_of_ack = 4;
+	return length_of_ack;
+}
+
+
+
+
+
 uint32_t get_length_NOTREG(pdu_NOTREG *pdu){
 	uint32_t length_of_notreg = 4;
 	return length_of_notreg;
 }
 
+uint32_t get_length_notreg(pdu *pdu){
+	uint32_t length_of_notreg = 4;
+	return length_of_notreg;
+}
+
+
+
+
 uint32_t get_length_GETLIST(pdu_GETLIST *pdu){
 	uint32_t length_of_getlist = 4;
 	return length_of_getlist;
 }
+
+uint32_t get_length_getlist(pdu *pdu){
+	uint32_t length_of_getlist = 4;
+	return length_of_getlist;
+}
+
+
+
 
 uint32_t get_length_SLIST(pdu_SLIST *pdu){
 
@@ -92,6 +117,34 @@ uint32_t get_length_SLIST(pdu_SLIST *pdu){
 	return length_of_slist;
 }
 
+
+uint32_t get_length_slist(pdu *pdu){
+
+	// fixed length
+    uint32_t length_of_slist =
+    		LENGTH_OP +
+			LENGTH_PAD +
+			LENGTH_NUMBER_SERVER;
+
+    // variable length
+    for(int i = 0; i < pdu->number_servers; i++){
+        length_of_slist += LENGTH_ADDRESS +
+                           LENGTH_PORT +
+                           LENGTH_NUMBER_CLIENTS +
+                           LENGTH_SERVER_NAME_LENGTH +
+						   pdu->current_servers[i]->name_length +
+						   calc_word_padding(pdu->current_servers[i]->name_length);
+
+    }
+	return length_of_slist;
+}
+
+
+
+
+
+
+
 uint32_t get_length_JOIN(pdu_JOIN *pdu){
     uint32_t length_of_join = (uint32_t) (LENGTH_OP +
                                           LENGTH_IDENTITY_LENGTH +
@@ -100,6 +153,20 @@ uint32_t get_length_JOIN(pdu_JOIN *pdu){
 										  calc_word_padding(pdu->identity_length));
 	return length_of_join;
 }
+
+uint32_t get_length_join(pdu *pdu){
+    uint32_t length_of_join = (uint32_t) (LENGTH_OP +
+                                          LENGTH_IDENTITY_LENGTH +
+                                          LENGTH_PAD * 2 +
+										  pdu->identity_length +
+										  calc_word_padding(pdu->identity_length));
+	return length_of_join;
+}
+
+
+
+
+
 
 uint32_t get_length_PARTICIPANTS(pdu_PARTICIPANTS *pdu){
 	// todo

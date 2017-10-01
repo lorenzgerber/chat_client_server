@@ -20,14 +20,19 @@ message_byte_array* pdu_alive_create_message(pdu_ALIVE *self);
 message_byte_array* alive_create_message(pdu *self);
 
 message_byte_array* pdu_ack_create_message(pdu_ACK *self);
+message_byte_array* ack_create_message(pdu *self);
 
 message_byte_array* pdu_notreg_create_message(pdu_NOTREG *self);
+message_byte_array* notreg_create_message(pdu *self);
 
 message_byte_array* pdu_getlist_create_message(pdu_GETLIST *self);
+message_byte_array* getlist_create_message(pdu *self);
 
 message_byte_array* pdu_slist_create_message(pdu_SLIST *self);
+message_byte_array* slist_create_message(pdu *self);
 
 message_byte_array* pdu_join_create_message(pdu_JOIN *self);
+message_byte_array* join_create_message(pdu *self);
 
 message_byte_array* pdu_participants_create_message(pdu_PARTICIPANTS *self);
 

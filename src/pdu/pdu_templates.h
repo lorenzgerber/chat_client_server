@@ -219,14 +219,19 @@ uint32_t get_length_ALIVE(pdu_ALIVE *pdu);
 uint32_t get_length_alive(pdu *pdu);
 
 uint32_t get_length_ACK(pdu_ACK *pdu);
+uint32_t get_length_ack(pdu *pdu);
 
 uint32_t get_length_NOTREG(pdu_NOTREG *pdu);
+uint32_t get_length_notreg(pdu *pdu);
 
 uint32_t get_length_GETLIST(pdu_GETLIST *pdu);
+uint32_t get_length_getlist(pdu *pdu);
 
 uint32_t get_length_SLIST(pdu_SLIST *pdu);
+uint32_t get_length_slist(pdu *pdu);
 
 uint32_t get_length_JOIN(pdu_JOIN *pdu);
+uint32_t get_length_join(pdu *pdu);
 
 uint32_t get_length_PARTICIPANTS(pdu_PARTICIPANTS *pdu);
 

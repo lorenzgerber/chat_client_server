@@ -94,6 +94,9 @@ int free_pdu_alive(pdu_ALIVE* pdu){
 	return 0;
 }
 
+
+
+
 /*
  * pdu_ACK
  */
@@ -105,10 +108,23 @@ pdu_ACK* create_ACK(uint16_t id_number){
 	return pdu;
 }
 
+pdu* create_ack(uint16_t id_number){
+	pdu *pdu = malloc(sizeof(pdu));
+	pdu->type = PDU_ACK;
+	pdu->id_number = id_number;
+	pdu->create_message = ack_create_message;
+	return pdu;
+}
+
+
+
 int free_pdu_ack(pdu_ACK* pdu){
 	free(pdu);
 	return 0;
 }
+
+
+
 
 /*
  * pdu_NOTREG
@@ -118,6 +134,14 @@ pdu_NOTREG* create_NOTREG(uint16_t id_number){
 	pdu->type = PDU_NOTREG;
 	pdu->id_number = id_number;
 	pdu->create_message = pdu_notreg_create_message;
+	return pdu;
+}
+
+pdu* create_notreg(uint16_t id_number){
+	pdu *pdu = malloc(sizeof(pdu));
+	pdu->type = PDU_NOTREG;
+	pdu->id_number = id_number;
+	pdu->create_message = notreg_create_message;
 	return pdu;
 }
 
@@ -135,6 +159,13 @@ pdu_GETLIST* create_GETLIST(void){
 	pdu_GETLIST *pdu = malloc(sizeof(pdu_GETLIST));
 	pdu->type = PDU_GETLIST;
 	pdu->create_message = pdu_getlist_create_message;
+	return pdu;
+}
+
+pdu* create_getlist(void){
+	pdu *pdu = malloc(sizeof(pdu));
+	pdu->type = PDU_GETLIST;
+	pdu->create_message = getlist_create_message;
 	return pdu;
 }
 
@@ -184,6 +215,16 @@ int add_server_entry(pdu_SLIST *pdu, pdu_server_entry* server_entry){
  	return pdu->server_assigned;
 }
 
+int add_server_entry2(pdu *pdu, pdu_server_entry* server_entry){
+	if(pdu->server_assigned == pdu->number_servers){
+		perror("all servers already assigned\n");
+		return -1;
+	}
+	pdu->current_servers[pdu->server_assigned] = server_entry;
+	pdu->server_assigned++;
+ 	return pdu->server_assigned;
+}
+
 pdu_SLIST* create_SLIST(uint16_t number_servers){
 	pdu_SLIST *pdu = malloc(sizeof(pdu_SLIST));
 	pdu->type = PDU_SLIST;
@@ -195,6 +236,20 @@ pdu_SLIST* create_SLIST(uint16_t number_servers){
 	pdu->create_message = pdu_slist_create_message;
 	return pdu;
 }
+
+pdu* create_slist(uint16_t number_servers){
+	pdu *pdu = malloc(sizeof(pdu));
+	pdu->type = PDU_SLIST;
+	pdu->number_servers = number_servers;
+	pdu->server_assigned = 0;
+	pdu->current_servers = malloc(sizeof(pdu_server_entry*)*number_servers); //probably wrong
+	*pdu->current_servers = (pdu_server_entry*)malloc(number_servers * sizeof(pdu_server_entry*));
+	pdu->add_server_entry = add_server_entry2;
+	pdu->create_message = slist_create_message;
+	return pdu;
+}
+
+
 
 int free_server_entry(pdu_server_entry *server){
 	if(server->name != NULL){
@@ -230,6 +285,18 @@ int pdu_join_add_identity(pdu_JOIN *pdu, char* identity){
 	return 0;
 }
 
+int join_add_identity(pdu *pdu, char* identity){
+	if(strlen(identity) == pdu->identity_length){
+		pdu->identity = malloc(pdu->identity_length*sizeof(char));
+		strcpy(pdu->identity, identity);
+	} else {
+		perror("identity length missmatch\n");
+		return -1;
+	}
+	return 0;
+}
+
+
 pdu_JOIN* create_JOIN(uint8_t identity_length){
 	pdu_JOIN *pdu = malloc(sizeof(pdu_JOIN));
 	pdu->type = PDU_JOIN;
@@ -239,6 +306,17 @@ pdu_JOIN* create_JOIN(uint8_t identity_length){
 	return pdu;
 }
 
+pdu* create_join(uint8_t identity_length){
+	pdu *pdu = malloc(sizeof(pdu));
+	pdu->type = PDU_JOIN;
+	pdu->identity_length = identity_length;
+	pdu->add_identity = join_add_identity;
+	pdu->create_message = join_create_message;
+	return pdu;
+}
+
+
+
 int free_pdu_join(pdu_JOIN *pdu){
 
 	if(pdu->identity != NULL){
@@ -247,6 +325,9 @@ int free_pdu_join(pdu_JOIN *pdu){
 	free(pdu);
 	return 0;
 }
+
+
+
 
 
 /*
