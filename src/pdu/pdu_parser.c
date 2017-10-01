@@ -15,6 +15,9 @@ int parse_header(struct io_handler *socket){
 	op_code = *read_position;
 
 	switch(op_code){
+		case PDU_ACK:
+			parse_ACK(socket, read_position);
+			break;
 		case PDU_MESS:
 			parse_MESS(socket, read_position);
 			break;
@@ -24,7 +27,12 @@ int parse_header(struct io_handler *socket){
 
 	return 0;
 }
-
+int parse_ACK(struct io_handler* socket, uint8_t* read_position){
+	uint16_t id_nr = ((uint16_t)*(read_position+2) << 8) | (uint16_t)*(read_position+3);
+	id_nr = ntohs(id_nr);
+	printf("identity number %d\n", id_nr);
+	return 0;
+}
 int parse_REG(struct io_handler* socket){
 
 	return 0;

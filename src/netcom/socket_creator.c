@@ -23,6 +23,9 @@ io_handler* create_dummy_socket(int op_code, int socket_entity){
 		case PDU_MESS:
 			return dummy_socket_mess(dummy_socket);
 			break;
+		case PDU_ACK:
+			return dummy_socket_ack(dummy_socket);
+			break;
 		default:
 			break;
 	}

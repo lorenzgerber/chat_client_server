@@ -13,5 +13,6 @@
 
 io_handler* dummy_socket_mess(io_handler * dummy_socket);
 
+io_handler* dummy_socket_ack(io_handler* dummy_socket);
 
 #endif /* SRC_NETCOM_DUMMY_SOCKETS_H_ */
