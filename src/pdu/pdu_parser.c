@@ -9,6 +9,11 @@
 
 int parse_header(struct io_handler *socket){
 
+	uint8_t op_code;
+	uint8_t* read_position;
+	read_position = socket->request_n_word(socket, 1);
+	op_code = *read_position;
+	printf("op_code %d\n", op_code);
 
 	return 0;
 }
