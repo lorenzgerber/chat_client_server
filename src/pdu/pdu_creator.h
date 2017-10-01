@@ -15,10 +15,14 @@
 
 // REG
 int pdu_reg_add_server_name(pdu_REG *pdu, char* server_name);
+int reg_add_server_name(pdu *pdu, char* server_name);
 
 pdu_REG* create_REG(uint8_t server_name_length, uint16_t tcp_port);
+pdu* create_reg(uint8_t server_name_length, uint16_t tcp_port);
 
 int free_pdu_reg(pdu_REG *pdu);
+
+
 
 
 // ALIVE
