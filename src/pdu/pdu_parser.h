@@ -11,11 +11,12 @@
 #include <string.h>
 #include "pdu_templates.h"
 #include "pdu_creator.h"
+#include "socket_templates.h"
 
-int parse_header(uint8_t* buffer);
+int parse_header(struct io_handler* socket);
 
-int parse_REG(uint8_t *buffer);
+int parse_REG(struct io_handler* socket);
 
-int parse_MESS(uint8_t *buffer);
+int parse_MESS(struct io_handler* socket);
 
 #endif /* PDU_PARSER_H_ */

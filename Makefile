@@ -6,6 +6,7 @@ TARGET_EXEC ?= $(EXEC)
 
 BUILD_DIR ?= ./build
 SRC_DIRS ?= ./src/pdu
+SRC_DIRS += ./src/netcom
 SRC_DIRS += ./src/test/$(EXEC)
 
 SRCS := $(shell find $(SRC_DIRS) -name *.c )
