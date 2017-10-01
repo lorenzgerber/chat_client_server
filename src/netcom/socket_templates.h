@@ -22,6 +22,8 @@ typedef struct io_handler {
 	// function: init_socket
 
 	// function: request_n_word
+	uint8_t* (*request_n_word)(struct io_handler *self);
+
 
 	// function: send_n_word
 
