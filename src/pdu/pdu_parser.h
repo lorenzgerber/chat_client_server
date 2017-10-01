@@ -9,6 +9,7 @@
 #define PDU_PARSER_H_
 
 #include <string.h>
+#include <arpa/inet.h>
 #include "pdu_templates.h"
 #include "pdu_creator.h"
 #include "socket_templates.h"
