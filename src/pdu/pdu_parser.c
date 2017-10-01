@@ -33,6 +33,19 @@ int parse_REG(uint8_t *buffer){
 
 int parse_MESS(uint8_t *buffer){
 
+	//Check padding
+	if (buffer[1]!=0){
+		printf("missing padding in potential MESS\n");
+	}
+
+	pdu_MESS* pdu = create_MESS(buffer[2], buffer[3]);
+
+	//request_one_word();
+
+
+
+	free_pdu_mess(pdu);
+
 
 	return 0;
 

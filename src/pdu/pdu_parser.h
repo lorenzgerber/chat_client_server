@@ -10,6 +10,7 @@
 
 #include <string.h>
 #include "pdu_templates.h"
+#include "pdu_creator.h"
 
 int parse_header(uint8_t* buffer);
 
