@@ -33,6 +33,10 @@ io_handler* create_dummy_socket(int op_code, int socket_entity){
 			return dummy_socket_join(dummy_socket);
 		case PDU_PARTICIPANTS:
 			return dummy_socket_participants(dummy_socket);
+        case PDU_QUIT:
+            return dummy_socket_quit(dummy_socket);
+		case PDU_PJOIN:
+			return  dummy_socket_pjoin(dummy_socket);
 		default:
 			break;
 	}

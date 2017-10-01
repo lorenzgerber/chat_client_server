@@ -40,9 +40,17 @@ int main(int argc, char*argv[]){
     dummy_socket_participants = create_dummy_socket(PDU_PARTICIPANTS, ENTITY_CLIENT);
     parse_header(dummy_socket_participants);
 
-	io_handler *dummy_socket;
-	dummy_socket = create_dummy_socket(PDU_MESS, ENTITY_CLIENT);
-	parse_header(dummy_socket);
+    io_handler* dummy_socket_quit;
+    dummy_socket_quit = create_dummy_socket(PDU_QUIT, ENTITY_CLIENT);
+    parse_header(dummy_socket_quit);
+
+	io_handler *dummy_socket_mess;
+    dummy_socket_mess = create_dummy_socket(PDU_MESS, ENTITY_CLIENT);
+	parse_header(dummy_socket_mess);
+    
+    io_handler* dummy_socket_pjoin;
+    dummy_socket_pjoin = create_dummy_socket(PDU_PJOIN, ENTITY_CLIENT);
+    parse_header(dummy_socket_pjoin);
 
 
 

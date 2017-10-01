@@ -26,8 +26,10 @@ int parse_JOIN(struct io_handler* socket, uint8_t* read_position);
 
 int parse_PARTICIPANTS(struct io_handler* socket, uint8_t* read_position);
 
-int parse_REG(struct io_handler* socket);
+int parse_QUIT(struct io_handler* socket, uint8_t* read_position);
 
 int parse_MESS(struct io_handler* socket, uint8_t *read_position);
+
+int parse_PJOIN(struct io_handler* socket, uint8_t* read_position);
 
 #endif /* PDU_PARSER_H_ */

@@ -19,9 +19,6 @@ int parse_header(struct io_handler *socket){
 		case PDU_ACK:
 			parse_ACK(socket, read_position);
 			break;
-		case PDU_MESS:
-			parse_MESS(socket, read_position);
-			break;
 		case PDU_NOTREG:
 			parse_NOTREG(socket, read_position);
 			break;
@@ -33,6 +30,15 @@ int parse_header(struct io_handler *socket){
 			break;
 		case PDU_PARTICIPANTS:
 			parse_PARTICIPANTS(socket, read_position);
+			break;
+        case PDU_QUIT:
+            parse_QUIT(socket, read_position);
+            break;
+        case PDU_MESS:
+            parse_MESS(socket, read_position);
+            break;
+		case PDU_PJOIN:
+			parse_PJOIN(socket, read_position);
 			break;
 	}
 
@@ -57,7 +63,7 @@ int parse_NOTREG(struct io_handler* socket, uint8_t* read_position){
 int parse_SLIST(struct io_handler* socket, uint8_t* read_position){
 	uint16_t nr_of_servers = ((uint16_t)*(read_position+2) << 8) | (uint16_t)*(read_position+3);
 	nr_of_servers = ntohs(nr_of_servers);
-	printf("Number of servers %d\n", nr_of_servers);
+	printf("Number of servers %d\n\n", nr_of_servers);
 	for(int i = 0; i < nr_of_servers; i++){
 		read_position = socket->request_n_word(socket, 2);
 		printf("Adress server %d: %d.%d.%d.%d\n",i+1,*read_position,*(read_position+1),*(read_position+2),*(read_position+3));
@@ -70,6 +76,7 @@ int parse_SLIST(struct io_handler* socket, uint8_t* read_position){
 		printf("server %d number of clients: %d\n",i+1, number_of_clients);
 
 		uint8_t namelen = *(read_position+7);
+		printf("server %d name length: %d\n", i+1, namelen);
 		read_position = socket->request_n_word(socket, (namelen + 4 - 1)/4);
 		printf("server %d name: ", i+1);
 		for(int j = 0; j < namelen; j++){
@@ -84,9 +91,10 @@ int parse_SLIST(struct io_handler* socket, uint8_t* read_position){
 int parse_JOIN(struct io_handler* socket, uint8_t* read_position){
 
 	uint8_t idlength = *(read_position+1);
+	printf("length of id: %d\n", idlength);
 
 	read_position = socket->request_n_word(socket, (idlength + 4 - 1)/4);
-	printf("name of server id: ");
+	printf("server id: ");
 	for(int i = 0; i < idlength; i++){
 		printf("%c", (int)*(read_position+i));
 	}
@@ -101,7 +109,7 @@ int parse_PARTICIPANTS(struct io_handler* socket, uint8_t* read_position){
 
 	uint16_t length_of_clients = ((uint16_t)*(read_position+2) << 8) | (uint16_t)*(read_position+3);
 	length_of_clients = ntohs(length_of_clients);
-	printf("length of clients: %d\n", length_of_clients);
+	printf("length of clients: %d\n\n", length_of_clients);
 
 	read_position = socket->request_n_word(socket, (length_of_clients + 4 - 1)/4);
 	printf("Clients connected to server:\n");
@@ -114,10 +122,10 @@ int parse_PARTICIPANTS(struct io_handler* socket, uint8_t* read_position){
 	}
 	return 0;
 }
-int parse_REG(struct io_handler* socket){
 
-	return 0;
+int parse_QUIT(struct io_handler* socket, uint8_t* read_position){
 
+    return 0;
 }
 
 int parse_MESS(struct io_handler* socket, uint8_t* read_position){
@@ -184,3 +192,20 @@ int parse_MESS(struct io_handler* socket, uint8_t* read_position){
 
 }
 
+int parse_PJOIN(struct io_handler* socket, uint8_t* read_position){
+
+	uint8_t identity_length = *(read_position+1);
+	printf("identity length: %d\n", identity_length);
+
+	read_position = socket->request_n_word(socket, 1);
+	uint32_t time_stamp = ((uint32_t)*read_position << 24) | *(read_position+1) << 16 | *(read_position+2) << 8 | *(read_position+3);
+	time_stamp = ntohl(time_stamp);
+	printf("timestamp: %u\n", time_stamp);
+
+	read_position = socket->request_n_word(socket, (identity_length + 4 - 1)/4);
+	for(int i = 0; i < identity_length; i++){
+		printf("%c", *(read_position+i));
+	}
+	printf("\n");
+	return 0;
+}
