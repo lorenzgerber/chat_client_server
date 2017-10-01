@@ -32,6 +32,14 @@ int main(int argc, char*argv[]){
     dummy_socket_slist = create_dummy_socket(PDU_SLIST, ENTITY_CLIENT);
     parse_header(dummy_socket_slist);
 
+    io_handler* dummy_socket_join;
+    dummy_socket_join = create_dummy_socket(PDU_JOIN, ENTITY_SERVER);
+    parse_header(dummy_socket_join);
+
+    io_handler* dummy_socket_participants;
+    dummy_socket_participants = create_dummy_socket(PDU_PARTICIPANTS, ENTITY_CLIENT);
+    parse_header(dummy_socket_participants);
+
 	io_handler *dummy_socket;
 	dummy_socket = create_dummy_socket(PDU_MESS, ENTITY_CLIENT);
 	parse_header(dummy_socket);

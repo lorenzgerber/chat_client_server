@@ -19,4 +19,8 @@ io_handler* dummy_socket_notreg(io_handler* dummy_socket);
 
 io_handler* dummy_socket_slist(io_handler* dummy_socket);
 
+io_handler* dummy_socket_join(io_handler* dummy_socket);
+
+io_handler* dummy_socket_participants(io_handler* dummy_socket);
+
 #endif /* SRC_NETCOM_DUMMY_SOCKETS_H_ */

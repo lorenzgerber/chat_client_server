@@ -29,6 +29,10 @@ io_handler* create_dummy_socket(int op_code, int socket_entity){
 			return dummy_socket_notreg(dummy_socket);
 		case PDU_SLIST:
 			return dummy_socket_slist(dummy_socket);
+		case PDU_JOIN:
+			return dummy_socket_join(dummy_socket);
+		case PDU_PARTICIPANTS:
+			return dummy_socket_participants(dummy_socket);
 		default:
 			break;
 	}

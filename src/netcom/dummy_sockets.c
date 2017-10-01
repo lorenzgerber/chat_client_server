@@ -54,3 +54,25 @@ io_handler* dummy_socket_slist(io_handler* dummy_socket){
 
 	return dummy_socket;
 }
+
+io_handler* dummy_socket_join(io_handler* dummy_socket){
+
+	pdu_JOIN *JOIN = create_JOIN(8);
+	JOIN->add_identity(JOIN, "identity");
+
+	dummy_socket->buffer = JOIN->create_message(JOIN);
+	free_pdu_join(JOIN);
+
+	return dummy_socket;
+}
+
+io_handler* dummy_socket_participants(io_handler* dummy_socket){
+
+	pdu_PARTICIPANTS *PARTICIPANTS = create_PARTICIPANTS(3, 15);
+	PARTICIPANTS->add_identities(PARTICIPANTS, "partic\0ipa\0nts\0");
+
+	dummy_socket->buffer = PARTICIPANTS->create_message(PARTICIPANTS);
+	free_pdu_participants(PARTICIPANTS);
+
+	return dummy_socket;
+}

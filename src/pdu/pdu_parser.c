@@ -28,6 +28,12 @@ int parse_header(struct io_handler *socket){
 		case PDU_SLIST:
 			parse_SLIST(socket, read_position);
 			break;
+		case PDU_JOIN:
+			parse_JOIN(socket, read_position);
+			break;
+		case PDU_PARTICIPANTS:
+			parse_PARTICIPANTS(socket, read_position);
+			break;
 	}
 
 
@@ -58,19 +64,53 @@ int parse_SLIST(struct io_handler* socket, uint8_t* read_position){
 
 		uint16_t port = ((uint16_t) *(read_position+4) << 8) | *(read_position+5);
 		port = ntohs(port);
-		printf("port server %d: %d\n",i+1, port);
+		printf("server %d port: %d\n",i+1, port);
 
 		uint8_t number_of_clients = *(read_position+6);
-		printf("clients at server %d: %d\n",i+1, number_of_clients);
+		printf("server %d number of clients: %d\n",i+1, number_of_clients);
 
 		uint8_t namelen = *(read_position+7);
 		read_position = socket->request_n_word(socket, (namelen + 4 - 1)/4);
-		printf("name of server %d: ", i+1);
+		printf("server %d name: ", i+1);
 		for(int j = 0; j < namelen; j++){
 			printf("%c", (int)*(read_position+j));
 		}
-		printf("\n");
+		printf("\n\n");
 
+	}
+	return 0;
+}
+
+int parse_JOIN(struct io_handler* socket, uint8_t* read_position){
+
+	uint8_t idlength = *(read_position+1);
+
+	read_position = socket->request_n_word(socket, (idlength + 4 - 1)/4);
+	printf("name of server id: ");
+	for(int i = 0; i < idlength; i++){
+		printf("%c", (int)*(read_position+i));
+	}
+	printf("\n");
+	return 0;
+}
+
+int parse_PARTICIPANTS(struct io_handler* socket, uint8_t* read_position){
+
+	uint8_t nr_of_clients = *(read_position+1);
+	printf("nr of clients: %d\n", nr_of_clients);
+
+	uint16_t length_of_clients = ((uint16_t)*(read_position+2) << 8) | (uint16_t)*(read_position+3);
+	length_of_clients = ntohs(length_of_clients);
+	printf("length of clients: %d\n", length_of_clients);
+
+	read_position = socket->request_n_word(socket, (length_of_clients + 4 - 1)/4);
+	printf("Clients connected to server:\n");
+	for(int i = 0; i < length_of_clients; i++){
+		if((int)*(read_position+i) != '\0'){
+			printf("%c", (int)*(read_position+i));
+		}else{
+			printf("\n");
+		}
 	}
 	return 0;
 }
