@@ -16,13 +16,14 @@
 
 typedef struct io_handler {
 
-	struct message_byte_array buffer;
+	struct message_byte_array *buffer;
 	int socket;
+	int read_head;
 
 	// function: init_socket
 
 	// function: request_n_word
-	uint8_t* (*request_n_word)(struct io_handler *self);
+	uint8_t* (*request_n_word)(struct io_handler *self, int n_word);
 
 
 	// function: send_n_word
