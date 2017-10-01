@@ -169,7 +169,6 @@ uint32_t get_length_join(pdu *pdu){
 
 
 uint32_t get_length_PARTICIPANTS(pdu_PARTICIPANTS *pdu){
-	// todo
     uint32_t length_of_participants = LENGTH_OP +
                                       LENGTH_NUMBER_IDENTITIES +
                                       LENGTH_MESSAGE_LENGTH;
@@ -184,10 +183,38 @@ uint32_t get_length_PARTICIPANTS(pdu_PARTICIPANTS *pdu){
     return length_of_participants;
 }
 
+uint32_t get_length_participants(pdu *pdu){
+    uint32_t length_of_participants = LENGTH_OP +
+                                      LENGTH_NUMBER_IDENTITIES +
+                                      LENGTH_MESSAGE_LENGTH;
+
+    for(int i = 0; i < pdu->number_identities; i++){
+
+        length_of_participants += (strlen(pdu->identities[i]) + 1);
+    }
+
+    length_of_participants += calc_word_padding(length_of_participants);
+
+    return length_of_participants;
+}
+
+
+
+
+
+
 uint32_t get_length_QUIT(pdu_QUIT *pdu){
 	uint32_t length_of_quit = 4;
 	return length_of_quit;
 }
+
+uint32_t get_length_quit(pdu *pdu){
+	uint32_t length_of_quit = 4;
+	return length_of_quit;
+}
+
+
+
 
 uint32_t get_length_MESS(pdu_MESS *pdu){
     uint32_t length_of_mess = LENGTH_OP +
@@ -207,6 +234,29 @@ uint32_t get_length_MESS(pdu_MESS *pdu){
 	return length_of_mess;
 }
 
+uint32_t get_length_mess(pdu *pdu){
+    uint32_t length_of_mess = LENGTH_OP +
+                              LENGTH_PAD +
+                              LENGTH_IDENTITY_LENGTH +
+                              LENGTH_CHECKSUM +
+                              LENGTH_MESSAGE_LENGTH +
+                              LENGTH_PAD * 2 +
+                              LENGTH_TIME;
+    length_of_mess += pdu->message_length +
+                      calc_word_padding(length_of_mess);
+    if(pdu->identity_length > 0){
+        length_of_mess += pdu->identity_length +
+                          calc_word_padding(length_of_mess);
+    }
+
+	return length_of_mess;
+}
+
+
+
+
+
+
 uint32_t get_length_PJOIN(pdu_PJOIN *pdu){
     uint32_t length_of_pjoin = (uint32_t) (LENGTH_OP +
                                            LENGTH_IDENTITY_LENGTH +
@@ -217,7 +267,41 @@ uint32_t get_length_PJOIN(pdu_PJOIN *pdu){
 	return length_of_pjoin;
 }
 
+uint32_t get_length_pjoin(pdu *pdu){
+    uint32_t length_of_pjoin = (uint32_t) (LENGTH_OP +
+                                           LENGTH_IDENTITY_LENGTH +
+                                           LENGTH_PAD * 2 +
+                                           LENGTH_TIME +
+                                           pdu->identity_length +
+                                           calc_word_padding(pdu->identity_length));
+	return length_of_pjoin;
+}
+
+
+
+
+
+
 uint32_t get_length_PLEAVE(pdu_PLEAVE *pdu){
+
+	// variable part
+	uint32_t length_client_identity = (uint32_t)
+                                      (pdu->identity_length +
+                                       calc_word_padding(pdu->identity_length));
+
+	// fixed part
+	uint32_t length = LENGTH_OP
+			+ LENGTH_IDENTITY_LENGTH
+			+ LENGTH_PAD * 2
+			+ LENGTH_TIME
+			+ length_client_identity;
+
+
+	return length;
+}
+
+
+uint32_t get_length_pleave(pdu *pdu){
 
 	// variable part
 	uint32_t length_client_identity = (uint32_t)

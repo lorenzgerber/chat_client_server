@@ -85,8 +85,10 @@ int free_pdu_join(pdu_JOIN *pdu);
 
 // PARTICIPANTS
 int pdu_participants_add_identities(pdu_PARTICIPANTS *pdu, char* identities);
+int participants_add_identities(pdu *pdu, char* identities);
 
 pdu_PARTICIPANTS* create_PARTICIPANTS(uint8_t number_identities, uint16_t length);
+pdu* create_participants(uint8_t number_identities, uint16_t length);
 
 int free_pdu_participants(pdu_PARTICIPANTS *pdu);
 
@@ -94,6 +96,7 @@ int free_pdu_participants(pdu_PARTICIPANTS *pdu);
 // QUIT
 
 pdu_QUIT* create_QUIT(void);
+pdu* create_quit(void);
 
 int free_pdu_quit(pdu_QUIT* pdu);
 
@@ -102,12 +105,16 @@ int free_pdu_quit(pdu_QUIT* pdu);
 //int pdu_padded_message_length(pdu_MESS *pdu);
 
 int pdu_mess_calc_checksum(pdu_MESS *pdu);
+int mess_calc_checksum(pdu *pdu);
 
 int pdu_mess_add_identity(pdu_MESS *pdu, char* identity);
+int mess_add_identity(pdu *pdu, char* identity);
 
 int pdu_mess_add_message(pdu_MESS *pdu, uint16_t message_length, uint32_t time_stamp, char* message);
+int mess_add_message(pdu *pdu, uint16_t message_length, uint32_t time_stamp, char* message);
 
 pdu_MESS* create_MESS(uint8_t identity_length, uint8_t checksum);
+pdu* create_mess(uint8_t identity_length, uint8_t checksum);
 
 int free_pdu_mess(pdu_MESS *pdu);
 
@@ -115,8 +122,10 @@ int free_pdu_mess(pdu_MESS *pdu);
 // PJOIN
 
 int pdu_pjoin_add_client_identity(pdu_PJOIN *pdu, uint32_t time_stamp, char* client_identity);
+int pjoin_add_client_identity(pdu *pdu, uint32_t time_stamp, char* client_identity);
 
 pdu_PJOIN* create_PJOIN(uint8_t identity_length);
+pdu* create_pjoin(uint8_t identity_length);
 
 int free_pdu_pjoin(pdu_PJOIN *pdu);
 
@@ -124,8 +133,11 @@ int free_pdu_pjoin(pdu_PJOIN *pdu);
 // PLEAVE
 
 int pdu_pleave_add_client_identity(pdu_PLEAVE *pdu, uint32_t time_stamp, char* client_identity);
+int pleave_add_client_identity(pdu *pdu, uint32_t time_stamp, char* client_identity);
+
 
 pdu_PLEAVE* create_PLEAVE(uint8_t identity_length);
+pdu* create_pleave(uint8_t identity_length);
 
 int free_pdu_pleave(pdu_PLEAVE *pdu);
 

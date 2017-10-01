@@ -355,6 +355,28 @@ int pdu_participants_add_identities(pdu_PARTICIPANTS *pdu, char* identities){
 	return 0;
 }
 
+int participants_add_identities(pdu *pdu, char* identities){
+	// need to implement check of length
+
+	int lower = 0, found = 0;
+	for(int i = 0 ; i < pdu->length;i++){
+		//read until null termination (detect length)
+		if(identities[i]=='\0'){
+
+			pdu->identities[found] = malloc((i-lower+1)*sizeof(char));
+			strncpy(pdu->identities[found], &identities[lower], i-lower);
+			lower = i+1;
+			found++;
+		}
+	}
+	if (found < pdu->number_identities){
+		perror("not enough identities provided");
+		return -1;
+	}
+
+	return 0;
+}
+
 pdu_PARTICIPANTS* create_PARTICIPANTS(uint8_t number_identities, uint16_t length){
 	pdu_PARTICIPANTS *pdu = malloc(sizeof(pdu_PARTICIPANTS));
 	pdu->type = PDU_PARTICIPANTS;
@@ -363,6 +385,18 @@ pdu_PARTICIPANTS* create_PARTICIPANTS(uint8_t number_identities, uint16_t length
 	pdu->identities = malloc(number_identities * sizeof(char*));
 	pdu->add_identities = pdu_participants_add_identities;
 	pdu->create_message = pdu_participants_create_message;
+	return pdu;
+}
+
+
+pdu* create_participants(uint8_t number_identities, uint16_t length){
+	pdu *pdu = malloc(sizeof(pdu));
+	pdu->type = PDU_PARTICIPANTS;
+	pdu->number_identities = number_identities;
+	pdu->length = length;
+	pdu->identities = malloc(number_identities * sizeof(char*));
+	pdu->add_identities = participants_add_identities;
+	pdu->create_message = participants_create_message;
 	return pdu;
 }
 
@@ -378,6 +412,9 @@ int free_pdu_participants(pdu_PARTICIPANTS *pdu){
 	return 0;
 }
 
+
+
+
 /*
  * pdu_QUIT
  */
@@ -385,6 +422,13 @@ pdu_QUIT* create_QUIT(void){
 	pdu_QUIT *pdu = malloc(sizeof(pdu_QUIT));
 	pdu->type = PDU_QUIT;
 	pdu->create_message = pdu_quit_create_message;
+	return pdu;
+}
+
+pdu* create_quit(void){
+	pdu *pdu = malloc(sizeof(pdu));
+	pdu->type = PDU_QUIT;
+	pdu->create_message = quit_create_message;
 	return pdu;
 }
 
@@ -407,6 +451,12 @@ int pdu_mess_calc_checksum(pdu_MESS *pdu){
 	return 0;
 }
 
+int mess_calc_checksum(pdu *pdu){
+
+	return 0;
+}
+
+
 int pdu_mess_add_client_identity(pdu_MESS *pdu, char* client_identity){
 	pdu->client_identity = malloc(pdu->identity_length*sizeof(char));
 	strcpy(pdu->client_identity, client_identity);
@@ -414,7 +464,24 @@ int pdu_mess_add_client_identity(pdu_MESS *pdu, char* client_identity){
 	return 0;
 }
 
+int mess_add_client_identity(pdu *pdu, char* client_identity){
+	pdu->identity = malloc(pdu->identity_length*sizeof(char));
+	strcpy(pdu->identity, client_identity);
+
+	return 0;
+}
+
+
 int pdu_mess_add_message(pdu_MESS *pdu, uint16_t message_length, uint32_t time_stamp, char* message){
+	pdu->time_stamp = time_stamp;
+	pdu->message_length = message_length;
+	pdu->message = malloc(pdu->message_length* sizeof(char));
+	strcpy(pdu->message, message);
+
+ 	return 0;
+}
+
+int mess_add_message(pdu *pdu, uint16_t message_length, uint32_t time_stamp, char* message){
 	pdu->time_stamp = time_stamp;
 	pdu->message_length = message_length;
 	pdu->message = malloc(pdu->message_length* sizeof(char));
@@ -436,6 +503,21 @@ pdu_MESS* create_MESS(uint8_t identity_length, uint8_t checksum){
 	pdu->create_message = pdu_mess_create_message;
 	return pdu;
 }
+
+
+pdu* create_mess(uint8_t identity_length, uint8_t checksum){
+	pdu *pdu = malloc(sizeof(pdu));
+	pdu->type = PDU_MESS;
+	pdu->identity_length = identity_length;
+	pdu->checksum = checksum;
+	pdu->add_message = mess_add_message;
+	pdu->add_identity = mess_add_client_identity;
+	pdu->calc_checksum = mess_calc_checksum;
+	//pdu->padded_message_length = pdu_mess_padded_message_length;
+	pdu->create_message = mess_create_message;
+	return pdu;
+}
+
 
 int free_pdu_mess(pdu_MESS *pdu){
 
@@ -460,6 +542,13 @@ int pdu_pjoin_add_client_identity(pdu_PJOIN *pdu, uint32_t time_stamp, char* cli
 	return 0;
 }
 
+int pjoin_add_client_identity(pdu *pdu, uint32_t time_stamp, char* client_identity){
+	pdu->time_stamp = time_stamp;
+	pdu->identity = malloc(pdu->identity_length*sizeof(char));
+	strcpy(pdu->identity, client_identity);
+	return 0;
+}
+
 
 pdu_PJOIN* create_PJOIN(uint8_t identity_length){
 	pdu_PJOIN *pdu = malloc(sizeof(pdu_PJOIN));
@@ -467,6 +556,15 @@ pdu_PJOIN* create_PJOIN(uint8_t identity_length){
 	pdu->identity_length = identity_length;
 	pdu->add_client_identity = pdu_pjoin_add_client_identity;
 	pdu->create_message = pdu_pjoin_create_message;
+	return pdu;
+}
+
+pdu* create_pjoin(uint8_t identity_length){
+	pdu *pdu = malloc(sizeof(pdu));
+	pdu->type = PDU_PJOIN;
+	pdu->identity_length = identity_length;
+	pdu->add_client_identity = pjoin_add_client_identity;
+	pdu->create_message = pjoin_create_message;
 	return pdu;
 }
 
@@ -489,6 +587,13 @@ int pdu_pleave_add_client_identity(pdu_PLEAVE *pdu, uint32_t time_stamp, char* c
 	return 0;
 }
 
+int pleave_add_client_identity(pdu *pdu, uint32_t time_stamp, char* client_identity){
+	pdu->time_stamp = time_stamp;
+	pdu->identity = malloc(pdu->identity_length*sizeof(char));
+	strcpy(pdu->identity, client_identity);
+	return 0;
+}
+
 
 pdu_PLEAVE* create_PLEAVE(uint8_t identity_length){
 	pdu_PLEAVE *pdu = malloc(sizeof(pdu_PLEAVE));
@@ -498,6 +603,16 @@ pdu_PLEAVE* create_PLEAVE(uint8_t identity_length){
 	pdu->create_message = pdu_pleave_create_message;
 	return pdu;
 }
+
+pdu* create_pleave(uint8_t identity_length){
+	pdu *pdu = malloc(sizeof(pdu));
+	pdu->type = PDU_PLEAVE;
+	pdu->identity_length = identity_length;
+	pdu->add_client_identity = pleave_add_client_identity;
+	pdu->create_message = pleave_create_message;
+	return pdu;
+}
+
 
 int free_pdu_pleave(pdu_PLEAVE *pdu){
 	if(pdu->identity_length != 0){

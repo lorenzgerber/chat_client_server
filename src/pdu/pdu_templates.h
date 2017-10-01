@@ -199,6 +199,7 @@ typedef struct pdu {
 	int (*padded_message_length)(struct pdu *self);
 	int (*add_identities)(struct pdu *self, char*);
 	int (*add_identity)(struct pdu *self, char*);
+	int (*add_client_identity)(struct pdu *self, uint32_t time_stamp, char* client_identity);
 	int (*add_server_entry)(struct pdu *self, pdu_server_entry*);
 	int (*add_server_name)(struct pdu *self, char*);
 	struct message_byte_array* (*create_message)(struct pdu *self);
@@ -234,13 +235,18 @@ uint32_t get_length_JOIN(pdu_JOIN *pdu);
 uint32_t get_length_join(pdu *pdu);
 
 uint32_t get_length_PARTICIPANTS(pdu_PARTICIPANTS *pdu);
+uint32_t get_length_participants(pdu *pdu);
 
 uint32_t get_length_QUIT(pdu_QUIT *pdu);
+uint32_t get_length_quit(pdu *pdu);
 
 uint32_t get_length_MESS(pdu_MESS *pdu);
+uint32_t get_length_mess(pdu *pdu);
 
 uint32_t get_length_PJOIN(pdu_PJOIN *pdu);
+uint32_t get_length_pjoin(pdu *pdu);
 
 uint32_t get_length_PLEAVE(pdu_PLEAVE *pdu);
+uint32_t get_length_pleave(pdu *pdu);
 
 #endif /* PDU_TEMPLATES_H_ */

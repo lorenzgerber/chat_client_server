@@ -35,13 +35,18 @@ message_byte_array* pdu_join_create_message(pdu_JOIN *self);
 message_byte_array* join_create_message(pdu *self);
 
 message_byte_array* pdu_participants_create_message(pdu_PARTICIPANTS *self);
+message_byte_array* participants_create_message(pdu *self);
 
 message_byte_array* pdu_quit_create_message(pdu_QUIT *self);
+message_byte_array* quit_create_message(pdu *self);
 
 message_byte_array* pdu_mess_create_message(pdu_MESS *self);
+message_byte_array* mess_create_message(pdu *self);
 
 message_byte_array* pdu_pjoin_create_message(pdu_PJOIN *self);
+message_byte_array* pjoin_create_message(pdu *self);
 
 message_byte_array* pdu_pleave_create_message(pdu_PLEAVE *self);
+message_byte_array* pleave_create_message(pdu *self);
 
 #endif /* PDU_SERIALIZER_H_ */
