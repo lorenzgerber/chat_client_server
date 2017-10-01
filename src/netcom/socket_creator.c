@@ -25,7 +25,10 @@ io_handler* create_dummy_socket(int op_code, int socket_entity){
 			break;
 		case PDU_ACK:
 			return dummy_socket_ack(dummy_socket);
-			break;
+		case PDU_NOTREG:
+			return dummy_socket_notreg(dummy_socket);
+		case PDU_SLIST:
+			return dummy_socket_slist(dummy_socket);
 		default:
 			break;
 	}

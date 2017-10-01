@@ -18,6 +18,10 @@ int parse_header(struct io_handler* socket);
 
 int parse_ACK(struct io_handler* socket, uint8_t* read_position);
 
+int parse_NOTREG(struct io_handler* socket, uint8_t* read_position);
+
+int parse_SLIST(struct io_handler* socket, uint8_t* read_position);
+
 int parse_REG(struct io_handler* socket);
 
 int parse_MESS(struct io_handler* socket, uint8_t *read_position);

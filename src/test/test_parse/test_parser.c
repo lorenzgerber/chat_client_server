@@ -24,6 +24,14 @@ int main(int argc, char*argv[]){
     dummy_socket_ack = create_dummy_socket(PDU_ACK, ENTITY_SERVER);
     parse_header(dummy_socket_ack);
 
+    io_handler* dummy_socket_notreg;
+    dummy_socket_notreg = create_dummy_socket(PDU_NOTREG, ENTITY_SERVER);
+    parse_header(dummy_socket_notreg);
+
+    io_handler* dummy_socket_slist;
+    dummy_socket_slist = create_dummy_socket(PDU_SLIST, ENTITY_CLIENT);
+    parse_header(dummy_socket_slist);
+
 	io_handler *dummy_socket;
 	dummy_socket = create_dummy_socket(PDU_MESS, ENTITY_CLIENT);
 	parse_header(dummy_socket);

@@ -13,7 +13,8 @@ int parse_header(struct io_handler *socket){
 	uint8_t* read_position;
 	read_position = socket->request_n_word(socket, 1);
 	op_code = *read_position;
-
+	printf("---------------\n");
+	printf("op_code %d\n", op_code);
 	switch(op_code){
 		case PDU_ACK:
 			parse_ACK(socket, read_position);
@@ -21,9 +22,15 @@ int parse_header(struct io_handler *socket){
 		case PDU_MESS:
 			parse_MESS(socket, read_position);
 			break;
+		case PDU_NOTREG:
+			parse_NOTREG(socket, read_position);
+			break;
+		case PDU_SLIST:
+			parse_SLIST(socket, read_position);
+			break;
 	}
 
-	printf("op_code %d\n", op_code);
+
 
 	return 0;
 }
@@ -31,6 +38,40 @@ int parse_ACK(struct io_handler* socket, uint8_t* read_position){
 	uint16_t id_nr = ((uint16_t)*(read_position+2) << 8) | (uint16_t)*(read_position+3);
 	id_nr = ntohs(id_nr);
 	printf("identity number %d\n", id_nr);
+	return 0;
+}
+
+int parse_NOTREG(struct io_handler* socket, uint8_t* read_position){
+	uint16_t id_nr = ((uint16_t)*(read_position+2) << 8) | (uint16_t)*(read_position+3);
+	id_nr = ntohs(id_nr);
+	printf("identity number %d\n", id_nr);
+	return 0;
+}
+
+int parse_SLIST(struct io_handler* socket, uint8_t* read_position){
+	uint16_t nr_of_servers = ((uint16_t)*(read_position+2) << 8) | (uint16_t)*(read_position+3);
+	nr_of_servers = ntohs(nr_of_servers);
+	printf("Number of servers %d\n", nr_of_servers);
+	for(int i = 0; i < nr_of_servers; i++){
+		read_position = socket->request_n_word(socket, 2);
+		printf("Adress server %d: %d.%d.%d.%d\n",i+1,*read_position,*(read_position+1),*(read_position+2),*(read_position+3));
+
+		uint16_t port = ((uint16_t) *(read_position+4) << 8) | *(read_position+5);
+		port = ntohs(port);
+		printf("port server %d: %d\n",i+1, port);
+
+		uint8_t number_of_clients = *(read_position+6);
+		printf("clients at server %d: %d\n",i+1, number_of_clients);
+
+		uint8_t namelen = *(read_position+7);
+		read_position = socket->request_n_word(socket, (namelen + 4 - 1)/4);
+		printf("name of server %d: ", i+1);
+		for(int j = 0; j < namelen; j++){
+			printf("%c", (int)*(read_position+j));
+		}
+		printf("\n");
+
+	}
 	return 0;
 }
 int parse_REG(struct io_handler* socket){

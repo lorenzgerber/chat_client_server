@@ -19,7 +19,7 @@ io_handler* dummy_socket_mess(io_handler * dummy_socket){
 
 io_handler* dummy_socket_ack(io_handler* dummy_socket){
 
-	pdu_ACK* ACK = create_ACK(4000);
+	pdu_ACK* ACK = create_ACK(4444);
 
 	dummy_socket->buffer = ACK->create_message(ACK);
 	free_pdu_ack(ACK);
@@ -27,4 +27,30 @@ io_handler* dummy_socket_ack(io_handler* dummy_socket){
 	return dummy_socket;
 }
 
+io_handler* dummy_socket_notreg(io_handler* dummy_socket){
+	pdu_NOTREG* NOTREG = create_NOTREG(5555);
 
+	dummy_socket->buffer = NOTREG->create_message(NOTREG);
+	free_pdu_notreg(NOTREG);
+
+	return dummy_socket;
+}
+
+io_handler* dummy_socket_slist(io_handler* dummy_socket){
+
+	pdu_SLIST *SLIST = create_SLIST(2);
+	uint8_t address[4] = {127,0,0,1};
+	pdu_server_entry* server1 = create_server_entry(address,2000,4,10);
+	server1->add_server_name(server1, "servername");
+	SLIST->add_server_entry(SLIST, server1);
+
+	uint8_t  address2[4] = {127,0,0,2};
+	pdu_server_entry* server2 = create_server_entry(address2,2001,4,11);
+	server2->add_server_name(server2, "servername2");
+	SLIST->add_server_entry(SLIST, server2);
+
+	dummy_socket->buffer = SLIST->create_message(SLIST);
+	free_pdu_slist(SLIST);
+
+	return dummy_socket;
+}
