@@ -55,6 +55,7 @@ dkms.conf
 .settings/
 .cproject
 .project
+build/
 
 #Clion
 cmake-build-debug/

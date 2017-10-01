@@ -1,6 +1,6 @@
 
 CC = gcc
-TARGET_EXEC ?= a.out
+TARGET_EXEC ?= $(EXEC)
 
 BUILD_DIR ?= ./build
 SRC_DIRS ?= ./src/pdu
