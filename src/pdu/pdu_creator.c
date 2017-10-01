@@ -62,6 +62,11 @@ int free_pdu_reg(pdu_REG *pdu){
 	return 0;
 }
 
+
+
+
+
+
 /*
  * pdu_ALIVE
  */
@@ -73,6 +78,16 @@ pdu_ALIVE* create_ALIVE(uint8_t number_clients, uint16_t id_number){
 	pdu->create_message = pdu_alive_create_message;
 	return pdu;
 }
+
+pdu* create_alive(uint8_t number_clients, uint16_t id_number){
+	pdu *pdu = malloc(sizeof(pdu));
+	pdu->type = PDU_ALIVE;
+	pdu->number_clients = number_clients;
+	pdu->id_number = id_number;
+	pdu->create_message = alive_create_message;
+	return pdu;
+}
+
 
 int free_pdu_alive(pdu_ALIVE* pdu){
 	free(pdu);

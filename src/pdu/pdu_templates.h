@@ -216,6 +216,7 @@ uint32_t get_length_REG(pdu_REG *pdu);
 uint32_t get_length_reg(pdu *pdu);
 
 uint32_t get_length_ALIVE(pdu_ALIVE *pdu);
+uint32_t get_length_alive(pdu *pdu);
 
 uint32_t get_length_ACK(pdu_ACK *pdu);
 

@@ -42,6 +42,19 @@ message_byte_array* pdu_alive_create_message(pdu_ALIVE *self){
 	return message;
 }
 
+message_byte_array* alive_create_message(pdu *self){
+	int length = get_length_alive(self);
+	message_byte_array* message = create_message_byte_array(length);
+	message->add_uint8(message, self->type);
+	message->add_uint8(message, self->number_clients);
+	message->add_uint16(message, self->id_number);
+	return message;
+}
+
+
+
+
+
 message_byte_array* pdu_ack_create_message(pdu_ACK *self){
 	int length = get_length_ACK(self);
 	message_byte_array* message = create_message_byte_array(length);

@@ -48,6 +48,14 @@ uint32_t get_length_ALIVE(pdu_ALIVE *pdu){
 	return length_of_alive;
 }
 
+uint32_t get_length_alive(pdu *pdu){
+	uint32_t length_of_alive = 4;
+	return length_of_alive;
+}
+
+
+
+
 uint32_t get_length_ACK(pdu_ACK *pdu){
 	uint32_t length_of_ack = 4;
 	return length_of_ack;
