@@ -11,7 +11,10 @@
 #include <string.h>
 #include "pdu_templates.h"
 
-int test(void);
+int parse_header(uint8_t* buffer);
 
+int parse_REG(uint8_t *buffer);
+
+int parse_MESS(uint8_t *buffer);
 
 #endif /* PDU_PARSER_H_ */

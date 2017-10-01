@@ -1,5 +1,7 @@
 
 CC = gcc
+CFLAGS = -Wall -std=c99 -Werror -g -pthread
+
 TARGET_EXEC ?= $(EXEC)
 
 BUILD_DIR ?= ./build
