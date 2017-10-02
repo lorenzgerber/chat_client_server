@@ -90,7 +90,7 @@ int main(int argc, char*argv[]){
 	// free ALIVE and MBA
 	free_pdu_alive(ALIVE);
 	free_message_byte_array(MBA);
-/*
+
     pdu *alive = create_alive(100, 10000);
 
     // Create ALIVE byte stream message to send
@@ -106,7 +106,7 @@ int main(int argc, char*argv[]){
     // free REG and MBA
     alive->free_pdu(alive);
     free_message_byte_array(MBA);
-*/
+
 	/*
 	 * Test ACK
 	 */
