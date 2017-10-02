@@ -104,6 +104,10 @@ int free_pdu_alive(pdu_ALIVE* pdu){
 	return 0;
 }
 
+int free_alive(pdu* pdu){
+    free(pdu);
+    return 0;
+}
 
 
 
@@ -133,7 +137,10 @@ int free_pdu_ack(pdu_ACK* pdu){
 	return 0;
 }
 
-
+int free_ack(pdu* pdu){
+    free(pdu);
+    return 0;
+}
 
 
 /*
@@ -160,7 +167,10 @@ int free_pdu_notreg(pdu_NOTREG* pdu){
 	return 0;
 }
 
-
+int free_notreg(pdu* pdu){
+    free(pdu);
+    return 0;
+}
 
 /*
  * pdu_GETLIST
@@ -184,7 +194,10 @@ int free_pdu_getlist(pdu_GETLIST* pdu){
 	return 0;
 }
 
-
+int free_getlist(pdu* pdu){
+    free(pdu);
+    return 0;
+}
 
 
 /*
@@ -203,26 +216,26 @@ int server_entry_add_server_name(pdu_server_entry *pdu, char* server_name){
 
 
 pdu_server_entry* create_server_entry(uint8_t address[4], uint16_t port, uint8_t number_clients, uint8_t name_length){
-	pdu_server_entry *pdu = malloc(sizeof(pdu_server_entry));
-	for(int i = 0; i < 4;i++){
-		pdu->address[i] = address[i];
-	}
-	pdu->port = port;
-	pdu->number_clients = number_clients;
-	pdu->name_length = name_length;
-	pdu->add_server_name = server_entry_add_server_name;
+    pdu_server_entry *pdu = malloc(sizeof(pdu_server_entry));
+    for(int i = 0; i < 4;i++){
+        pdu->address[i] = address[i];
+    }
+    pdu->port = port;
+    pdu->number_clients = number_clients;
+    pdu->name_length = name_length;
+    pdu->add_server_name = server_entry_add_server_name;
 
-	return pdu;
+    return pdu;
 }
 
 int add_server_entry(pdu_SLIST *pdu, pdu_server_entry* server_entry){
-	if(pdu->server_assigned == pdu->number_servers){
-		perror("all servers already assigned\n");
-		return -1;
-	}
-	pdu->current_servers[pdu->server_assigned] = server_entry;
-	pdu->server_assigned++;
- 	return pdu->server_assigned;
+    if(pdu->server_assigned == pdu->number_servers){
+        perror("all servers already assigned\n");
+        return -1;
+    }
+    pdu->current_servers[pdu->server_assigned] = server_entry;
+    pdu->server_assigned++;
+    return pdu->server_assigned;
 }
 
 int add_server_entry2(pdu *pdu, pdu_server_entry* server_entry){
@@ -236,15 +249,15 @@ int add_server_entry2(pdu *pdu, pdu_server_entry* server_entry){
 }
 
 pdu_SLIST* create_SLIST(uint16_t number_servers){
-	pdu_SLIST *pdu = malloc(sizeof(pdu_SLIST));
-	pdu->type = PDU_SLIST;
-	pdu->number_servers = number_servers;
-	pdu->server_assigned = 0;
-	pdu->current_servers = malloc(sizeof(pdu_server_entry*)*number_servers); //probably wrong
-	*pdu->current_servers = (pdu_server_entry*)malloc(number_servers * sizeof(pdu_server_entry*));
-	pdu->add_server_entry = add_server_entry;
-	pdu->create_message = pdu_slist_create_message;
-	return pdu;
+    pdu_SLIST *pdu = malloc(sizeof(pdu_SLIST));
+    pdu->type = PDU_SLIST;
+    pdu->number_servers = number_servers;
+    pdu->server_assigned = 0;
+    pdu->current_servers = malloc(sizeof(pdu_server_entry*)*number_servers); //probably wrong
+    *pdu->current_servers = (pdu_server_entry*)malloc(number_servers * sizeof(pdu_server_entry*));
+    pdu->add_server_entry = add_server_entry;
+    pdu->create_message = pdu_slist_create_message;
+    return pdu;
 }
 
 pdu* create_slist(uint16_t number_servers){

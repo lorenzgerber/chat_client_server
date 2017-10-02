@@ -60,7 +60,7 @@ int main(int argc, char*argv[]){
 	for(int i = 0;i < length;i++){
 		printf("%d, ", MBA->array[i]);
 	}
-
+    printf("\n");
 	// free reg and MBA
 	reg->free_pdu(reg);
 	free_message_byte_array(MBA);
@@ -85,12 +85,26 @@ int main(int argc, char*argv[]){
 	for(int i = 0;i < length;i++){
 		printf("%d, ", MBA->array[i]);
 	}
-
+    printf("\n");
 
 	// free REG and MBA
 	free_pdu_alive(ALIVE);
 	free_message_byte_array(MBA);
+    pdu *alive = create_alive(100, 10000);
 
+    // Create ALIVE byte stream message to send
+    MBA = alive->create_message(alive);
+    length = get_length_alive(alive);
+    printf("Length of message = %d\n", length);
+
+    for(int i = 0;i < length;i++){
+        printf("%d, ", MBA->array[i]);
+    }
+    printf("\n");
+
+    // free REG and MBA
+    free_alive(alive);
+    free_message_byte_array(MBA);
 
 
 	/*
@@ -104,17 +118,30 @@ int main(int argc, char*argv[]){
 	// Create ACK byte stream message to send
 	MBA = ACK->create_message(ACK);
 	length = get_length_ACK(ACK);
-
+    printf("Length of message = %d\n", length);
 	for(int i = 0;i < length;i++){
 		printf("%d, ", MBA->array[i]);
 	}
-
+    printf("\n");
 
 	// free ACK and MBA
 	free_pdu_ack(ACK);
 	free_message_byte_array(MBA);
 
+    pdu *ack = create_ack(10000);
 
+    // Create ACK byte stream message to send
+    MBA = ack->create_message(ack);
+    length = get_length_ack(ack);
+    printf("Length of message = %d\n", length);
+    for(int i = 0;i < length;i++){
+        printf("%d, ", MBA->array[i]);
+    }
+    printf("\n");
+
+    // free ACK and MBA
+    free_ack(ack);
+    free_message_byte_array(MBA);
 
 
 	/*
@@ -128,17 +155,30 @@ int main(int argc, char*argv[]){
 	// Create NOTREG byte stream message to send
 	MBA = NOTREG->create_message(NOTREG);
 	length = get_length_NOTREG(NOTREG);
-
+    printf("Length of message = %d\n", length);
 	for(int i = 0;i < length;i++){
 		printf("%d, ", MBA->array[i]);
 	}
-
+    printf("\n");
 
 	// free NOTREG and MBA
 	free_pdu_notreg(NOTREG);
 	free_message_byte_array(MBA);
 
+    pdu *notreg = create_notreg(10000);
 
+    // Create NOTREG byte stream message to send
+    MBA = notreg->create_message(notreg);
+    length = get_length_notreg(notreg);
+    printf("Length of message = %d\n", length);
+    for(int i = 0;i < length;i++){
+        printf("%d, ", MBA->array[i]);
+    }
+    printf("\n");
+
+    // free NOTREG and MBA
+    free_notreg(notreg);
+    free_message_byte_array(MBA);
 
 	/*
 	 * GETLIST
@@ -151,17 +191,30 @@ int main(int argc, char*argv[]){
 	// Create GETLIST byte stream message to send
 	MBA = GETLIST->create_message(GETLIST);
 	length = get_length_GETLIST(GETLIST);
-
+    printf("Length of message = %d\n", length);
 	for(int i = 0;i < length;i++){
 		printf("%d, ", MBA->array[i]);
 	}
-
+    printf("\n");
 
 	// free GETLIST and MBA
 	free_pdu_getlist(GETLIST);
 	free_message_byte_array(MBA);
 
+    pdu *getlist = create_getlist();
 
+    // Create GETLIST byte stream message to send
+    MBA = getlist->create_message(getlist);
+    length = get_length_getlist(getlist);
+    printf("Length of message = %d\n", length);
+    for(int i = 0;i < length;i++){
+        printf("%d, ", MBA->array[i]);
+    }
+    printf("\n");
+
+    // free GETLIST and MBA
+    free_getlist(getlist);
+    free_message_byte_array(MBA);
 
 
 	/*
