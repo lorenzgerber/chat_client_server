@@ -39,11 +39,33 @@ int main(int argc, char*argv[]){
 	for(int i = 0;i < length;i++){
 		printf("%d, ", MBA->array[i]);
 	}
+	printf("\n");
 
 
 	// free REG and MBA
 	free_pdu_reg(REG);
 	free_message_byte_array(MBA);
+
+
+	pdu *reg = create_reg(10,2000);
+	reg->add_server_name(reg,"servername");
+
+	MBA = reg->create_message(reg);
+
+	length = get_length_reg(reg);
+
+	printf("Length of message = %d\n", length);
+
+
+	for(int i = 0;i < length;i++){
+		printf("%d, ", MBA->array[i]);
+	}
+
+	// free reg and MBA
+	reg->free_pdu(reg);
+	free_message_byte_array(MBA);
+
+
 
 
 

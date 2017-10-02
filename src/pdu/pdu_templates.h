@@ -203,6 +203,7 @@ typedef struct pdu {
 	int (*add_server_entry)(struct pdu *self, pdu_server_entry*);
 	int (*add_server_name)(struct pdu *self, char*);
 	struct message_byte_array* (*create_message)(struct pdu *self);
+	int (*free_pdu)(struct pdu *self);
 
 } pdu;
 
