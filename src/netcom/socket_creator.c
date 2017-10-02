@@ -45,6 +45,16 @@ io_handler* create_dummy_socket(int op_code, int socket_entity){
 	return dummy_socket;
 }
 
+io_handler* create_client_tcp_socket(uint8_t address_server[4], uint16_t port){
+	io_handler *io = malloc(sizeof(io_handler));
+	io->socket_entity = ENTITY_CLIENT;
+
+
+
+
+	return io;
+}
+
 
 /**
  * Function read from dummy socket
