@@ -20,9 +20,6 @@ io_handler* create_dummy_socket(int op_code, int socket_entity){
 	dummy_socket->socket_entity = socket_entity;
 
 	switch(op_code){
-		case PDU_MESS:
-			return dummy_socket_mess(dummy_socket);
-			break;
 		case PDU_ACK:
 			return dummy_socket_ack(dummy_socket);
 		case PDU_NOTREG:
@@ -35,8 +32,12 @@ io_handler* create_dummy_socket(int op_code, int socket_entity){
 			return dummy_socket_participants(dummy_socket);
         case PDU_QUIT:
             return dummy_socket_quit(dummy_socket);
+		case PDU_MESS:
+			return dummy_socket_mess(dummy_socket);
 		case PDU_PJOIN:
 			return  dummy_socket_pjoin(dummy_socket);
+		case PDU_PLEAVE:
+			return dummy_socket_pleave(dummy_socket);
 		default:
 			break;
 	}

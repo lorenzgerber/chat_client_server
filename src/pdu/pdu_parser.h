@@ -32,4 +32,6 @@ int parse_MESS(struct io_handler* socket, uint8_t *read_position);
 
 int parse_PJOIN(struct io_handler* socket, uint8_t* read_position);
 
+int parse_PLEAVE(struct io_handler* socket, uint8_t* read_position);
+
 #endif /* PDU_PARSER_H_ */

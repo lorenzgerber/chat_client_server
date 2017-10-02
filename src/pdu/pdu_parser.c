@@ -40,6 +40,9 @@ int parse_header(struct io_handler *socket){
 		case PDU_PJOIN:
 			parse_PJOIN(socket, read_position);
 			break;
+		case PDU_PLEAVE:
+			parse_PLEAVE(socket, read_position);
+			break;
 	}
 
 
@@ -207,5 +210,24 @@ int parse_PJOIN(struct io_handler* socket, uint8_t* read_position){
 		printf("%c", *(read_position+i));
 	}
 	printf("\n");
+	return 0;
+}
+
+int parse_PLEAVE(struct io_handler* socket, uint8_t* read_position){
+
+	uint8_t identity_length = *(read_position+1);
+	printf("identity length: %d\n", identity_length);
+
+	read_position = socket->request_n_word(socket, 1);
+	uint32_t time_stamp = ((uint32_t)*read_position << 24) | *(read_position+1) << 16 | *(read_position+2) << 8 | *(read_position+3);
+	time_stamp = ntohl(time_stamp);
+	printf("timestamp: %u\n", time_stamp);
+
+	read_position = socket->request_n_word(socket, (identity_length + 4 - 1)/4);
+	for(int i = 0; i < identity_length; i++){
+		printf("%c", *(read_position+i));
+	}
+	printf("\n");
+	
 	return 0;
 }

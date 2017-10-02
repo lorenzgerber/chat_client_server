@@ -47,10 +47,14 @@ int main(int argc, char*argv[]){
 	io_handler *dummy_socket_mess;
     dummy_socket_mess = create_dummy_socket(PDU_MESS, ENTITY_CLIENT);
 	parse_header(dummy_socket_mess);
-    
+
     io_handler* dummy_socket_pjoin;
     dummy_socket_pjoin = create_dummy_socket(PDU_PJOIN, ENTITY_CLIENT);
     parse_header(dummy_socket_pjoin);
+
+    io_handler* dummy_socket_pleave;
+    dummy_socket_pleave = create_dummy_socket(PDU_PLEAVE, ENTITY_CLIENT);
+    parse_header(dummy_socket_pleave);
 
 
 

@@ -27,4 +27,6 @@ io_handler* dummy_socket_mess(io_handler * dummy_socket);
 
 io_handler* dummy_socket_pjoin(io_handler * dummy_socket);
 
+io_handler* dummy_socket_pleave(io_handler * dummy_socket);
+
 #endif /* SRC_NETCOM_DUMMY_SOCKETS_H_ */
