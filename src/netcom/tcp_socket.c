@@ -73,7 +73,7 @@ int listen_obtain_client_socket(int sfd){
 
 }
 
-int setup_tcp_send_socket(){
+int setup_tcp_send_socket(void){
 	int sock;
 	if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
 		perror("socket");

@@ -26,7 +26,7 @@ int setup_listener_socket(int sfd, uint16_t *port);
 
 int listen_obtain_client_socket(int sfd);
 
-int setup_tcp_send_socket();
+int setup_tcp_send_socket(void);
 
 struct addrinfo *get_tcp_server_address(uint16_t *port, char *name);
 
