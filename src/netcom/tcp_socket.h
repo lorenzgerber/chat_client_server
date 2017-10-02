@@ -26,11 +26,11 @@ int setup_listener_socket(int sfd, uint16_t *port);
 
 int listen_obtain_client_socket(int sfd);
 
-int setup_send_socket();
+int setup_tcp_send_socket();
 
-struct addrinfo *get_server_address(uint16_t *port, char *name);
+struct addrinfo *get_tcp_server_address(uint16_t *port, char *name);
 
-int connect_to_server(int sock, struct addrinfo *res);
+int connect_to_tcp_server(int sock, struct addrinfo *res);
 
 
 #endif /* SRC_NETCOM_TCP_SOCKET_H_ */

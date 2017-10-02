@@ -73,14 +73,14 @@ int listen_obtain_client_socket(int sfd){
 
 }
 
-int setup_send_socket(){
+int setup_tcp_send_socket(){
 	int sock;
 	if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
 		perror("socket");
 	return sock;
 }
 
-struct addrinfo *get_server_address(uint16_t *port, char *name){
+struct addrinfo *get_tcp_server_address(uint16_t *port, char *name){
 	struct addrinfo *res;
 	struct addrinfo hints;
 		memset(&hints, 0, sizeof(struct addrinfo));
@@ -99,7 +99,7 @@ struct addrinfo *get_server_address(uint16_t *port, char *name){
 	return res;
 }
 
-int connect_to_server(int sock, struct addrinfo *res){
+int connect_to_tcp_server(int sock, struct addrinfo *res){
 
 	if(connect(sock, (struct sockaddr *)res->ai_addr, res->ai_addrlen) < 0)
 		return -1;
