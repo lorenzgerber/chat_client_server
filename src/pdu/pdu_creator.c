@@ -49,11 +49,21 @@ pdu* create_reg(uint8_t servername_length, uint16_t tcp_port){
 	pdu->tcp_port = tcp_port;
 	pdu->add_server_name = reg_add_server_name;
 	pdu->create_message = reg_create_message;
+	pdu->free_pdu = free_reg;
 	return pdu;
 }
 
 
 int free_pdu_reg(pdu_REG *pdu){
+
+	if(pdu->server_name != NULL){
+		free(pdu->server_name);
+	}
+	free(pdu);
+	return 0;
+}
+
+int free_reg(pdu *pdu){
 
 	if(pdu->server_name != NULL){
 		free(pdu->server_name);
