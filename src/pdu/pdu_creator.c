@@ -95,6 +95,7 @@ pdu* create_alive(uint8_t number_clients, uint16_t id_number){
 	pdu->number_clients = number_clients;
 	pdu->id_number = id_number;
 	pdu->create_message = alive_create_message;
+    pdu->free_pdu = free_alive;
 	return pdu;
 }
 
@@ -103,7 +104,10 @@ int free_pdu_alive(pdu_ALIVE* pdu){
 	free(pdu);
 	return 0;
 }
-
+int free_alive(pdu* pdu){
+    free(pdu);
+    return 0;
+}
 
 
 
@@ -123,6 +127,8 @@ pdu* create_ack(uint16_t id_number){
 	pdu->type = PDU_ACK;
 	pdu->id_number = id_number;
 	pdu->create_message = ack_create_message;
+    pdu->free_pdu = free_ack;
+
 	return pdu;
 }
 
@@ -132,7 +138,10 @@ int free_pdu_ack(pdu_ACK* pdu){
 	free(pdu);
 	return 0;
 }
-
+int free_ack(pdu* pdu){
+    free(pdu);
+    return 0;
+}
 
 
 
@@ -152,6 +161,7 @@ pdu* create_notreg(uint16_t id_number){
 	pdu->type = PDU_NOTREG;
 	pdu->id_number = id_number;
 	pdu->create_message = notreg_create_message;
+    pdu->free_pdu = free_notreg;
 	return pdu;
 }
 
@@ -159,7 +169,10 @@ int free_pdu_notreg(pdu_NOTREG* pdu){
 	free(pdu);
 	return 0;
 }
-
+int free_notreg(pdu* pdu){
+    free(pdu);
+    return 0;
+}
 
 
 /*
@@ -176,6 +189,7 @@ pdu* create_getlist(void){
 	pdu *pdu = malloc(sizeof(pdu));
 	pdu->type = PDU_GETLIST;
 	pdu->create_message = getlist_create_message;
+    pdu->free_pdu = free_getlist;
 	return pdu;
 }
 
@@ -183,7 +197,10 @@ int free_pdu_getlist(pdu_GETLIST* pdu){
 	free(pdu);
 	return 0;
 }
-
+int free_getlist(pdu* pdu){
+    free(pdu);
+    return 0;
+}
 
 
 
@@ -256,6 +273,7 @@ pdu* create_slist(uint16_t number_servers){
 	*pdu->current_servers = (pdu_server_entry*)malloc(number_servers * sizeof(pdu_server_entry*));
 	pdu->add_server_entry = add_server_entry2;
 	pdu->create_message = slist_create_message;
+    pdu->free_pdu = free_slist;
 	return pdu;
 }
 
@@ -278,7 +296,16 @@ int free_pdu_slist(pdu_SLIST *pdu){
 	free(pdu);
 	return 0;
 }
+int free_slist(pdu *pdu){
 
+    if(pdu->number_servers !=0){
+        for(int i = 0; i < pdu->number_servers;i++){
+            free_server_entry(pdu->current_servers[i]);
+        }
+    }
+    free(pdu);
+    return 0;
+}
 
 
 /*

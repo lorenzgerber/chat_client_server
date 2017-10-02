@@ -46,7 +46,7 @@ int main(int argc, char*argv[]){
 	free_pdu_reg(REG);
 	free_message_byte_array(MBA);
 
-
+    // Create new REG struct and add 1 server name
 	pdu *reg = create_reg(10,2000);
 	reg->add_server_name(reg,"servername");
 
@@ -87,10 +87,10 @@ int main(int argc, char*argv[]){
 	}
 	printf("\n");
 
-	// free REG and MBA
+	// free ALIVE and MBA
 	free_pdu_alive(ALIVE);
 	free_message_byte_array(MBA);
-
+/*
     pdu *alive = create_alive(100, 10000);
 
     // Create ALIVE byte stream message to send
@@ -106,7 +106,7 @@ int main(int argc, char*argv[]){
     // free REG and MBA
     alive->free_pdu(alive);
     free_message_byte_array(MBA);
-
+*/
 	/*
 	 * Test ACK
 	 */
@@ -191,17 +191,30 @@ int main(int argc, char*argv[]){
 	// Create GETLIST byte stream message to send
 	MBA = GETLIST->create_message(GETLIST);
 	length = get_length_GETLIST(GETLIST);
-
+    printf("Length of message = %d\n", length);
 	for(int i = 0;i < length;i++){
 		printf("%d, ", MBA->array[i]);
 	}
-
+    printf("\n");
 
 	// free GETLIST and MBA
 	free_pdu_getlist(GETLIST);
 	free_message_byte_array(MBA);
 
+    pdu *getlist = create_getlist();
 
+    // Create GETLIST byte stream message to send
+    MBA = getlist->create_message(getlist);
+    length = get_length_getlist(getlist);
+    printf("Length of message = %d\n", length);
+    for(int i = 0;i < length;i++){
+        printf("%d, ", MBA->array[i]);
+    }
+    printf("\n");
+
+    // free GETLIST and MBA
+    getlist->free_pdu(getlist);
+    free_message_byte_array(MBA);
 
 
 	/*
