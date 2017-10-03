@@ -80,7 +80,7 @@ io_handler* dummy_socket_mess(io_handler * dummy_socket){
 
     pdu *MESS = create_mess(8, 99);
     MESS->add_message(MESS, 13, 1505933137, "Test Message.");
-    MESS->add_client_identity(MESS, "identity");
+    MESS->add_identity(MESS, "identity");  //changed from add_client_identity
     dummy_socket->buffer = MESS->create_message(MESS);
     free_mess(MESS);
 

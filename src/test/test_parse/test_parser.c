@@ -78,12 +78,24 @@ int main(int argc, char*argv[]){
 
     io_handler* dummy_socket_quit;
     dummy_socket_quit = create_dummy_socket(PDU_QUIT, ENTITY_CLIENT);
-    parse_header(dummy_socket_quit);
-/*
+    pdu* quit = parse_header(dummy_socket_quit);
+
+    printf("\nQUIT pdu from dummy\n");
+    printf("op code: %d\n", quit->type);
+
 	io_handler *dummy_socket_mess;
     dummy_socket_mess = create_dummy_socket(PDU_MESS, ENTITY_CLIENT);
-	parse_header(dummy_socket_mess);
-*/
+	pdu* mess = parse_header(dummy_socket_mess);
+
+    printf("\nMESS pdu from dummy\n");
+    printf("op code: %d\n", mess->type);
+    printf("identity length: %d\n", mess->identity_length);
+    printf("Checksum: %d\n", mess->checksum);
+    printf("message length: %d\n", mess->message_length);
+    printf("timestamp: %d\n", mess->time_stamp);
+    printf("message: %s\n", mess->message);
+    printf("client identity: %s\n", mess->identity);
+
     io_handler* dummy_socket_pjoin;
     dummy_socket_pjoin = create_dummy_socket(PDU_PJOIN, ENTITY_CLIENT);
     parse_header(dummy_socket_pjoin);

@@ -34,10 +34,10 @@ pdu* parse_header(struct io_handler *socket){
 			return_pdu = parse_PARTICIPANTS(socket, read_position);
 			break;
         case PDU_QUIT:
-            parse_QUIT(socket, read_position);
+            return_pdu = parse_QUIT(socket, read_position);
             break;
         case PDU_MESS:
-            parse_MESS(socket, read_position);
+            return_pdu = parse_MESS(socket, read_position);
             break;
 		case PDU_PJOIN:
 			parse_PJOIN(socket, read_position);
@@ -154,12 +154,12 @@ pdu* parse_PARTICIPANTS(struct io_handler* socket, uint8_t* read_position){
 	return participants;
 }
 
-int parse_QUIT(struct io_handler* socket, uint8_t* read_position){
-
-    return 0;
+pdu* parse_QUIT(struct io_handler* socket, uint8_t* read_position){
+	pdu *quit = create_quit();
+    return quit;
 }
 
-int parse_MESS(struct io_handler* socket, uint8_t* read_position){
+pdu* parse_MESS(struct io_handler* socket, uint8_t* read_position){
 
 	char *identity;
 
@@ -210,7 +210,7 @@ int parse_MESS(struct io_handler* socket, uint8_t* read_position){
 		read_position = socket->request_n_word(socket, length_padded);
 		identity = malloc(sizeof(char)*identity_length);
 		memcpy(identity, read_position, sizeof(char)*identity_length);
-		MESS->add_client_identity(MESS, identity);
+		MESS->add_identity(MESS, identity);//changed from add_identity
 	}
 
 	for(int i = 0; i < identity_length; i++){
@@ -219,7 +219,7 @@ int parse_MESS(struct io_handler* socket, uint8_t* read_position){
 	printf("\n");
 
 
-	return 0;
+	return MESS;
 
 }
 
