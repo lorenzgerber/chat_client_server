@@ -14,9 +14,9 @@
 #include "pdu_creator.h"
 #include "socket_templates.h"
 
-int parse_header(struct io_handler* socket);
+pdu* parse_header(struct io_handler* socket);
 
-int parse_ACK(struct io_handler* socket, uint8_t* read_position);
+pdu* parse_ACK(struct io_handler* socket, uint8_t* read_position);
 
 int parse_NOTREG(struct io_handler* socket, uint8_t* read_position);
 

@@ -22,7 +22,11 @@ int main(int argc, char*argv[]){
 
     io_handler* dummy_socket_ack;
     dummy_socket_ack = create_dummy_socket(PDU_ACK, ENTITY_SERVER);
-    parse_header(dummy_socket_ack);
+    pdu* ack = parse_header(dummy_socket_ack);
+
+    printf("\nACK pdu from dummy\n");
+    printf("op code: %d\n", ack->type);
+    printf("identity nr: %d\n", ack->id_number);
 
     io_handler* dummy_socket_notreg;
     dummy_socket_notreg = create_dummy_socket(PDU_NOTREG, ENTITY_SERVER);

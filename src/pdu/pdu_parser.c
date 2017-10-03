@@ -7,17 +7,19 @@
 
 #include "pdu_parser.h"
 
-int parse_header(struct io_handler *socket){
+pdu* parse_header(struct io_handler *socket){
 
 	uint8_t op_code;
 	uint8_t* read_position;
 	read_position = socket->request_n_word(socket, 1);
 	op_code = *read_position;
+
+    pdu* return_pdu = NULL;
 	printf("---------------\n");
 	printf("op_code %d\n", op_code);
 	switch(op_code){
 		case PDU_ACK:
-			parse_ACK(socket, read_position);
+			return_pdu = parse_ACK(socket, read_position);
 			break;
 		case PDU_NOTREG:
 			parse_NOTREG(socket, read_position);
@@ -45,15 +47,15 @@ int parse_header(struct io_handler *socket){
 			break;
 	}
 
-
-
-	return 0;
+    return return_pdu;
 }
-int parse_ACK(struct io_handler* socket, uint8_t* read_position){
+pdu* parse_ACK(struct io_handler* socket, uint8_t* read_position){
 	uint16_t id_nr = ((uint16_t)*(read_position+2) << 8) | (uint16_t)*(read_position+3);
 	id_nr = ntohs(id_nr);
+    pdu *ack = create_ack(id_nr);
 	printf("identity number %d\n", id_nr);
-	return 0;
+
+	return ack;
 }
 
 int parse_NOTREG(struct io_handler* socket, uint8_t* read_position){
