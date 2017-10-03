@@ -33,7 +33,6 @@ message_byte_array* quit_create_message(pdu *self);
 
 message_byte_array* mess_create_message(pdu *self);
 
-message_byte_array* pdu_pjoin_create_message(pdu_PJOIN *self);
 message_byte_array* pjoin_create_message(pdu *self);
 
 message_byte_array* pdu_pleave_create_message(pdu_PLEAVE *self);

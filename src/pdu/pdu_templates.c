@@ -142,19 +142,6 @@ uint32_t get_length_mess(pdu *pdu){
 
 
 
-
-
-
-uint32_t get_length_PJOIN(pdu_PJOIN *pdu){
-    uint32_t length_of_pjoin = (uint32_t) (LENGTH_OP +
-                                           LENGTH_IDENTITY_LENGTH +
-                                           LENGTH_PAD * 2 +
-                                           LENGTH_TIME +
-                                           pdu->identity_length +
-                                           calc_word_padding(pdu->identity_length));
-	return length_of_pjoin;
-}
-
 uint32_t get_length_pjoin(pdu *pdu){
     uint32_t length_of_pjoin = (uint32_t) (LENGTH_OP +
                                            LENGTH_IDENTITY_LENGTH +

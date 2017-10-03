@@ -242,25 +242,6 @@ int main(int argc, char*argv[]){
 	 */
     printf("\n\nPJOIN\n");
 
-	//Create PJOIN and add some identities
-
-	pdu_PJOIN *PJOIN = create_PJOIN(8);
-	PJOIN->add_client_identity(PJOIN, 1505933137, "identity");
-
-	printf("%s\n", PJOIN->client_identity);
-
-	// Create PJOIN byte stream for send
-	MBA = PJOIN->create_message(PJOIN);
-	length = get_length_PJOIN(PJOIN);
-	printf("Length of message = %d\n", length);
-
-	for(int i = 0;i < length;i++){
-		printf("%d, ", MBA->array[i]);
-	}
-    printf("\n");
-
-	free_pdu_pjoin(PJOIN);
-	free_message_byte_array(MBA);
 
     //---------PJOIN using new struct--------
     pdu *pjoin = create_pjoin(8);

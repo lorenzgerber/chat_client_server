@@ -89,11 +89,11 @@ io_handler* dummy_socket_mess(io_handler * dummy_socket){
 
 io_handler* dummy_socket_pjoin(io_handler * dummy_socket){
 
-	pdu_PJOIN *PJOIN = create_PJOIN(8);
-	PJOIN->add_client_identity(PJOIN, 1505933137, "identity");
+	pdu *PJOIN = create_pjoin(8);
+	PJOIN->add_client_identity_timestamp(PJOIN, 1505933137, "identity");
 
 	dummy_socket->buffer = PJOIN->create_message(PJOIN);
-	free_pdu_pjoin(PJOIN);
+	free_pjoin(PJOIN);
 
 	return dummy_socket;
 }

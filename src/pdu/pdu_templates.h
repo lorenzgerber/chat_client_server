@@ -226,7 +226,6 @@ uint32_t get_length_quit(pdu *pdu);
 
 uint32_t get_length_mess(pdu *pdu);
 
-uint32_t get_length_PJOIN(pdu_PJOIN *pdu);
 uint32_t get_length_pjoin(pdu *pdu);
 
 uint32_t get_length_PLEAVE(pdu_PLEAVE *pdu);

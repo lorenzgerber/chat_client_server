@@ -370,13 +370,6 @@ int free_mess(pdu *pdu){
 /*
  * PJOIN
  */
-int pdu_pjoin_add_client_identity(pdu_PJOIN *pdu, uint32_t time_stamp, char* client_identity){
-	pdu->time_stamp = time_stamp;
-	pdu->client_identity = malloc((pdu->identity_length+1)*sizeof(char));
-	strcpy(pdu->client_identity, client_identity);
-	return 0;
-}
-
 int pjoin_add_client_identity(pdu *pdu, uint32_t time_stamp, char* client_identity){
 	pdu->time_stamp = time_stamp;
 	pdu->identity = malloc((pdu->identity_length+1)*sizeof(char));
@@ -384,15 +377,6 @@ int pjoin_add_client_identity(pdu *pdu, uint32_t time_stamp, char* client_identi
 	return 0;
 }
 
-
-pdu_PJOIN* create_PJOIN(uint8_t identity_length){
-	pdu_PJOIN *pdu = malloc(sizeof(struct pdu_PJOIN));
-	pdu->type = PDU_PJOIN;
-	pdu->identity_length = identity_length;
-	pdu->add_client_identity = pdu_pjoin_add_client_identity;
-	pdu->create_message = pdu_pjoin_create_message;
-	return pdu;
-}
 
 pdu* create_pjoin(uint8_t identity_length){
 	pdu *pdu = malloc(sizeof(struct pdu));
@@ -404,13 +388,6 @@ pdu* create_pjoin(uint8_t identity_length){
 	return pdu;
 }
 
-int free_pdu_pjoin(pdu_PJOIN *pdu){
-	if(pdu->identity_length != 0){
-		free(pdu->client_identity);
-	}
-	free(pdu);
-	return 0;
-}
 int free_pjoin(pdu *pdu){
     if(pdu->identity_length != 0){
         free(pdu->identity);
