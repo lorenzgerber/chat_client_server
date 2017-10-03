@@ -33,11 +33,6 @@ uint32_t get_length_reg(pdu *pdu){
 
 
 
-uint32_t get_length_ALIVE(pdu_ALIVE *pdu){
-	uint32_t length_of_alive = 4;
-	return length_of_alive;
-}
-
 uint32_t get_length_alive(pdu *pdu){
 	uint32_t length_of_alive = 4;
 	return length_of_alive;

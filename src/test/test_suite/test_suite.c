@@ -41,22 +41,6 @@ int main(int argc, char*argv[]){
 	 */
 	printf("\n\nALIVE\n");
 
-	// Create ALIVE struct
-	pdu_ALIVE *ALIVE = create_ALIVE(100, 10000);
-
-	// Create ALIVE byte stream message to send
-	MBA = ALIVE->create_message(ALIVE);
-	length = get_length_ALIVE(ALIVE);
-	printf("Length of message = %d\n", length);
-
-	for(int i = 0;i < length;i++){
-		printf("%d, ", MBA->array[i]);
-	}
-	printf("\n");
-
-	// free ALIVE and MBA
-	free_pdu_alive(ALIVE);
-	free_message_byte_array(MBA);
 
     //------ALIVE using new struct------
     pdu *alive = create_alive(100, 10000);

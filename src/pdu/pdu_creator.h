@@ -24,10 +24,8 @@ int free_reg(pdu *pdu);
 
 
 // ALIVE
-pdu_ALIVE* create_ALIVE(uint8_t number_clients, uint16_t id_number);
 pdu* create_alive(uint8_t number_clients, uint16_t id_number);
 
-int free_pdu_alive(pdu_ALIVE* pdu);
 int free_alive(pdu* pdu);
 
 // ACK

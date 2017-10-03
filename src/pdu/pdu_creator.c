@@ -9,8 +9,6 @@
 /*
  * pdu_REG
  */
-
-
 int reg_add_server_name(pdu *pdu, char* server_name){
 	if(strlen(server_name) == pdu->server_name_length){
 		pdu->server_name = malloc((pdu->server_name_length+1)*sizeof(char));
@@ -22,7 +20,6 @@ int reg_add_server_name(pdu *pdu, char* server_name){
 	return 0;
 }
 
-
 pdu* create_reg(uint8_t servername_length, uint16_t tcp_port){
 	pdu *pdu = malloc(sizeof(struct pdu));
 	pdu->type = PDU_REG;
@@ -33,9 +30,6 @@ pdu* create_reg(uint8_t servername_length, uint16_t tcp_port){
 	pdu->free_pdu = free_reg;
 	return pdu;
 }
-
-
-
 
 int free_reg(pdu *pdu){
 
@@ -54,14 +48,6 @@ int free_reg(pdu *pdu){
 /*
  * pdu_ALIVE
  */
-pdu_ALIVE* create_ALIVE(uint8_t number_clients, uint16_t id_number){
-	pdu_ALIVE *pdu = malloc(sizeof(struct pdu_ALIVE));
-	pdu->type = PDU_ALIVE;
-	pdu->number_clients = number_clients;
-	pdu->id_number = id_number;
-	pdu->create_message = pdu_alive_create_message;
-	return pdu;
-}
 
 pdu* create_alive(uint8_t number_clients, uint16_t id_number){
 	pdu *pdu = malloc(sizeof(struct pdu));
@@ -73,11 +59,6 @@ pdu* create_alive(uint8_t number_clients, uint16_t id_number){
 	return pdu;
 }
 
-
-int free_pdu_alive(pdu_ALIVE* pdu){
-	free(pdu);
-	return 0;
-}
 int free_alive(pdu* pdu){
     free(pdu);
     return 0;
