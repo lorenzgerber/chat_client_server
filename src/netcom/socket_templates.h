@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <sys/socket.h>
 #include "message_byte_array.h"
 
 typedef struct io_handler {
@@ -25,7 +26,7 @@ typedef struct io_handler {
 	int read_head;
 	int socket_entity;
 
-	// function: init_socket
+	// function: connect_socket
 
 	// function: request_n_word
 	uint8_t* (*request_n_word)(struct io_handler *self, int n_word);

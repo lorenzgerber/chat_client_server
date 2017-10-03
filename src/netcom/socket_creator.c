@@ -20,17 +20,39 @@ io_handler* create_dummy_socket(int op_code, int socket_entity){
 	dummy_socket->socket_entity = socket_entity;
 
 	switch(op_code){
-		case PDU_MESS:
-			return dummy_socket_mess(dummy_socket);
-			break;
 		case PDU_ACK:
 			return dummy_socket_ack(dummy_socket);
-			break;
+		case PDU_NOTREG:
+			return dummy_socket_notreg(dummy_socket);
+		case PDU_SLIST:
+			return dummy_socket_slist(dummy_socket);
+		case PDU_JOIN:
+			return dummy_socket_join(dummy_socket);
+		case PDU_PARTICIPANTS:
+			return dummy_socket_participants(dummy_socket);
+        case PDU_QUIT:
+            return dummy_socket_quit(dummy_socket);
+		case PDU_MESS:
+			return dummy_socket_mess(dummy_socket);
+		case PDU_PJOIN:
+			return  dummy_socket_pjoin(dummy_socket);
+		case PDU_PLEAVE:
+			return dummy_socket_pleave(dummy_socket);
 		default:
 			break;
 	}
 
 	return dummy_socket;
+}
+
+io_handler* create_client_tcp_socket(uint8_t address_server[4], uint16_t port){
+	io_handler *io = malloc(sizeof(io_handler));
+	io->socket_entity = ENTITY_CLIENT;
+
+
+
+
+	return io;
 }
 
 
