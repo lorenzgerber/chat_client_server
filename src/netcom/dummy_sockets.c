@@ -100,11 +100,11 @@ io_handler* dummy_socket_pjoin(io_handler * dummy_socket){
 
 io_handler* dummy_socket_pleave(io_handler * dummy_socket){
 
-	pdu_PLEAVE *PLEAVE = create_PLEAVE(8);
-	PLEAVE->add_client_identity(PLEAVE, 1505933137, "identity");
+	pdu *PLEAVE = create_pleave(8);
+	PLEAVE->add_client_identity_timestamp(PLEAVE, 1505933137, "identity");
 
 	dummy_socket->buffer = PLEAVE->create_message(PLEAVE);
-	free_pdu_pleave(PLEAVE);
+	free_pleave(PLEAVE);
 
 	return dummy_socket;
 }

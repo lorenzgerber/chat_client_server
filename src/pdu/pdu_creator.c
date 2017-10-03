@@ -399,12 +399,6 @@ int free_pjoin(pdu *pdu){
 /*
  * PLEAVE
  */
-int pdu_pleave_add_client_identity(pdu_PLEAVE *pdu, uint32_t time_stamp, char* client_identity){
-	pdu->time_stamp = time_stamp;
-	pdu->client_identity = malloc((pdu->identity_length+1)*sizeof(char));
-	strcpy(pdu->client_identity, client_identity);
-	return 0;
-}
 
 int pleave_add_client_identity(pdu *pdu, uint32_t time_stamp, char* client_identity){
 	pdu->time_stamp = time_stamp;
@@ -413,15 +407,6 @@ int pleave_add_client_identity(pdu *pdu, uint32_t time_stamp, char* client_ident
 	return 0;
 }
 
-
-pdu_PLEAVE* create_PLEAVE(uint8_t identity_length){
-	pdu_PLEAVE *pdu = malloc(sizeof(struct pdu_PLEAVE));
-	pdu->type = PDU_PLEAVE;
-	pdu->identity_length = identity_length;
-	pdu->add_client_identity = pdu_pleave_add_client_identity;
-	pdu->create_message = pdu_pleave_create_message;
-	return pdu;
-}
 
 pdu* create_pleave(uint8_t identity_length){
 	pdu *pdu = malloc(sizeof(struct pdu));
@@ -433,14 +418,6 @@ pdu* create_pleave(uint8_t identity_length){
 	return pdu;
 }
 
-
-int free_pdu_pleave(pdu_PLEAVE *pdu){
-	if(pdu->identity_length != 0){
-		free(pdu->client_identity);
-	}
-	free(pdu);
-	return 0;
-}
 int free_pleave(pdu *pdu){
     if(pdu->identity_length != 0){
         free(pdu->identity);

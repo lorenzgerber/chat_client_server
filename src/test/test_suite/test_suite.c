@@ -266,24 +266,6 @@ int main(int argc, char*argv[]){
 	 */
     printf("\n\nPLEAVE\n");
 
-	//Create PLEAVE and add some identities
-    pdu_PLEAVE *PLEAVE = create_PLEAVE(8);
-	PLEAVE->add_client_identity(PLEAVE, 1505933137, "identity");
-
-	printf("%s\n", PLEAVE->client_identity);
-
-	// Create PLEAVE byte stream for send
-	MBA = PLEAVE->create_message(PLEAVE);
-	length = get_length_PLEAVE(PLEAVE);
-	printf("Length of message = %d\n", length);
-
-	for(int i = 0;i < length;i++){
-		printf("%d, ", MBA->array[i]);
-	}
-    printf("\n");
-
-	free_pdu_pleave(PLEAVE);
-	free_message_byte_array(MBA);
 
     //---------PLEAVE using new struct-----------
     pdu *pleave = create_pleave(8);

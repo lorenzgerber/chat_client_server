@@ -101,14 +101,11 @@ int free_pjoin(pdu *pdu);
 
 // PLEAVE
 
-int pdu_pleave_add_client_identity(pdu_PLEAVE *pdu, uint32_t time_stamp, char* client_identity);
 int pleave_add_client_identity(pdu *pdu, uint32_t time_stamp, char* client_identity);
 
 
-pdu_PLEAVE* create_PLEAVE(uint8_t identity_length);
 pdu* create_pleave(uint8_t identity_length);
 
-int free_pdu_pleave(pdu_PLEAVE *pdu);
 int free_pleave(pdu *pdu);
 
 #endif /* PDU_CREATOR_H_ */

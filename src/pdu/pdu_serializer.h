@@ -35,7 +35,6 @@ message_byte_array* mess_create_message(pdu *self);
 
 message_byte_array* pjoin_create_message(pdu *self);
 
-message_byte_array* pdu_pleave_create_message(pdu_PLEAVE *self);
 message_byte_array* pleave_create_message(pdu *self);
 
 #endif /* PDU_SERIALIZER_H_ */

@@ -228,7 +228,6 @@ uint32_t get_length_mess(pdu *pdu);
 
 uint32_t get_length_pjoin(pdu *pdu);
 
-uint32_t get_length_PLEAVE(pdu_PLEAVE *pdu);
 uint32_t get_length_pleave(pdu *pdu);
 
 #endif /* PDU_TEMPLATES_H_ */
