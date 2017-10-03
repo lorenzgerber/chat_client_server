@@ -315,29 +315,13 @@ int free_quit(pdu* pdu){
 /*
  * MESS
  */
-/*
-int pdu_mess_padded_message_length(pdu_MESS *pdu){
-	int result = pdu->message_length + (pdu->message_length % 4) - 4;
-	return result;
-}*/
 
-int pdu_mess_calc_checksum(pdu_MESS *pdu){
-
-	return 0;
-}
 
 int mess_calc_checksum(pdu *pdu){
 
 	return 0;
 }
 
-
-int pdu_mess_add_client_identity(pdu_MESS *pdu, char* client_identity){
-	pdu->client_identity = malloc((pdu->identity_length+1)*sizeof(char));
-	strcpy(pdu->client_identity, client_identity);
-
-	return 0;
-}
 
 int mess_add_client_identity(pdu *pdu, char* client_identity){
 	pdu->identity = malloc((pdu->identity_length+1)*sizeof(char));
@@ -346,15 +330,6 @@ int mess_add_client_identity(pdu *pdu, char* client_identity){
 	return 0;
 }
 
-
-int pdu_mess_add_message(pdu_MESS *pdu, uint16_t message_length, uint32_t time_stamp, char* message){
-	pdu->time_stamp = time_stamp;
-	pdu->message_length = message_length;
-	pdu->message = malloc((pdu->message_length+1)* sizeof(char));
-	strcpy(pdu->message, message);
-
- 	return 0;
-}
 
 int mess_add_message(pdu *pdu, uint16_t message_length, uint32_t time_stamp, char* message){
 	pdu->time_stamp = time_stamp;
@@ -366,19 +341,6 @@ int mess_add_message(pdu *pdu, uint16_t message_length, uint32_t time_stamp, cha
 }
 
 
-pdu_MESS* create_MESS(uint8_t identity_length, uint8_t checksum){
-	pdu_MESS *pdu = malloc(sizeof(struct pdu_MESS));
-	pdu->type = PDU_MESS;
-	pdu->identity_length = identity_length;
-	pdu->checksum = checksum;
-	pdu->add_message = pdu_mess_add_message;
-	pdu->add_client_identity = pdu_mess_add_client_identity;
-	pdu->calc_checksum = pdu_mess_calc_checksum;
-	//pdu->padded_message_length = pdu_mess_padded_message_length;
-	pdu->create_message = pdu_mess_create_message;
-	return pdu;
-}
-
 
 pdu* create_mess(uint8_t identity_length, uint8_t checksum){
 	pdu *pdu = malloc(sizeof(struct pdu));
@@ -388,25 +350,11 @@ pdu* create_mess(uint8_t identity_length, uint8_t checksum){
 	pdu->add_message = mess_add_message;
 	pdu->add_identity = mess_add_client_identity;
 	pdu->calc_checksum = mess_calc_checksum;
-	//pdu->padded_message_length = pdu_mess_padded_message_length;
 	pdu->create_message = mess_create_message;
     pdu->free_pdu = free_mess;
 	return pdu;
 }
 
-
-int free_pdu_mess(pdu_MESS *pdu){
-
-	if(pdu->identity_length !=0){
-		free(pdu->client_identity);
-	}
-	if(pdu->message_length >0){
-		free(pdu->message);
-	}
-
-	free(pdu);
-	return 0;
-}
 int free_mess(pdu *pdu){
 
     if(pdu->identity_length !=0){
@@ -450,7 +398,7 @@ pdu* create_pjoin(uint8_t identity_length){
 	pdu *pdu = malloc(sizeof(struct pdu));
 	pdu->type = PDU_PJOIN;
 	pdu->identity_length = identity_length;
-	pdu->add_client_identity = pjoin_add_client_identity;
+	pdu->add_client_identity_timestamp = pjoin_add_client_identity;
 	pdu->create_message = pjoin_create_message;
     pdu->free_pdu = free_pjoin;
 	return pdu;
@@ -502,7 +450,7 @@ pdu* create_pleave(uint8_t identity_length){
 	pdu *pdu = malloc(sizeof(struct pdu));
 	pdu->type = PDU_PLEAVE;
 	pdu->identity_length = identity_length;
-	pdu->add_client_identity = pleave_add_client_identity;
+	pdu->add_client_identity_timestamp = pleave_add_client_identity;
 	pdu->create_message = pleave_create_message;
     pdu->free_pdu = free_pleave;
 	return pdu;

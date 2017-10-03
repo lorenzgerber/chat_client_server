@@ -81,21 +81,14 @@ pdu* create_quit(void);
 int free_quit(pdu* pdu);
 
 // MESS
-//int pdu_padded_message_length(pdu_MESS *pdu);
-
-int pdu_mess_calc_checksum(pdu_MESS *pdu);
 int mess_calc_checksum(pdu *pdu);
 
-int pdu_mess_add_identity(pdu_MESS *pdu, char* identity);
 int mess_add_identity(pdu *pdu, char* identity);
 
-int pdu_mess_add_message(pdu_MESS *pdu, uint16_t message_length, uint32_t time_stamp, char* message);
 int mess_add_message(pdu *pdu, uint16_t message_length, uint32_t time_stamp, char* message);
 
-pdu_MESS* create_MESS(uint8_t identity_length, uint8_t checksum);
 pdu* create_mess(uint8_t identity_length, uint8_t checksum);
 
-int free_pdu_mess(pdu_MESS *pdu);
 int free_mess(pdu *pdu);
 
 // PJOIN

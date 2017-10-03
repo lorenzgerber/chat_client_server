@@ -143,7 +143,7 @@ int parse_MESS(struct io_handler* socket, uint8_t* read_position){
 	printf("identity length %d\n", identity_length);
 	printf("checksum %d\n", checksum);
 
-	pdu_MESS *MESS = create_MESS(identity_length, checksum);
+	pdu *MESS = create_mess(identity_length, checksum);
 
 	read_position = socket->request_n_word(socket, 1);
 

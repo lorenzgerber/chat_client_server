@@ -216,23 +216,6 @@ int main(int argc, char*argv[]){
 	 */
     printf("\n\nMESS\n");
 
-	pdu_MESS *MESS = create_MESS(8, 99);
-	MESS->add_message(MESS, 13, 1505933137, "Test Message.");
-	MESS->add_client_identity(MESS, "identity");
-
-	printf("%s\n", MESS->message);
-
-	MBA = MESS->create_message(MESS);
-	length = get_length_MESS(MESS);
-	printf("Length of message = %d\n", length);
-
-	for(int i = 0;i < length;i++){
-		printf("%d, ", MBA->array[i]);
-	}
-    printf("\n");
-
-	free_pdu_mess(MESS);
-	free_message_byte_array(MBA);
 
     //--------MESS using new struct--------
     pdu *mess = create_mess(8, 99);
@@ -281,7 +264,7 @@ int main(int argc, char*argv[]){
 
     //---------PJOIN using new struct--------
     pdu *pjoin = create_pjoin(8);
-    pjoin->add_client_identity(pjoin, 1505933137, "identity");
+    pjoin->add_client_identity_timestamp(pjoin, 1505933137, "identity");
 
     printf("%s\n", pjoin->identity);
 
@@ -323,7 +306,7 @@ int main(int argc, char*argv[]){
 
     //---------PLEAVE using new struct-----------
     pdu *pleave = create_pleave(8);
-    pleave->add_client_identity(pleave, 1505933137, "identity");
+    pleave->add_client_identity_timestamp(pleave, 1505933137, "identity");
 
     printf("%s\n", pleave->identity);
 
