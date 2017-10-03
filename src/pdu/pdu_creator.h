@@ -82,7 +82,7 @@ pdu_JOIN* create_JOIN(uint8_t identity_length);
 pdu* create_join(uint8_t identity_length);
 
 int free_pdu_join(pdu_JOIN *pdu);
-
+int free_join(pdu *pdu);
 
 // PARTICIPANTS
 int pdu_participants_add_identities(pdu_PARTICIPANTS *pdu, char* identities);
@@ -92,7 +92,7 @@ pdu_PARTICIPANTS* create_PARTICIPANTS(uint8_t number_identities, uint16_t length
 pdu* create_participants(uint8_t number_identities, uint16_t length);
 
 int free_pdu_participants(pdu_PARTICIPANTS *pdu);
-
+int free_participants(pdu *pdu);
 
 // QUIT
 
@@ -100,7 +100,7 @@ pdu_QUIT* create_QUIT(void);
 pdu* create_quit(void);
 
 int free_pdu_quit(pdu_QUIT* pdu);
-
+int free_quit(pdu* pdu);
 
 // MESS
 //int pdu_padded_message_length(pdu_MESS *pdu);
@@ -118,7 +118,7 @@ pdu_MESS* create_MESS(uint8_t identity_length, uint8_t checksum);
 pdu* create_mess(uint8_t identity_length, uint8_t checksum);
 
 int free_pdu_mess(pdu_MESS *pdu);
-
+int free_mess(pdu *pdu);
 
 // PJOIN
 
@@ -129,7 +129,7 @@ pdu_PJOIN* create_PJOIN(uint8_t identity_length);
 pdu* create_pjoin(uint8_t identity_length);
 
 int free_pdu_pjoin(pdu_PJOIN *pdu);
-
+int free_pjoin(pdu *pdu);
 
 // PLEAVE
 
@@ -141,6 +141,6 @@ pdu_PLEAVE* create_PLEAVE(uint8_t identity_length);
 pdu* create_pleave(uint8_t identity_length);
 
 int free_pdu_pleave(pdu_PLEAVE *pdu);
-
+int free_pleave(pdu *pdu);
 
 #endif /* PDU_CREATOR_H_ */
