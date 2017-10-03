@@ -155,7 +155,7 @@ pdu_server_entry* create_server_entry(uint8_t address[4], uint16_t port, uint8_t
 }
 
 
-int add_server_entry2(pdu *pdu, pdu_server_entry* server_entry){
+int add_server_entry(pdu *pdu, pdu_server_entry* server_entry){
 	if(pdu->server_assigned == pdu->number_servers){
 		perror("all servers already assigned\n");
 		return -1;
@@ -172,7 +172,7 @@ pdu* create_slist(uint16_t number_servers){
 	pdu->number_servers = number_servers;
 	pdu->server_assigned = 0;
 	pdu->current_servers = malloc(sizeof(pdu_server_entry*)*number_servers);
-	pdu->add_server_entry = add_server_entry2;
+	pdu->add_server_entry = add_server_entry;
 	pdu->create_message = slist_create_message;
     pdu->free_pdu = free_slist;
 	return pdu;
