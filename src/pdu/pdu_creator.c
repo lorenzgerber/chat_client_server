@@ -204,17 +204,6 @@ int free_slist(pdu *pdu){
 /*
  * pdu_JOIN
  */
-int pdu_join_add_identity(pdu_JOIN *pdu, char* identity){
-	if(strlen(identity) == pdu->identity_length){
-		pdu->identity = malloc((pdu->identity_length+1)*sizeof(char));
-		strcpy(pdu->identity, identity);
-	} else {
-		perror("identity length missmatch\n");
-		return -1;
-	}
-	return 0;
-}
-
 int join_add_identity(pdu *pdu, char* identity){
 	if(strlen(identity) == pdu->identity_length){
 		pdu->identity = malloc((pdu->identity_length+1)*sizeof(char));
@@ -227,15 +216,6 @@ int join_add_identity(pdu *pdu, char* identity){
 }
 
 
-pdu_JOIN* create_JOIN(uint8_t identity_length){
-	pdu_JOIN *pdu = malloc(sizeof(struct pdu_JOIN));
-	pdu->type = PDU_JOIN;
-	pdu->identity_length = identity_length;
-	pdu->add_identity = pdu_join_add_identity;
-	pdu->create_message = pdu_join_create_message;
-	return pdu;
-}
-
 pdu* create_join(uint8_t identity_length){
 	pdu *pdu = malloc(sizeof(struct pdu));
 	pdu->type = PDU_JOIN;
@@ -246,16 +226,6 @@ pdu* create_join(uint8_t identity_length){
 	return pdu;
 }
 
-
-
-int free_pdu_join(pdu_JOIN *pdu){
-
-	if(pdu->identity != NULL){
-		free(pdu->identity);
-	}
-	free(pdu);
-	return 0;
-}
 
 int free_join(pdu *pdu){
 

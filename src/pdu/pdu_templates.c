@@ -86,18 +86,6 @@ uint32_t get_length_slist(pdu *pdu){
 
 
 
-
-
-
-uint32_t get_length_JOIN(pdu_JOIN *pdu){
-    uint32_t length_of_join = (uint32_t) (LENGTH_OP +
-                                          LENGTH_IDENTITY_LENGTH +
-                                          LENGTH_PAD * 2 +
-										  pdu->identity_length +
-										  calc_word_padding(pdu->identity_length));
-	return length_of_join;
-}
-
 uint32_t get_length_join(pdu *pdu){
     uint32_t length_of_join = (uint32_t) (LENGTH_OP +
                                           LENGTH_IDENTITY_LENGTH +

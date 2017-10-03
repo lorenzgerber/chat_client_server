@@ -149,22 +149,6 @@ int main(int argc, char*argv[]){
 	 */
     printf("\n\nJOIN\n");
 
-	//Create JOIN and add identity
-	pdu_JOIN *JOIN = create_JOIN(8);
-	JOIN->add_identity(JOIN, "identity");
-
-	// Create join byte stream message to send
-	MBA = JOIN->create_message(JOIN);
-	length = get_length_JOIN(JOIN);
-    printf("Length of message = %d\n", length);
-	for(int i = 0; i < length; i++){
-		printf("%d, ", MBA->array[i]);
-	}
-    printf("\n");
-
-	// free JOIN and MBA
-	free_pdu_join(JOIN);
-	free_message_byte_array(MBA);
 
     //------JOIN using new struct---------
     pdu *join = create_join(8);

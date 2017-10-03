@@ -99,24 +99,6 @@ message_byte_array* slist_create_message(pdu *self){
 
 
 
-
-
-message_byte_array* pdu_join_create_message(pdu_JOIN *self){
-	int length = get_length_JOIN(self);
-	message_byte_array* message = create_message_byte_array(length);
-	message->add_uint8(message, self->type);
-	message->add_uint8(message, self->identity_length);
-	message->add_uint16(message, 0);
-	message->add_chars(message, self->identity, self->identity_length);
-
-	int padding = 4 -(self->identity_length % 4);
-	for (int i = 0; i < padding; i++){
-		message->add_uint8(message, 0);
-	}
-
-	return message;
-}
-
 message_byte_array* join_create_message(pdu *self){
 	int length = get_length_join(self);
 	message_byte_array* message = create_message_byte_array(length);

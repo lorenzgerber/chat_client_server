@@ -25,7 +25,6 @@ message_byte_array* getlist_create_message(pdu *self);
 
 message_byte_array* slist_create_message(pdu *self);
 
-message_byte_array* pdu_join_create_message(pdu_JOIN *self);
 message_byte_array* join_create_message(pdu *self);
 
 message_byte_array* pdu_participants_create_message(pdu_PARTICIPANTS *self);

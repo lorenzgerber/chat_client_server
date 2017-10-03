@@ -61,13 +61,10 @@ int free_slist(pdu *pdu);
 
 // JOIN
 
-int pdu_join_add_identity(pdu_JOIN *pdu, char* identity);
 int join_add_identity(pdu *pdu, char* identity);
 
-pdu_JOIN* create_JOIN(uint8_t identity_length);
 pdu* create_join(uint8_t identity_length);
 
-int free_pdu_join(pdu_JOIN *pdu);
 int free_join(pdu *pdu);
 
 // PARTICIPANTS

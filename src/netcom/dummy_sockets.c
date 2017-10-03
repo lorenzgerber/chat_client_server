@@ -46,11 +46,11 @@ io_handler* dummy_socket_slist(io_handler* dummy_socket){
 
 io_handler* dummy_socket_join(io_handler* dummy_socket){
 
-	pdu_JOIN *JOIN = create_JOIN(8);
+	pdu *JOIN = create_join(8);
 	JOIN->add_identity(JOIN, "identity");
 
 	dummy_socket->buffer = JOIN->create_message(JOIN);
-	free_pdu_join(JOIN);
+	free_join(JOIN);
 
 	return dummy_socket;
 }
