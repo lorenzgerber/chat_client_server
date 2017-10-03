@@ -22,7 +22,7 @@ pdu* parse_NOTREG(struct io_handler* socket, uint8_t* read_position);
 
 pdu* parse_SLIST(struct io_handler* socket, uint8_t* read_position);
 
-int parse_JOIN(struct io_handler* socket, uint8_t* read_position);
+pdu* parse_JOIN(struct io_handler* socket, uint8_t* read_position);
 
 int parse_PARTICIPANTS(struct io_handler* socket, uint8_t* read_position);
 

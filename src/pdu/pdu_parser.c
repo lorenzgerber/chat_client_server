@@ -28,7 +28,7 @@ pdu* parse_header(struct io_handler *socket){
 			return_pdu = parse_SLIST(socket, read_position);
 			break;
 		case PDU_JOIN:
-			parse_JOIN(socket, read_position);
+			return_pdu = parse_JOIN(socket, read_position);
 			break;
 		case PDU_PARTICIPANTS:
 			parse_PARTICIPANTS(socket, read_position);
@@ -92,7 +92,7 @@ pdu* parse_SLIST(struct io_handler* socket, uint8_t* read_position){
 		printf("server %d name: ", i+1);
         char servername[255];
         memset(servername, 0, 255);
-        int j = 0;
+        int j;
 		for(j = 0; j < namelen; j++){
 			printf("%c", (int)*(read_position+j));
             servername[j] = (int)*(read_position+j);
@@ -106,18 +106,25 @@ pdu* parse_SLIST(struct io_handler* socket, uint8_t* read_position){
 	return slist;
 }
 
-int parse_JOIN(struct io_handler* socket, uint8_t* read_position){
+pdu* parse_JOIN(struct io_handler* socket, uint8_t* read_position){
 
 	uint8_t idlength = *(read_position+1);
 	printf("length of id: %d\n", idlength);
+    pdu *join = create_join(idlength);
 
 	read_position = socket->request_n_word(socket, (idlength + 4 - 1)/4);
 	printf("server id: ");
-	for(int i = 0; i < idlength; i++){
+    char identity[255];
+    memset(identity, 0, 255);
+    int i;
+	for(i = 0; i < idlength; i++){
 		printf("%c", (int)*(read_position+i));
+        identity[i] = (int)*(read_position+i);
 	}
+    identity[i+1] = '\0';
+    join->add_identity(join, identity);
 	printf("\n");
-	return 0;
+	return join;
 }
 
 int parse_PARTICIPANTS(struct io_handler* socket, uint8_t* read_position){

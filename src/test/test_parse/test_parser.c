@@ -57,7 +57,12 @@ int main(int argc, char*argv[]){
 
     io_handler* dummy_socket_join;
     dummy_socket_join = create_dummy_socket(PDU_JOIN, ENTITY_SERVER);
-    parse_header(dummy_socket_join);
+    pdu* join = parse_header(dummy_socket_join);
+
+    printf("\nJOIN pdu from dummy\n");
+    printf("op code: %d\n", join->type);
+    printf("identity length: %d\n", join->identity_length);
+    printf("identity: %s\n", join->identity);
 
     io_handler* dummy_socket_participants;
     dummy_socket_participants = create_dummy_socket(PDU_PARTICIPANTS, ENTITY_CLIENT);
