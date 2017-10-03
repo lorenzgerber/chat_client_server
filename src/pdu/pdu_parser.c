@@ -31,19 +31,19 @@ pdu* parse_header(struct io_handler *socket){
 			return_pdu = parse_JOIN(socket, read_position);
 			break;
 		case PDU_PARTICIPANTS:
-			parse_PARTICIPANTS(socket, read_position);
+			return_pdu = parse_PARTICIPANTS(socket, read_position);
 			break;
         case PDU_QUIT:
-            parse_QUIT(socket, read_position);
+            return_pdu = parse_QUIT(socket, read_position);
             break;
         case PDU_MESS:
-            parse_MESS(socket, read_position);
+            return_pdu = parse_MESS(socket, read_position);
             break;
 		case PDU_PJOIN:
-			parse_PJOIN(socket, read_position);
+			return_pdu = parse_PJOIN(socket, read_position);
 			break;
 		case PDU_PLEAVE:
-			parse_PLEAVE(socket, read_position);
+			return_pdu = parse_PLEAVE(socket, read_position);
 			break;
 	}
 
@@ -127,7 +127,7 @@ pdu* parse_JOIN(struct io_handler* socket, uint8_t* read_position){
 	return join;
 }
 
-int parse_PARTICIPANTS(struct io_handler* socket, uint8_t* read_position){
+pdu* parse_PARTICIPANTS(struct io_handler* socket, uint8_t* read_position){
 
 	uint8_t nr_of_clients = *(read_position+1);
 	printf("nr of clients: %d\n", nr_of_clients);
@@ -138,29 +138,36 @@ int parse_PARTICIPANTS(struct io_handler* socket, uint8_t* read_position){
 
 	read_position = socket->request_n_word(socket, (length_of_clients + 4 - 1)/4);
 	printf("Clients connected to server:\n");
+	pdu *participants = create_participants(nr_of_clients, length_of_clients);
+	char clients[255*nr_of_clients];
+	memset(clients, 0, 255*nr_of_clients);
 	for(int i = 0; i < length_of_clients; i++){
 		if((int)*(read_position+i) != '\0'){
 			printf("%c", (int)*(read_position+i));
+			clients[i] = (int)*(read_position+i);
 		}else{
 			printf("\n");
+			clients[i] = (int)*(read_position+i);
 		}
 	}
-	return 0;
+	participants->add_identities(participants, clients);
+	return participants;
 }
 
-int parse_QUIT(struct io_handler* socket, uint8_t* read_position){
-
-    return 0;
+pdu* parse_QUIT(struct io_handler* socket, uint8_t* read_position){
+	pdu *quit = create_quit();
+    return quit;
 }
 
-int parse_MESS(struct io_handler* socket, uint8_t* read_position){
+pdu* parse_MESS(struct io_handler* socket, uint8_t* read_position){
 
-	char *identity;
+
 
 
 	// build step by step a MESS pdu
 	uint8_t identity_length = *(read_position+2);
 	uint8_t checksum = *(read_position+3);
+    char identity[identity_length+1];
 
 	printf("identity length %d\n", identity_length);
 	printf("checksum %d\n", checksum);
@@ -181,10 +188,11 @@ int parse_MESS(struct io_handler* socket, uint8_t* read_position){
 	printf("timestamp: %u\n", time_stamp);
 
 
-	uint32_t length_padded = message_length/4 + ((message_length % 4 > 0) ? 1 : 0);
+	uint32_t length_padded = (uint32_t) (message_length / 4 + ((message_length % 4 > 0) ? 1 : 0));
 
 	read_position = socket->request_n_word(socket, length_padded);
-	char *message = malloc(sizeof(char)*message_length);
+	char message[message_length + 1];
+    memset(message, 0, message_length+1);// = malloc(sizeof(char)*(message_length+1));
 	memcpy(message, read_position, sizeof(char)*message_length);
 
 
@@ -200,11 +208,12 @@ int parse_MESS(struct io_handler* socket, uint8_t* read_position){
 			printf("something wrong, client sent entity length\n");
 		}
 	} else {
-		length_padded = identity_length/4 + ((identity_length % 4 > 0) ? 1 : 0);
+		length_padded = (uint32_t) (identity_length / 4 + ((identity_length % 4 > 0) ? 1 : 0));
 		read_position = socket->request_n_word(socket, length_padded);
-		identity = malloc(sizeof(char)*identity_length);
+        memset(identity, 0, sizeof(char)*(identity_length+1));
+		//identity = malloc(sizeof(char)*(identity_length+1));
 		memcpy(identity, read_position, sizeof(char)*identity_length);
-		MESS->add_client_identity(MESS, identity);
+		MESS->add_identity(MESS, identity);//changed from add_client_identity
 	}
 
 	for(int i = 0; i < identity_length; i++){
@@ -213,11 +222,11 @@ int parse_MESS(struct io_handler* socket, uint8_t* read_position){
 	printf("\n");
 
 
-	return 0;
+	return MESS;
 
 }
 
-int parse_PJOIN(struct io_handler* socket, uint8_t* read_position){
+pdu* parse_PJOIN(struct io_handler* socket, uint8_t* read_position){
 
 	uint8_t identity_length = *(read_position+1);
 	printf("identity length: %d\n", identity_length);
@@ -228,28 +237,46 @@ int parse_PJOIN(struct io_handler* socket, uint8_t* read_position){
 	printf("timestamp: %u\n", time_stamp);
 
 	read_position = socket->request_n_word(socket, (identity_length + 4 - 1)/4);
-	for(int i = 0; i < identity_length; i++){
+	char identity[255];
+	memset(identity, 0, 255);
+	int i;
+	for(i = 0; i < identity_length; i++){
 		printf("%c", *(read_position+i));
+		identity[i] = *(read_position+i);
 	}
+	identity[i+1] = '\0';
 	printf("\n");
-	return 0;
+
+	pdu *pjoin = create_pjoin(identity_length);
+	pjoin->add_client_identity_timestamp(pjoin, time_stamp, identity);
+
+	return pjoin;
 }
 
-int parse_PLEAVE(struct io_handler* socket, uint8_t* read_position){
+pdu* parse_PLEAVE(struct io_handler* socket, uint8_t* read_position){
 
 	uint8_t identity_length = *(read_position+1);
 	printf("identity length: %d\n", identity_length);
 
 	read_position = socket->request_n_word(socket, 1);
-	uint32_t time_stamp = ((uint32_t)*read_position << 24) | *(read_position+1) << 16 | *(read_position+2) << 8 | *(read_position+3);
+	uint32_t time_stamp = (*read_position << 24) | *(read_position+1) << 16 | *(read_position+2) << 8 | *(read_position+3);
 	time_stamp = ntohl(time_stamp);
 	printf("timestamp: %u\n", time_stamp);
 
 	read_position = socket->request_n_word(socket, (identity_length + 4 - 1)/4);
-	for(int i = 0; i < identity_length; i++){
+
+	char identity[255];
+	memset(identity, 0, 255);
+	int i;
+	for(i = 0; i < identity_length; i++){
 		printf("%c", *(read_position+i));
+		identity[i] = *(read_position+i);
 	}
+	identity[i+1] = '\0';
 	printf("\n");
-	
-	return 0;
+
+	pdu *pleave = create_pleave(identity_length);
+	pleave->add_client_identity_timestamp(pleave, time_stamp, identity);
+
+	return pleave;
 }
