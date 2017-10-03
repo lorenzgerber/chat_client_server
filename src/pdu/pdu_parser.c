@@ -31,7 +31,7 @@ pdu* parse_header(struct io_handler *socket){
 			return_pdu = parse_JOIN(socket, read_position);
 			break;
 		case PDU_PARTICIPANTS:
-			parse_PARTICIPANTS(socket, read_position);
+			return_pdu = parse_PARTICIPANTS(socket, read_position);
 			break;
         case PDU_QUIT:
             parse_QUIT(socket, read_position);
@@ -127,7 +127,7 @@ pdu* parse_JOIN(struct io_handler* socket, uint8_t* read_position){
 	return join;
 }
 
-int parse_PARTICIPANTS(struct io_handler* socket, uint8_t* read_position){
+pdu* parse_PARTICIPANTS(struct io_handler* socket, uint8_t* read_position){
 
 	uint8_t nr_of_clients = *(read_position+1);
 	printf("nr of clients: %d\n", nr_of_clients);
@@ -138,14 +138,20 @@ int parse_PARTICIPANTS(struct io_handler* socket, uint8_t* read_position){
 
 	read_position = socket->request_n_word(socket, (length_of_clients + 4 - 1)/4);
 	printf("Clients connected to server:\n");
+	pdu *participants = create_participants(nr_of_clients, length_of_clients);
+	char clients[255*nr_of_clients];
+	memset(clients, 0, 255*nr_of_clients);
 	for(int i = 0; i < length_of_clients; i++){
 		if((int)*(read_position+i) != '\0'){
 			printf("%c", (int)*(read_position+i));
+			clients[i] = (int)*(read_position+i);
 		}else{
 			printf("\n");
+			clients[i] = (int)*(read_position+i);
 		}
 	}
-	return 0;
+	participants->add_identities(participants, clients);
+	return participants;
 }
 
 int parse_QUIT(struct io_handler* socket, uint8_t* read_position){

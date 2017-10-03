@@ -66,16 +66,24 @@ int main(int argc, char*argv[]){
 
     io_handler* dummy_socket_participants;
     dummy_socket_participants = create_dummy_socket(PDU_PARTICIPANTS, ENTITY_CLIENT);
-    parse_header(dummy_socket_participants);
+    pdu* participants = parse_header(dummy_socket_participants);
+
+    printf("\nPARTICIPANTS pdu from dummy\n");
+    printf("op code: %d\n", participants->type);
+    printf("nr of identities: %d\n", participants->number_identities);
+    printf("identities length: %d\n", participants->length);
+    for(int i = 0; i < participants->number_identities; i++){
+        printf("Identity %d: %s\n",i+1,participants->identities[i]);
+    }
 
     io_handler* dummy_socket_quit;
     dummy_socket_quit = create_dummy_socket(PDU_QUIT, ENTITY_CLIENT);
     parse_header(dummy_socket_quit);
-
+/*
 	io_handler *dummy_socket_mess;
     dummy_socket_mess = create_dummy_socket(PDU_MESS, ENTITY_CLIENT);
 	parse_header(dummy_socket_mess);
-
+*/
     io_handler* dummy_socket_pjoin;
     dummy_socket_pjoin = create_dummy_socket(PDU_PJOIN, ENTITY_CLIENT);
     parse_header(dummy_socket_pjoin);
