@@ -23,24 +23,6 @@ int main(int argc, char*argv[]){
 	 */
 	printf("\n\nREG\n");
 
-	// Create REG struct and add 1 server name
-	pdu_REG *REG = create_REG(10,2000);
-	REG->add_server_name(REG,"servername");
-
-	// Create REG byte stream message to send
-	MBA = REG->create_message(REG);
-	length = get_length_REG(REG);
-	printf("Length of message = %d\n", length);
-
-    for(int i = 0;i < length;i++){
-		printf("%d, ", MBA->array[i]);
-	}
-	printf("\n");
-
-    // free REG and MBA
-	free_pdu_reg(REG);
-	free_message_byte_array(MBA);
-
     // -------REG using new struct-----------------
 	pdu *reg = create_reg(10,2000);
 	reg->add_server_name(reg,"servername");

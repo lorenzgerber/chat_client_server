@@ -53,15 +53,6 @@ typedef struct pdu_prototype {
 
 
 
-typedef struct pdu_REG {
-	uint8_t type;
-	uint8_t server_name_length;
-	uint16_t tcp_port;
-	char* server_name;
-	int (*add_server_name)(struct pdu_REG *self, char*);
-	struct message_byte_array* (*create_message)(struct pdu_REG *self);
-} pdu_REG;
-
 typedef struct pdu_ALIVE {
 	uint8_t type;
 	uint8_t number_clients;
@@ -214,7 +205,6 @@ int get_type(void *message);
 int calc_word_padding(uint32_t length);
 
 
-uint32_t get_length_REG(pdu_REG *pdu);
 uint32_t get_length_reg(pdu *pdu);
 
 uint32_t get_length_ALIVE(pdu_ALIVE *pdu);

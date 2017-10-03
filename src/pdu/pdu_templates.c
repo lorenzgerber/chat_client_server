@@ -21,16 +21,6 @@ int calc_word_padding(uint32_t length){
 
 
 
-
-uint32_t get_length_REG(pdu_REG *pdu){
-    uint32_t  length_of_reg = (uint32_t) (LENGTH_OP +
-                                          LENGTH_SERVER_NAME_LENGTH +
-                                          LENGTH_PORT +
-										  pdu->server_name_length +
-										  calc_word_padding(pdu->server_name_length));
-	return length_of_reg;
-}
-
 uint32_t get_length_reg(pdu *pdu){
     uint32_t  length_of_reg = (uint32_t) (LENGTH_OP +
                                           LENGTH_SERVER_NAME_LENGTH +

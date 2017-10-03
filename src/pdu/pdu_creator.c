@@ -10,16 +10,6 @@
  * pdu_REG
  */
 
-int pdu_reg_add_server_name(pdu_REG *pdu, char* server_name){
-	if(strlen(server_name) == pdu->server_name_length){
-		pdu->server_name = malloc((pdu->server_name_length+1)*sizeof(char));
-		strcpy(pdu->server_name, server_name);
-	} else {
-		perror("server_name length missmatch\n");
-		return -1;
-	}
-	return 0;
-}
 
 int reg_add_server_name(pdu *pdu, char* server_name){
 	if(strlen(server_name) == pdu->server_name_length){
@@ -32,15 +22,6 @@ int reg_add_server_name(pdu *pdu, char* server_name){
 	return 0;
 }
 
-pdu_REG* create_REG(uint8_t servername_length, uint16_t tcp_port){
-	pdu_REG *pdu = malloc(sizeof(struct pdu_REG));
-	pdu->type = PDU_REG;
-	pdu->server_name_length = servername_length;
-	pdu->tcp_port = tcp_port;
-	pdu->add_server_name = pdu_reg_add_server_name;
-	pdu->create_message = pdu_reg_create_message;
-	return pdu;
-}
 
 pdu* create_reg(uint8_t servername_length, uint16_t tcp_port){
 	pdu *pdu = malloc(sizeof(struct pdu));
@@ -54,14 +35,7 @@ pdu* create_reg(uint8_t servername_length, uint16_t tcp_port){
 }
 
 
-int free_pdu_reg(pdu_REG *pdu){
 
-	if(pdu->server_name != NULL){
-		free(pdu->server_name);
-	}
-	free(pdu);
-	return 0;
-}
 
 int free_reg(pdu *pdu){
 
