@@ -20,6 +20,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <unistd.h>
+#include "socket_templates.h"
 
 
 int setup_listener_socket(int sfd, uint16_t *port);
@@ -28,7 +29,7 @@ int listen_obtain_client_socket(int sfd);
 
 int setup_tcp_send_socket(void);
 
-struct addrinfo *get_tcp_server_address(uint16_t *port, char *name);
+struct addrinfo* get_tcp_server_address(int *port, char *name);
 
 int connect_to_tcp_server(int sock, struct addrinfo *res);
 

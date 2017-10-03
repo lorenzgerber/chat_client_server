@@ -5,18 +5,28 @@
  *      Author: lgerber
  */
 
+#ifndef _POSIX_SOURCE
+#define _POSIX_SOURCE
+#endif
+#ifndef _XOPEN_SOURCE
+#define _XOPEN_SOURCE 700
+#endif
 #ifndef SRC_NETCOM_SOCKET_TEMPLATES_H_
 #define SRC_NETCOM_SOCKET_TEMPLATES_H_
+#include <netdb.h>
+#include <sys/socket.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <stdint.h>
+#include <string.h>
+#include <unistd.h>
+
 
 #define ENTITY_SERVER 0
 #define ENTITY_CLIENT 1
 
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdint.h>
-#include <sys/socket.h>
+
 #include "message_byte_array.h"
 
 typedef struct io_handler {
@@ -25,6 +35,7 @@ typedef struct io_handler {
 	int socket;
 	int read_head;
 	int socket_entity;
+	struct addrinfo *hints;
 
 	// function: connect_socket
 
@@ -33,6 +44,7 @@ typedef struct io_handler {
 
 
 	// function: send_n_word
+	int (*send_pdu)(struct io_handler *self, pdu *pdu);
 
 	// function: listen
 

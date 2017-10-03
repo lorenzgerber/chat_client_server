@@ -7,11 +7,6 @@
 
 #ifndef MESSAGE_BYTE_ARRAY_H_
 #define MESSAGE_BYTE_ARRAY_H_
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdint.h>
 #include "pdu_templates.h"
 
 typedef struct message_byte_array {
