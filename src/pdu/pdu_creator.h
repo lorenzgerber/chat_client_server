@@ -34,10 +34,8 @@ pdu* create_ack(uint16_t id_number);
 int free_ack(pdu* pdu);
 
 // NOTREG
-pdu_NOTREG* create_NOTREG(uint16_t id_number);
 pdu* create_notreg(uint16_t id_number);
 
-int free_pdu_notreg(pdu_NOTREG* pdu);
 int free_notreg(pdu* pdu);
 
 // GETLIST

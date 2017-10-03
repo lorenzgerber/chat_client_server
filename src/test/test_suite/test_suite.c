@@ -80,22 +80,6 @@ int main(int argc, char*argv[]){
 	 */
 	printf("\n\nNOTREG\n");
 
-	// Create NOTREG struct
-	pdu_NOTREG *NOTREG = create_NOTREG(10000);
-
-	// Create NOTREG byte stream message to send
-	MBA = NOTREG->create_message(NOTREG);
-	length = get_length_NOTREG(NOTREG);
-    printf("Length of message = %d\n", length);
-	for(int i = 0;i < length;i++){
-		printf("%d, ", MBA->array[i]);
-	}
-    printf("\n");
-
-	// free NOTREG and MBA
-	free_pdu_notreg(NOTREG);
-	free_message_byte_array(MBA);
-
     //------NOTREG using new struct--------
     pdu *notreg = create_notreg(10000);
 

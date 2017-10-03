@@ -42,17 +42,6 @@ message_byte_array* ack_create_message(pdu *self){
 
 
 
-
-
-message_byte_array* pdu_notreg_create_message(pdu_NOTREG *self){
-	int length = get_length_NOTREG(self);
-	message_byte_array* message = create_message_byte_array(length);
-	message->add_uint8(message, self->type);
-	message->add_uint8(message, 0);
-	message->add_uint16(message, self->id_number);
-	return message;
-}
-
 message_byte_array* notreg_create_message(pdu *self){
 	int length = get_length_notreg(self);
 	message_byte_array* message = create_message_byte_array(length);

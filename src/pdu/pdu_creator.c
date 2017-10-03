@@ -81,11 +81,6 @@ pdu* create_ack(uint16_t id_number){
 }
 
 
-
-int free_pdu_ack(pdu_ACK* pdu){
-	free(pdu);
-	return 0;
-}
 int free_ack(pdu* pdu){
     free(pdu);
     return 0;
@@ -96,13 +91,6 @@ int free_ack(pdu* pdu){
 /*
  * pdu_NOTREG
  */
-pdu_NOTREG* create_NOTREG(uint16_t id_number){
-	pdu_NOTREG *pdu = malloc(sizeof(struct pdu_NOTREG));
-	pdu->type = PDU_NOTREG;
-	pdu->id_number = id_number;
-	pdu->create_message = pdu_notreg_create_message;
-	return pdu;
-}
 
 pdu* create_notreg(uint16_t id_number){
 	pdu *pdu = malloc(sizeof(struct pdu));
@@ -113,10 +101,6 @@ pdu* create_notreg(uint16_t id_number){
 	return pdu;
 }
 
-int free_pdu_notreg(pdu_NOTREG* pdu){
-	free(pdu);
-	return 0;
-}
 int free_notreg(pdu* pdu){
     free(pdu);
     return 0;

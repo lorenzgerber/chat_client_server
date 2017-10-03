@@ -17,10 +17,10 @@ io_handler* dummy_socket_ack(io_handler* dummy_socket){
 }
 
 io_handler* dummy_socket_notreg(io_handler* dummy_socket){
-	pdu_NOTREG* NOTREG = create_NOTREG(5555);
+	pdu* NOTREG = create_notreg(5555);
 
 	dummy_socket->buffer = NOTREG->create_message(NOTREG);
-	free_pdu_notreg(NOTREG);
+	free_notreg(NOTREG);
 
 	return dummy_socket;
 }

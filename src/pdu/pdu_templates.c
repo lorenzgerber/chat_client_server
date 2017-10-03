@@ -48,13 +48,6 @@ uint32_t get_length_ack(pdu *pdu){
 
 
 
-
-
-uint32_t get_length_NOTREG(pdu_NOTREG *pdu){
-	uint32_t length_of_notreg = 4;
-	return length_of_notreg;
-}
-
 uint32_t get_length_notreg(pdu *pdu){
 	uint32_t length_of_notreg = 4;
 	return length_of_notreg;
