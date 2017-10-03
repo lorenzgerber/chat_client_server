@@ -43,7 +43,7 @@ pdu* parse_header(struct io_handler *socket){
 			return_pdu = parse_PJOIN(socket, read_position);
 			break;
 		case PDU_PLEAVE:
-			parse_PLEAVE(socket, read_position);
+			return_pdu = parse_PLEAVE(socket, read_position);
 			break;
 	}
 
@@ -250,21 +250,30 @@ pdu* parse_PJOIN(struct io_handler* socket, uint8_t* read_position){
 	return pjoin;
 }
 
-int parse_PLEAVE(struct io_handler* socket, uint8_t* read_position){
+pdu* parse_PLEAVE(struct io_handler* socket, uint8_t* read_position){
 
 	uint8_t identity_length = *(read_position+1);
 	printf("identity length: %d\n", identity_length);
 
 	read_position = socket->request_n_word(socket, 1);
-	uint32_t time_stamp = ((uint32_t)*read_position << 24) | *(read_position+1) << 16 | *(read_position+2) << 8 | *(read_position+3);
+	uint32_t time_stamp = (*read_position << 24) | *(read_position+1) << 16 | *(read_position+2) << 8 | *(read_position+3);
 	time_stamp = ntohl(time_stamp);
 	printf("timestamp: %u\n", time_stamp);
 
 	read_position = socket->request_n_word(socket, (identity_length + 4 - 1)/4);
-	for(int i = 0; i < identity_length; i++){
+
+	char identity[255];
+	memset(identity, 0, 255);
+	int i;
+	for(i = 0; i < identity_length; i++){
 		printf("%c", *(read_position+i));
+		identity[i] = *(read_position+i);
 	}
+	identity[i+1] = '\0';
 	printf("\n");
-	
-	return 0;
+
+	pdu *pleave = create_pleave(identity_length);
+	pleave->add_client_identity_timestamp(pleave, time_stamp, identity);
+
+	return pleave;
 }

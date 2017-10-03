@@ -108,9 +108,13 @@ int main(int argc, char*argv[]){
 
     io_handler* dummy_socket_pleave;
     dummy_socket_pleave = create_dummy_socket(PDU_PLEAVE, ENTITY_CLIENT);
-    parse_header(dummy_socket_pleave);
+    pdu* pleave = parse_header(dummy_socket_pleave);
 
-
+    printf("\nPJLEAVE pdu from dummy\n");
+    printf("op code: %d\n", pleave->type);
+    printf("identity length: %d\n", pleave->identity_length);
+    printf("timestamp: %u\n", pleave->time_stamp);
+    printf("client identity: %s\n", pleave->identity);
 
 	return 0;
 
