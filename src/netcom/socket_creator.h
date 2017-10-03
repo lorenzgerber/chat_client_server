@@ -17,6 +17,8 @@ io_handler* create_dummy_socket(int op_code, int socket_entity);
 
 io_handler* create_client_tcp_socket(uint8_t address_server[4], uint16_t port);
 
+int tcp_client_send_n_word(uint16_t n, uint8_t word);
+
 uint8_t* dummy_socket_request_n_word(struct io_handler *self, int n_word);
 
 

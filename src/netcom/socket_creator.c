@@ -45,14 +45,27 @@ io_handler* create_dummy_socket(int op_code, int socket_entity){
 	return dummy_socket;
 }
 
-io_handler* create_client_tcp_socket(uint8_t address_server[4], uint16_t port){
+io_handler* create_client_tcp_socket(char *server_name, uint16_t port){
 	io_handler *io = malloc(sizeof(io_handler));
 	io->socket_entity = ENTITY_CLIENT;
-
-
-
+	io->send_n_word = tcp_client_send_n_word;
+	socket = setup_tcp_send_socket();
+	io->hints = get_tcp_server_address(port, server_name);
+	connect_to_tcp_server(io->socket, io->hints);
 
 	return io;
+}
+
+int tcp_client_send_n_word(struct io_handler *self, pdu* pdu){
+
+	message_byte_array *MBA = pdu->create_message();
+	MBA->array;
+
+	if(sendto(self->socket, MBA->array, n*8, 0, (struct sockaddr *)self->hints->ai_addr, self->hints->ai_addrlen)<0){
+		fprintf(stderr, "sendto failed\n");
+	}
+
+	return 0;
 }
 
 

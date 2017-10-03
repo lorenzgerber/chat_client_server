@@ -25,6 +25,7 @@ typedef struct io_handler {
 	int socket;
 	int read_head;
 	int socket_entity;
+	struct addrinfo hints;
 
 	// function: connect_socket
 
@@ -33,6 +34,7 @@ typedef struct io_handler {
 
 
 	// function: send_n_word
+	int (*send_n_word)(uint16_t n, uint8_t word);
 
 	// function: listen
 
