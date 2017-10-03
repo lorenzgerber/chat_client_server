@@ -64,7 +64,7 @@ int message_byte_array_add_chars(message_byte_array *self, char* data, uint32_t 
 
 message_byte_array* create_message_byte_array(uint32_t length){
 	message_byte_array *mba = malloc(sizeof(message_byte_array));
-	mba->array = malloc(length*sizeof(uint8_t));
+	mba->array = malloc(length*8);
 	mba->add_uint8 = message_byte_array_add_uint8;
 	mba->add_uint16 = message_byte_array_add_uint16;
 	mba->add_uint32 = message_byte_array_add_uint32;

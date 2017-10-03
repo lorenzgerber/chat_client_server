@@ -252,7 +252,7 @@ int participants_add_identities(pdu *pdu, char* identities){
 		if(identities[i]=='\0'){
 
 			pdu->identities[found] = malloc((i-lower+1)*sizeof(char));
-			strncpy(pdu->identities[found], &identities[lower], i-lower);
+			strncpy(pdu->identities[found], &identities[lower], i-lower+1);
 			lower = i+1;
 			found++;
 		}
