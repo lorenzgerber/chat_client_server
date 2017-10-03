@@ -22,10 +22,10 @@ pdu* parse_header(struct io_handler *socket){
 			return_pdu = parse_ACK(socket, read_position);
 			break;
 		case PDU_NOTREG:
-			parse_NOTREG(socket, read_position);
+			return_pdu = parse_NOTREG(socket, read_position);
 			break;
 		case PDU_SLIST:
-			parse_SLIST(socket, read_position);
+			return_pdu = parse_SLIST(socket, read_position);
 			break;
 		case PDU_JOIN:
 			parse_JOIN(socket, read_position);
@@ -58,20 +58,26 @@ pdu* parse_ACK(struct io_handler* socket, uint8_t* read_position){
 	return ack;
 }
 
-int parse_NOTREG(struct io_handler* socket, uint8_t* read_position){
+pdu* parse_NOTREG(struct io_handler* socket, uint8_t* read_position){
 	uint16_t id_nr = ((uint16_t)*(read_position+2) << 8) | (uint16_t)*(read_position+3);
 	id_nr = ntohs(id_nr);
+    pdu* notreg = create_notreg(id_nr);
 	printf("identity number %d\n", id_nr);
-	return 0;
+
+	return notreg;
 }
 
-int parse_SLIST(struct io_handler* socket, uint8_t* read_position){
+pdu* parse_SLIST(struct io_handler* socket, uint8_t* read_position){
+
 	uint16_t nr_of_servers = ((uint16_t)*(read_position+2) << 8) | (uint16_t)*(read_position+3);
 	nr_of_servers = ntohs(nr_of_servers);
-	printf("Number of servers %d\n\n", nr_of_servers);
+    pdu *slist = create_slist(nr_of_servers);
+
+    printf("Number of servers %d\n\n", nr_of_servers);
 	for(int i = 0; i < nr_of_servers; i++){
 		read_position = socket->request_n_word(socket, 2);
 		printf("Adress server %d: %d.%d.%d.%d\n",i+1,*read_position,*(read_position+1),*(read_position+2),*(read_position+3));
+        uint8_t address[4] = {*read_position,*(read_position+1),*(read_position+2),*(read_position+3)};
 
 		uint16_t port = ((uint16_t) *(read_position+4) << 8) | *(read_position+5);
 		port = ntohs(port);
@@ -84,13 +90,20 @@ int parse_SLIST(struct io_handler* socket, uint8_t* read_position){
 		printf("server %d name length: %d\n", i+1, namelen);
 		read_position = socket->request_n_word(socket, (namelen + 4 - 1)/4);
 		printf("server %d name: ", i+1);
-		for(int j = 0; j < namelen; j++){
+        char servername[255];
+        memset(servername, 0, 255);
+        int j = 0;
+		for(j = 0; j < namelen; j++){
 			printf("%c", (int)*(read_position+j));
+            servername[j] = (int)*(read_position+j);
 		}
+        servername[j+1] = '\0';
 		printf("\n\n");
-
+        pdu_server_entry* server = create_server_entry(address,port,number_of_clients,namelen);
+        server->add_server_name(server, servername);
+        slist->add_server_entry(slist, server);
 	}
-	return 0;
+	return slist;
 }
 
 int parse_JOIN(struct io_handler* socket, uint8_t* read_position){

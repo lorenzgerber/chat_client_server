@@ -18,9 +18,9 @@ pdu* parse_header(struct io_handler* socket);
 
 pdu* parse_ACK(struct io_handler* socket, uint8_t* read_position);
 
-int parse_NOTREG(struct io_handler* socket, uint8_t* read_position);
+pdu* parse_NOTREG(struct io_handler* socket, uint8_t* read_position);
 
-int parse_SLIST(struct io_handler* socket, uint8_t* read_position);
+pdu* parse_SLIST(struct io_handler* socket, uint8_t* read_position);
 
 int parse_JOIN(struct io_handler* socket, uint8_t* read_position);
 

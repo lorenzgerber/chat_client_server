@@ -30,11 +30,30 @@ int main(int argc, char*argv[]){
 
     io_handler* dummy_socket_notreg;
     dummy_socket_notreg = create_dummy_socket(PDU_NOTREG, ENTITY_SERVER);
-    parse_header(dummy_socket_notreg);
+    pdu* notreg = parse_header(dummy_socket_notreg);
+
+    printf("\nNOTREG pdu from dummy\n");
+    printf("op code: %d\n", notreg->type);
+    printf("identity nr: %d\n", notreg->id_number);
 
     io_handler* dummy_socket_slist;
     dummy_socket_slist = create_dummy_socket(PDU_SLIST, ENTITY_CLIENT);
-    parse_header(dummy_socket_slist);
+    pdu* slist = parse_header(dummy_socket_slist);
+
+    printf("\nSLIST pdu from dummy\n");
+    printf("op code: %d\n", slist->type);
+    printf("nr of servers: %d\n", slist->number_servers);
+    for(int i = 0;i < slist->number_servers; i++){
+        printf("****Server %d****\n", i+1);
+        printf("adress: %d,%d,%d,%d\n", slist->current_servers[i]->address[0],
+                                        slist->current_servers[i]->address[1],
+                                        slist->current_servers[i]->address[2],
+                                        slist->current_servers[i]->address[3]);
+        printf("port: %d\n", slist->current_servers[i]->port);
+        printf("number of clients: %d\n", slist->current_servers[i]->number_clients);
+        printf("server name length: %d\n", slist->current_servers[i]->name_length);
+        printf("Servername: %s\n", slist->current_servers[i]->name);
+    }
 
     io_handler* dummy_socket_join;
     dummy_socket_join = create_dummy_socket(PDU_JOIN, ENTITY_SERVER);
