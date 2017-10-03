@@ -213,7 +213,6 @@ uint32_t get_length_ack(pdu *pdu);
 
 uint32_t get_length_notreg(pdu *pdu);
 
-uint32_t get_length_GETLIST(pdu_GETLIST *pdu);
 uint32_t get_length_getlist(pdu *pdu);
 
 uint32_t get_length_SLIST(pdu_SLIST *pdu);

@@ -110,12 +110,6 @@ int free_notreg(pdu* pdu){
 /*
  * pdu_GETLIST
  */
-pdu_GETLIST* create_GETLIST(void){
-	pdu_GETLIST *pdu = malloc(sizeof(struct pdu_GETLIST));
-	pdu->type = PDU_GETLIST;
-	pdu->create_message = pdu_getlist_create_message;
-	return pdu;
-}
 
 pdu* create_getlist(void){
 	pdu *pdu = malloc(sizeof(struct pdu));
@@ -125,10 +119,6 @@ pdu* create_getlist(void){
 	return pdu;
 }
 
-int free_pdu_getlist(pdu_GETLIST* pdu){
-	free(pdu);
-	return 0;
-}
 int free_getlist(pdu* pdu){
     free(pdu);
     return 0;

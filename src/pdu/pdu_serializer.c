@@ -53,18 +53,6 @@ message_byte_array* notreg_create_message(pdu *self){
 
 
 
-
-
-
-
-message_byte_array* pdu_getlist_create_message(pdu_GETLIST *self){
-	message_byte_array* message = create_message_byte_array(4);
-	message->add_uint8(message, self->type);
-	message->add_uint8(message, 0);
-	message->add_uint16(message,0);
-	return message;
-}
-
 message_byte_array* getlist_create_message(pdu *self){
 	message_byte_array* message = create_message_byte_array(4);
 	message->add_uint8(message, self->type);

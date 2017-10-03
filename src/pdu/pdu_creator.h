@@ -39,10 +39,8 @@ pdu* create_notreg(uint16_t id_number);
 int free_notreg(pdu* pdu);
 
 // GETLIST
-pdu_GETLIST* create_GETLIST(void);
 pdu* create_getlist(void);
 
-int free_pdu_getlist(pdu_GETLIST* pdu);
 int free_getlist(pdu* pdu);
 
 

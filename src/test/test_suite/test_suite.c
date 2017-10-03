@@ -99,22 +99,6 @@ int main(int argc, char*argv[]){
 	 */
 	printf("\n\nGETLIST\n");
 
-	// Create GETLIST struct
-	pdu_GETLIST *GETLIST = create_GETLIST();
-
-	// Create GETLIST byte stream message to send
-	MBA = GETLIST->create_message(GETLIST);
-	length = get_length_GETLIST(GETLIST);
-    printf("Length of message = %d\n", length);
-	for(int i = 0;i < length;i++){
-		printf("%d, ", MBA->array[i]);
-	}
-    printf("\n");
-
-	// free GETLIST and MBA
-	free_pdu_getlist(GETLIST);
-	free_message_byte_array(MBA);
-
     //-------GETLIST using new struct-----
     pdu *getlist = create_getlist();
 

@@ -54,13 +54,6 @@ uint32_t get_length_notreg(pdu *pdu){
 }
 
 
-
-
-uint32_t get_length_GETLIST(pdu_GETLIST *pdu){
-	uint32_t length_of_getlist = 4;
-	return length_of_getlist;
-}
-
 uint32_t get_length_getlist(pdu *pdu){
 	uint32_t length_of_getlist = 4;
 	return length_of_getlist;

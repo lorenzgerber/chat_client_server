@@ -21,7 +21,6 @@ message_byte_array* ack_create_message(pdu *self);
 
 message_byte_array* notreg_create_message(pdu *self);
 
-message_byte_array* pdu_getlist_create_message(pdu_GETLIST *self);
 message_byte_array* getlist_create_message(pdu *self);
 
 message_byte_array* pdu_slist_create_message(pdu_SLIST *self);
