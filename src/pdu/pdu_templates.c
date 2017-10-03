@@ -116,14 +116,6 @@ uint32_t get_length_participants(pdu *pdu){
 
 
 
-
-
-
-uint32_t get_length_QUIT(pdu_QUIT *pdu){
-	uint32_t length_of_quit = 4;
-	return length_of_quit;
-}
-
 uint32_t get_length_quit(pdu *pdu){
 	uint32_t length_of_quit = 4;
 	return length_of_quit;

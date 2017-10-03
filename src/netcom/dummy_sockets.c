@@ -68,10 +68,10 @@ io_handler* dummy_socket_participants(io_handler* dummy_socket){
 
 io_handler* dummy_socket_quit(io_handler* dummy_socket){
 
-    pdu_QUIT *QUIT = create_QUIT();
+    pdu *QUIT = create_quit();
 
     dummy_socket->buffer = QUIT->create_message(QUIT);
-    free_pdu_quit(QUIT);
+    free_quit(QUIT);
 
     return dummy_socket;
 }

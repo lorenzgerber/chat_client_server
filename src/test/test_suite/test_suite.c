@@ -195,21 +195,7 @@ int main(int argc, char*argv[]){
 	 */
 	printf("\n\nQUIT\n");
 
-	// Create QUIT struct
-	pdu_QUIT *QUIT = create_QUIT();
 
-	// Create GETLIST byte stream message to send
-	MBA = QUIT->create_message(QUIT);
-	length = get_length_QUIT(QUIT);
-    printf("Length of message = %d\n", length);
-	for(int i = 0;i < length;i++){
-		printf("%d, ", MBA->array[i]);
-	}
-    printf("\n");
-
-	// free QUIT and MBA
-	free_pdu_quit(QUIT);
-	free_message_byte_array(MBA);
 
     //------QUIT using new struct----------
     pdu *quit = create_quit();

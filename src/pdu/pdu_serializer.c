@@ -134,18 +134,6 @@ message_byte_array* participants_create_message(pdu *self){
 
 
 
-
-
-
-message_byte_array* pdu_quit_create_message(pdu_QUIT *self){
-	int length = get_length_QUIT(self);
-	message_byte_array* message = create_message_byte_array(length);
-	message->add_uint8(message, self->type);
-	message->add_uint8(message, 0);
-	message->add_uint16(message,0);
-	return message;
-}
-
 message_byte_array* quit_create_message(pdu *self){
 	int length = get_length_quit(self);
 	message_byte_array* message = create_message_byte_array(length);

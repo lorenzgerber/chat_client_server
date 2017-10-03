@@ -29,7 +29,6 @@ message_byte_array* join_create_message(pdu *self);
 
 message_byte_array* participants_create_message(pdu *self);
 
-message_byte_array* pdu_quit_create_message(pdu_QUIT *self);
 message_byte_array* quit_create_message(pdu *self);
 
 message_byte_array* pdu_mess_create_message(pdu_MESS *self);

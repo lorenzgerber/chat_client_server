@@ -298,12 +298,6 @@ int free_participants(pdu *pdu){
 /*
  * pdu_QUIT
  */
-pdu_QUIT* create_QUIT(void){
-	pdu_QUIT *pdu = malloc(sizeof(struct pdu_QUIT));
-	pdu->type = PDU_QUIT;
-	pdu->create_message = pdu_quit_create_message;
-	return pdu;
-}
 
 pdu* create_quit(void){
 	pdu *pdu = malloc(sizeof(struct pdu));
@@ -313,10 +307,6 @@ pdu* create_quit(void){
 	return pdu;
 }
 
-int free_pdu_quit(pdu_QUIT* pdu){
-	free(pdu);
-	return 0;
-}
 int free_quit(pdu* pdu){
     free(pdu);
     return 0;

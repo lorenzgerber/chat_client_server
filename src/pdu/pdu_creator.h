@@ -76,10 +76,8 @@ int free_participants(pdu *pdu);
 
 // QUIT
 
-pdu_QUIT* create_QUIT(void);
 pdu* create_quit(void);
 
-int free_pdu_quit(pdu_QUIT* pdu);
 int free_quit(pdu* pdu);
 
 // MESS
