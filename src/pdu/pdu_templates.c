@@ -6,9 +6,6 @@
  */
 #include "pdu_templates.h"
 
-int get_type(void *message){
-	return ((pdu_prototype*) message)->type;
-}
 
 int calc_word_padding(uint32_t length){
 	int padding = 4 - (length % 4);
