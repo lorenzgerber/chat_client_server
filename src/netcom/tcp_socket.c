@@ -80,7 +80,9 @@ int setup_tcp_send_socket(void){
 	return sock;
 }
 
-struct addrinfo *get_tcp_server_address(uint16_t *port, char *name){
+struct addrinfo* get_tcp_server_address(int *port, char *name){
+
+
 	struct addrinfo *res;
 	struct addrinfo hints;
 		memset(&hints, 0, sizeof(struct addrinfo));
@@ -91,12 +93,14 @@ struct addrinfo *get_tcp_server_address(uint16_t *port, char *name){
 
 		//Translate server port to char
 		char send_port[5];
-			sprintf(send_port, "%u", *port);
+			sprintf(send_port, "%d", *port);
 
 		/* Build the network address of server */
 		getaddrinfo(name, send_port, &hints, &res);
 
 	return res;
+
+
 }
 
 int connect_to_tcp_server(int sock, struct addrinfo *res){
