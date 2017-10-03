@@ -8,10 +8,10 @@
 
 io_handler* dummy_socket_ack(io_handler* dummy_socket){
 
-	pdu_ACK* ACK = create_ACK(4444);
+	pdu* ACK = create_ack(4444);
 
 	dummy_socket->buffer = ACK->create_message(ACK);
-	free_pdu_ack(ACK);
+	free_ack(ACK);
 
 	return dummy_socket;
 }

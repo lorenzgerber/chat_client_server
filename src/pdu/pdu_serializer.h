@@ -17,7 +17,6 @@ message_byte_array* reg_create_message(pdu *self);
 
 message_byte_array* alive_create_message(pdu *self);
 
-message_byte_array* pdu_ack_create_message(pdu_ACK *self);
 message_byte_array* ack_create_message(pdu *self);
 
 message_byte_array* pdu_notreg_create_message(pdu_NOTREG *self);

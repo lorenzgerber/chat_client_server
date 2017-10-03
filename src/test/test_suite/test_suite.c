@@ -61,22 +61,6 @@ int main(int argc, char*argv[]){
 	 */
 	printf("\n\nACK\n");
 
-	// Create ACK struct
-	pdu_ACK *ACK = create_ACK(10000);
-
-	// Create ACK byte stream message to send
-	MBA = ACK->create_message(ACK);
-	length = get_length_ACK(ACK);
-    printf("Length of message = %d\n", length);
-	for(int i = 0;i < length;i++){
-		printf("%d, ", MBA->array[i]);
-	}
-    printf("\n");
-
-	// free ACK and MBA
-	free_pdu_ack(ACK);
-	free_message_byte_array(MBA);
-
     //-------ACK using new struct------
     pdu *ack = create_ack(10000);
 

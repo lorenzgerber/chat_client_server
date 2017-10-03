@@ -69,13 +69,6 @@ int free_alive(pdu* pdu){
 /*
  * pdu_ACK
  */
-pdu_ACK* create_ACK(uint16_t id_number){
-	pdu_ACK *pdu = malloc(sizeof(struct pdu_ACK));
-	pdu->type = PDU_ACK;
-	pdu->id_number = id_number;
-	pdu->create_message = pdu_ack_create_message;
-	return pdu;
-}
 
 pdu* create_ack(uint16_t id_number){
 	pdu *pdu = malloc(sizeof(struct pdu));

@@ -29,10 +29,8 @@ pdu* create_alive(uint8_t number_clients, uint16_t id_number);
 int free_alive(pdu* pdu);
 
 // ACK
-pdu_ACK* create_ACK(uint16_t id_number);
 pdu* create_ack(uint16_t id_number);
 
-int free_pdu_ack(pdu_ACK* pdu);
 int free_ack(pdu* pdu);
 
 // NOTREG
