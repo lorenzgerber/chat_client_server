@@ -27,6 +27,7 @@ pdu* create_reg(uint8_t servername_length, uint16_t tcp_port){
 	pdu->tcp_port = tcp_port;
 	pdu->add_server_name = reg_add_server_name;
 	pdu->create_message = reg_create_message;
+	pdu->get_message_length = get_length_reg;
 	pdu->free_pdu = free_reg;
 	return pdu;
 }
@@ -55,6 +56,7 @@ pdu* create_alive(uint8_t number_clients, uint16_t id_number){
 	pdu->number_clients = number_clients;
 	pdu->id_number = id_number;
 	pdu->create_message = alive_create_message;
+	pdu->get_message_length = get_length_alive;
     pdu->free_pdu = free_alive;
 	return pdu;
 }
@@ -75,6 +77,7 @@ pdu* create_ack(uint16_t id_number){
 	pdu->type = PDU_ACK;
 	pdu->id_number = id_number;
 	pdu->create_message = ack_create_message;
+	pdu->get_message_length = get_length_ack;
     pdu->free_pdu = free_ack;
 
 	return pdu;
@@ -97,6 +100,7 @@ pdu* create_notreg(uint16_t id_number){
 	pdu->type = PDU_NOTREG;
 	pdu->id_number = id_number;
 	pdu->create_message = notreg_create_message;
+	pdu->get_message_length = get_length_notreg;
     pdu->free_pdu = free_notreg;
 	return pdu;
 }
@@ -115,6 +119,7 @@ pdu* create_getlist(void){
 	pdu *pdu = malloc(sizeof(struct pdu));
 	pdu->type = PDU_GETLIST;
 	pdu->create_message = getlist_create_message;
+	pdu->get_message_length = get_length_getlist;
     pdu->free_pdu = free_getlist;
 	return pdu;
 }
@@ -174,6 +179,7 @@ pdu* create_slist(uint16_t number_servers){
 	pdu->current_servers = malloc(sizeof(pdu_server_entry*)*number_servers);
 	pdu->add_server_entry = add_server_entry;
 	pdu->create_message = slist_create_message;
+	pdu->get_message_length = get_length_slist;
     pdu->free_pdu = free_slist;
 	return pdu;
 }
@@ -222,6 +228,7 @@ pdu* create_join(uint8_t identity_length){
 	pdu->identity_length = identity_length;
 	pdu->add_identity = join_add_identity;
 	pdu->create_message = join_create_message;
+	pdu->get_message_length = get_length_join;
     pdu->free_pdu = free_join;
 	return pdu;
 }
@@ -275,6 +282,7 @@ pdu* create_participants(uint8_t number_identities, uint16_t length){
 	pdu->identities = malloc(number_identities * sizeof(char*));
 	pdu->add_identities = participants_add_identities;
 	pdu->create_message = participants_create_message;
+	pdu->get_message_length = get_length_participants;
     pdu->free_pdu = free_participants;
 	return pdu;
 }
@@ -303,6 +311,7 @@ pdu* create_quit(void){
 	pdu *pdu = malloc(sizeof(struct pdu));
 	pdu->type = PDU_QUIT;
 	pdu->create_message = quit_create_message;
+	pdu->get_message_length = get_length_quit;
     pdu->free_pdu = free_quit;
 	return pdu;
 }
@@ -351,6 +360,7 @@ pdu* create_mess(uint8_t identity_length, uint8_t checksum){
 	pdu->add_identity = mess_add_client_identity;
 	pdu->calc_checksum = mess_calc_checksum;
 	pdu->create_message = mess_create_message;
+	pdu->get_message_length = get_length_mess;
     pdu->free_pdu = free_mess;
 	return pdu;
 }
@@ -384,6 +394,7 @@ pdu* create_pjoin(uint8_t identity_length){
 	pdu->identity_length = identity_length;
 	pdu->add_client_identity_timestamp = pjoin_add_client_identity;
 	pdu->create_message = pjoin_create_message;
+	pdu->get_message_length = get_length_pjoin;
     pdu->free_pdu = free_pjoin;
 	return pdu;
 }
@@ -414,6 +425,7 @@ pdu* create_pleave(uint8_t identity_length){
 	pdu->identity_length = identity_length;
 	pdu->add_client_identity_timestamp = pleave_add_client_identity;
 	pdu->create_message = pleave_create_message;
+	pdu->get_message_length = get_length_pleave;
     pdu->free_pdu = free_pleave;
 	return pdu;
 }
