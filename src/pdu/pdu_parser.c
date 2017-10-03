@@ -161,12 +161,13 @@ pdu* parse_QUIT(struct io_handler* socket, uint8_t* read_position){
 
 pdu* parse_MESS(struct io_handler* socket, uint8_t* read_position){
 
-	char *identity;
+
 
 
 	// build step by step a MESS pdu
 	uint8_t identity_length = *(read_position+2);
 	uint8_t checksum = *(read_position+3);
+    char identity[identity_length+1];
 
 	printf("identity length %d\n", identity_length);
 	printf("checksum %d\n", checksum);
@@ -187,10 +188,11 @@ pdu* parse_MESS(struct io_handler* socket, uint8_t* read_position){
 	printf("timestamp: %u\n", time_stamp);
 
 
-	uint32_t length_padded = message_length/4 + ((message_length % 4 > 0) ? 1 : 0);
+	uint32_t length_padded = (uint32_t) (message_length / 4 + ((message_length % 4 > 0) ? 1 : 0));
 
 	read_position = socket->request_n_word(socket, length_padded);
-	char *message = malloc(sizeof(char)*message_length);
+	char message[message_length + 1];
+    memset(message, 0, message_length+1);// = malloc(sizeof(char)*(message_length+1));
 	memcpy(message, read_position, sizeof(char)*message_length);
 
 
@@ -206,11 +208,12 @@ pdu* parse_MESS(struct io_handler* socket, uint8_t* read_position){
 			printf("something wrong, client sent entity length\n");
 		}
 	} else {
-		length_padded = identity_length/4 + ((identity_length % 4 > 0) ? 1 : 0);
+		length_padded = (uint32_t) (identity_length / 4 + ((identity_length % 4 > 0) ? 1 : 0));
 		read_position = socket->request_n_word(socket, length_padded);
-		identity = malloc(sizeof(char)*identity_length);
+        memset(identity, 0, sizeof(char)*(identity_length+1));
+		//identity = malloc(sizeof(char)*(identity_length+1));
 		memcpy(identity, read_position, sizeof(char)*identity_length);
-		MESS->add_identity(MESS, identity);//changed from add_identity
+		MESS->add_identity(MESS, identity);//changed from add_client_identity
 	}
 
 	for(int i = 0; i < identity_length; i++){
