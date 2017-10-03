@@ -15,7 +15,6 @@
 
 int main(int argc, char*argv[]){
 
-	uint32_t length = 0;
 	message_byte_array *MBA;
 
     /*
@@ -28,9 +27,8 @@ int main(int argc, char*argv[]){
 	reg->add_server_name(reg,"servername");
 
 	MBA = reg->create_message(reg);
-    length = get_length_reg(reg);
-    printf("Length of message = %d\n", length);
-    for(int i = 0;i < length;i++){
+    printf("Length of message = %d\n", reg->get_message_length(reg));
+    for(int i = 0;i < reg->get_message_length(reg);i++){
 		printf("%d, ", MBA->array[i]);
 	}
 	reg->free_pdu(reg);
@@ -46,9 +44,8 @@ int main(int argc, char*argv[]){
     pdu *alive = create_alive(100, 10000);
 
     MBA = alive->create_message(alive);
-    length = get_length_alive(alive);
-    printf("Length of message = %d\n", length);
-    for(int i = 0;i < length;i++){
+    printf("Length of message = %d\n", alive->get_message_length(alive));
+    for(int i = 0;i < alive->get_message_length(alive);i++){
         printf("%d, ", MBA->array[i]);
     }
     printf("\n");
@@ -65,9 +62,8 @@ int main(int argc, char*argv[]){
     pdu *ack = create_ack(10000);
 
     MBA = ack->create_message(ack);
-    length = get_length_ack(ack);
-    printf("Length of message = %d\n", length);
-    for(int i = 0;i < length;i++){
+    printf("Length of message = %d\n", ack->get_message_length(ack));
+    for(int i = 0;i < ack->get_message_length(ack);i++){
         printf("%d, ", MBA->array[i]);
     }
     printf("\n");
@@ -84,9 +80,8 @@ int main(int argc, char*argv[]){
     pdu *notreg = create_notreg(10000);
 
     MBA = notreg->create_message(notreg);
-    length = get_length_notreg(notreg);
-    printf("Length of message = %d\n", length);
-    for(int i = 0;i < length;i++){
+    printf("Length of message = %d\n", notreg->get_message_length(notreg));
+    for(int i = 0;i < notreg->get_message_length(notreg);i++){
         printf("%d, ", MBA->array[i]);
     }
     printf("\n");
@@ -103,9 +98,8 @@ int main(int argc, char*argv[]){
     pdu *getlist = create_getlist();
 
     MBA = getlist->create_message(getlist);
-    length = get_length_getlist(getlist);
-    printf("Length of message = %d\n", length);
-    for(int i = 0;i < length;i++){
+    printf("Length of message = %d\n", getlist->get_message_length(getlist));
+    for(int i = 0;i < getlist->get_message_length(getlist);i++){
         printf("%d, ", MBA->array[i]);
     }
     printf("\n");
@@ -133,10 +127,9 @@ int main(int argc, char*argv[]){
     slist->add_server_entry(slist, server4);
 
     MBA = slist->create_message(slist);
-    length = get_length_slist(slist);
-    printf("Length of message = %d\n", length);
+    printf("Length of message = %d\n", slist->get_message_length(slist));
 
-    for(int i = 0; i < length; i++){
+    for(int i = 0; i < slist->get_message_length(slist); i++){
         printf("%d, ", MBA->array[i]);
     }
     printf("\n");
@@ -155,9 +148,8 @@ int main(int argc, char*argv[]){
     join->add_identity(join, "identity");
 
     MBA = join->create_message(join);
-    length = get_length_join(join);
-    printf("Length of message = %d\n", length);
-    for(int i = 0; i < length; i++){
+    printf("Length of message = %d\n", join->get_message_length(join));
+    for(int i = 0; i < join->get_message_length(join); i++){
         printf("%d, ", MBA->array[i]);
     }
     printf("\n");
@@ -180,9 +172,8 @@ int main(int argc, char*argv[]){
     }
 
     MBA = participants->create_message(participants);
-    length = get_length_participants(participants);
-    printf("Length of message = %d\n", length);
-    for(int i = 0; i < length; i++){
+    printf("Length of message = %d\n", participants->get_message_length(participants));
+    for(int i = 0; i < participants->get_message_length(participants); i++){
         printf("%d, ", MBA->array[i]);
     }
     printf("\n");
@@ -201,9 +192,8 @@ int main(int argc, char*argv[]){
     pdu *quit = create_quit();
 
     MBA = quit->create_message(quit);
-    length = get_length_quit(quit);
-    printf("Length of message = %d\n", length);
-    for(int i = 0;i < length;i++){
+    printf("Length of message = %d\n", quit->get_message_length(quit));
+    for(int i = 0;i < quit->get_message_length(quit);i++){
         printf("%d, ", MBA->array[i]);
     }
     printf("\n");
@@ -226,10 +216,9 @@ int main(int argc, char*argv[]){
     printf("%s\n", mess->message);
 
     MBA = mess->create_message(mess);
-    length = get_length_mess(mess);
-    printf("Length of message = %d\n", length);
+    printf("Length of message = %d\n", mess->get_message_length(mess));
 
-    for(int i = 0;i < length;i++){
+    for(int i = 0;i < mess->get_message_length(mess);i++){
         printf("%d, ", MBA->array[i]);
     }
     printf("\n");
@@ -250,10 +239,9 @@ int main(int argc, char*argv[]){
     printf("%s\n", pjoin->identity);
 
     MBA = pjoin->create_message(pjoin);
-    length = get_length_pjoin(pjoin);
-    printf("Length of message = %d\n", length);
+    printf("Length of message = %d\n", pjoin->get_message_length(pjoin));
 
-    for(int i = 0;i < length;i++){
+    for(int i = 0;i < pjoin->get_message_length(pjoin);i++){
         printf("%d, ", MBA->array[i]);
     }
     printf("\n");
@@ -274,9 +262,8 @@ int main(int argc, char*argv[]){
     printf("%s\n", pleave->identity);
 
     MBA = pleave->create_message(pleave);
-    length = get_length_pleave(pleave);
-    printf("Length of message = %d\n", length);
-    for(int i = 0;i < length;i++){
+    printf("Length of message = %d\n", pleave->get_message_length(pleave));
+    for(int i = 0;i < pleave->get_message_length(pleave);i++){
         printf("%d, ", MBA->array[i]);
     }
     printf("\n");
