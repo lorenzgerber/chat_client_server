@@ -50,15 +50,12 @@ int server_entry_add_server_name(pdu_server_entry* pdu, char* server_name);
 
 pdu_server_entry *create_server_entry(uint8_t address[4], uint16_t port, uint8_t number_clients, uint8_t name_length);
 
-int add_server_entry(pdu_SLIST *pdu, pdu_server_entry* server_entry);
 int add_server_entry2(pdu *pdu, pdu_server_entry* server_entry);
 
-pdu_SLIST* create_SLIST(uint16_t number_servers);
 pdu* create_slist(uint16_t number_servers);
 
 int free_server_entry(pdu_server_entry *server);
 
-int free_pdu_slist(pdu_SLIST *pdu);
 int free_slist(pdu *pdu);
 
 

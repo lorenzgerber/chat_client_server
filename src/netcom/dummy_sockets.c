@@ -27,7 +27,7 @@ io_handler* dummy_socket_notreg(io_handler* dummy_socket){
 
 io_handler* dummy_socket_slist(io_handler* dummy_socket){
 
-	pdu_SLIST *SLIST = create_SLIST(2);
+	pdu *SLIST = create_slist(2);
 	uint8_t address[4] = {127,0,0,1};
 	pdu_server_entry* server1 = create_server_entry(address,2000,4,10);
 	server1->add_server_name(server1, "servername");
@@ -39,7 +39,7 @@ io_handler* dummy_socket_slist(io_handler* dummy_socket){
 	SLIST->add_server_entry(SLIST, server2);
 
 	dummy_socket->buffer = SLIST->create_message(SLIST);
-	free_pdu_slist(SLIST);
+	free_slist(SLIST);
 
 	return dummy_socket;
 }

@@ -118,32 +118,6 @@ int main(int argc, char*argv[]){
 	 */
 	printf("\n\nSLIST\n");
 
-	// Create SLIST struct
-	pdu_SLIST *SLIST = create_SLIST(2);
-
-	uint8_t address[4] = {127,0,0,1};
-	pdu_server_entry* server1 = create_server_entry(address,2000,4,10);
-	server1->add_server_name(server1, "servername");
-	SLIST->add_server_entry(SLIST, server1);
-
-
-    uint8_t address2[4] = {127,0,0,2};
-    pdu_server_entry* server2 = create_server_entry(address2,2001,4,11);
-    server2->add_server_name(server2, "servername2");
-    SLIST->add_server_entry(SLIST, server2);
-
-
-	MBA = SLIST->create_message(SLIST);
-	length = get_length_SLIST(SLIST);
-	printf("Length of message = %d\n", length);
-
-	for(int i = 0; i < length; i++){
-		printf("%d, ", MBA->array[i]);
-	}
-    printf("\n");
-	// free SLIST and MBA
-	free_pdu_slist(SLIST);
-	free_message_byte_array(MBA);
 
     //-------SLIST using new struct--------
     pdu *slist = create_slist(2);

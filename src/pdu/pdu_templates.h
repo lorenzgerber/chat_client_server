@@ -215,7 +215,6 @@ uint32_t get_length_notreg(pdu *pdu);
 
 uint32_t get_length_getlist(pdu *pdu);
 
-uint32_t get_length_SLIST(pdu_SLIST *pdu);
 uint32_t get_length_slist(pdu *pdu);
 
 uint32_t get_length_JOIN(pdu_JOIN *pdu);
