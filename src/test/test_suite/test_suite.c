@@ -170,27 +170,6 @@ int main(int argc, char*argv[]){
 	 */
     printf("\n\nPARTICIPANTS\n");
 
-	//Create PARTICIPANTS and add some identities
-	pdu_PARTICIPANTS *PARTICIPANTS = create_PARTICIPANTS(3, 15);
-	PARTICIPANTS->add_identities(PARTICIPANTS, "partic\0ipa\0nts\0");
-
-    for(int i = 0; i < PARTICIPANTS->number_identities;i++){
-		printf("%s\n", PARTICIPANTS->identities[i]);
-	}
-
-    // Create participants byte stream message to send
-	MBA = PARTICIPANTS->create_message(PARTICIPANTS);
-	length = get_length_PARTICIPANTS(PARTICIPANTS);
-	printf("Length of message = %d\n", length);
-
-	for(int i = 0; i < length; i++){
-		printf("%d, ", MBA->array[i]);
-	}
-    printf("\n");
-
-	// free PARTICIPANTS and MBA
-	free_pdu_participants(PARTICIPANTS);
-	free_message_byte_array(MBA);
 
     //-------PARTICIPANTS using new struct-------
     pdu *participants = create_participants(3, 15);

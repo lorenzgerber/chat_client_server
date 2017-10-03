@@ -68,13 +68,10 @@ pdu* create_join(uint8_t identity_length);
 int free_join(pdu *pdu);
 
 // PARTICIPANTS
-int pdu_participants_add_identities(pdu_PARTICIPANTS *pdu, char* identities);
 int participants_add_identities(pdu *pdu, char* identities);
 
-pdu_PARTICIPANTS* create_PARTICIPANTS(uint8_t number_identities, uint16_t length);
 pdu* create_participants(uint8_t number_identities, uint16_t length);
 
-int free_pdu_participants(pdu_PARTICIPANTS *pdu);
 int free_participants(pdu *pdu);
 
 // QUIT

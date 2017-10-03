@@ -242,27 +242,6 @@ int free_join(pdu *pdu){
 /*
  * pdu_PARTICIPANTS
  */
-int pdu_participants_add_identities(pdu_PARTICIPANTS *pdu, char* identities){
-	// need to implement check of length
-
-	int lower = 0, found = 0;
-	for(int i = 0 ; i < pdu->length;i++){
-		//read until null termination (detect length)
-		if(identities[i]=='\0'){
-
-			pdu->identities[found] = malloc((i-lower+1)*sizeof(char));
-			strncpy(pdu->identities[found], &identities[lower], i-lower);
-			lower = i+1;
-			found++;
-		}
-	}
-	if (found < pdu->number_identities){
-		perror("not enough identities provided");
-		return -1;
-	}
-
-	return 0;
-}
 
 int participants_add_identities(pdu *pdu, char* identities){
 	// need to implement check of length
@@ -286,16 +265,6 @@ int participants_add_identities(pdu *pdu, char* identities){
 	return 0;
 }
 
-pdu_PARTICIPANTS* create_PARTICIPANTS(uint8_t number_identities, uint16_t length){
-	pdu_PARTICIPANTS *pdu = malloc(sizeof(struct pdu_PARTICIPANTS));
-	pdu->type = PDU_PARTICIPANTS;
-	pdu->number_identities = number_identities;
-	pdu->length = length;
-	pdu->identities = malloc(number_identities * sizeof(char*));
-	pdu->add_identities = pdu_participants_add_identities;
-	pdu->create_message = pdu_participants_create_message;
-	return pdu;
-}
 
 
 pdu* create_participants(uint8_t number_identities, uint16_t length){
@@ -310,18 +279,6 @@ pdu* create_participants(uint8_t number_identities, uint16_t length){
 	return pdu;
 }
 
-int free_pdu_participants(pdu_PARTICIPANTS *pdu){
-
-	if(pdu->number_identities !=0){
-		for(int i = 0; i < pdu->number_identities;i++){
-			free(pdu->identities[i]);
-		}
-	}
-
-	free(pdu->identities);
-	free(pdu);
-	return 0;
-}
 
 int free_participants(pdu *pdu){
 

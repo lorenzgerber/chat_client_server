@@ -116,26 +116,6 @@ message_byte_array* join_create_message(pdu *self){
 }
 
 
-
-
-
-
-message_byte_array* pdu_participants_create_message(pdu_PARTICIPANTS *self){
-	int length = get_length_PARTICIPANTS(self);
-	message_byte_array* message = create_message_byte_array(length);
-	message->add_uint8(message, self->type);
-	message->add_uint8(message, self->number_identities);
-	message->add_uint16(message, self->length);
-	for (int i = 0; i < self->number_identities;i++){
-		message->add_chars(message, self->identities[i], strlen(self->identities[i])+1);
-	}
-	int padding = calc_word_padding(self->length);
-	for (int i = 0; i < padding; i++){
-		message->add_uint8(message, 0);
-	}
-	return message;
-}
-
 message_byte_array* participants_create_message(pdu *self){
 	int length = get_length_participants(self);
 	message_byte_array* message = create_message_byte_array(length);

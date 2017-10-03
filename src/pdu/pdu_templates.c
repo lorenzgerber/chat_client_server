@@ -99,22 +99,6 @@ uint32_t get_length_join(pdu *pdu){
 
 
 
-
-uint32_t get_length_PARTICIPANTS(pdu_PARTICIPANTS *pdu){
-    uint32_t length_of_participants = LENGTH_OP +
-                                      LENGTH_NUMBER_IDENTITIES +
-                                      LENGTH_MESSAGE_LENGTH;
-
-    for(int i = 0; i < pdu->number_identities; i++){
-
-        length_of_participants += (strlen(pdu->identities[i]) + 1);
-    }
-
-    length_of_participants += calc_word_padding(length_of_participants);
-
-    return length_of_participants;
-}
-
 uint32_t get_length_participants(pdu *pdu){
     uint32_t length_of_participants = LENGTH_OP +
                                       LENGTH_NUMBER_IDENTITIES +

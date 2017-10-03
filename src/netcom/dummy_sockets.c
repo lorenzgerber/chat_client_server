@@ -57,11 +57,11 @@ io_handler* dummy_socket_join(io_handler* dummy_socket){
 
 io_handler* dummy_socket_participants(io_handler* dummy_socket){
 
-	pdu_PARTICIPANTS *PARTICIPANTS = create_PARTICIPANTS(3, 15);
+	pdu *PARTICIPANTS = create_participants(3, 15);
 	PARTICIPANTS->add_identities(PARTICIPANTS, "partic\0ipa\0nts\0");
 
 	dummy_socket->buffer = PARTICIPANTS->create_message(PARTICIPANTS);
-	free_pdu_participants(PARTICIPANTS);
+	free_participants(PARTICIPANTS);
 
 	return dummy_socket;
 }

@@ -219,7 +219,6 @@ uint32_t get_length_slist(pdu *pdu);
 
 uint32_t get_length_join(pdu *pdu);
 
-uint32_t get_length_PARTICIPANTS(pdu_PARTICIPANTS *pdu);
 uint32_t get_length_participants(pdu *pdu);
 
 uint32_t get_length_QUIT(pdu_QUIT *pdu);
