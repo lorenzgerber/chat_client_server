@@ -30,7 +30,7 @@ pdu* parse_QUIT(struct io_handler* socket, uint8_t* read_position);
 
 pdu* parse_MESS(struct io_handler* socket, uint8_t *read_position);
 
-int parse_PJOIN(struct io_handler* socket, uint8_t* read_position);
+pdu* parse_PJOIN(struct io_handler* socket, uint8_t* read_position);
 
 int parse_PLEAVE(struct io_handler* socket, uint8_t* read_position);
 

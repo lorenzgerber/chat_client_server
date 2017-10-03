@@ -92,13 +92,19 @@ int main(int argc, char*argv[]){
     printf("identity length: %d\n", mess->identity_length);
     printf("Checksum: %d\n", mess->checksum);
     printf("message length: %d\n", mess->message_length);
-    printf("timestamp: %d\n", mess->time_stamp);
+    printf("timestamp: %u\n", mess->time_stamp);
     printf("message: %s\n", mess->message);
     printf("client identity: %s\n", mess->identity);
 
     io_handler* dummy_socket_pjoin;
     dummy_socket_pjoin = create_dummy_socket(PDU_PJOIN, ENTITY_CLIENT);
-    parse_header(dummy_socket_pjoin);
+    pdu* pjoin = parse_header(dummy_socket_pjoin);
+
+    printf("\nPJOIN pdu from dummy\n");
+    printf("op code: %d\n", pjoin->type);
+    printf("identity length: %d\n", pjoin->identity_length);
+    printf("timestamp: %u\n", pjoin->time_stamp);
+    printf("client identity: %s\n", pjoin->identity);
 
     io_handler* dummy_socket_pleave;
     dummy_socket_pleave = create_dummy_socket(PDU_PLEAVE, ENTITY_CLIENT);
