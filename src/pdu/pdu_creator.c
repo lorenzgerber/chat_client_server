@@ -257,8 +257,7 @@ pdu_SLIST* create_SLIST(uint16_t number_servers){
 	pdu->type = PDU_SLIST;
 	pdu->number_servers = number_servers;
 	pdu->server_assigned = 0;
-	pdu->current_servers = malloc(sizeof(pdu_server_entry*)*number_servers); //probably wrong
-	*pdu->current_servers = (pdu_server_entry*)malloc(number_servers * sizeof(pdu_server_entry*));
+	pdu->current_servers = malloc(sizeof(pdu_server_entry*)*number_servers);
 	pdu->add_server_entry = add_server_entry;
 	pdu->create_message = pdu_slist_create_message;
 	return pdu;
@@ -269,8 +268,7 @@ pdu* create_slist(uint16_t number_servers){
 	pdu->type = PDU_SLIST;
 	pdu->number_servers = number_servers;
 	pdu->server_assigned = 0;
-	pdu->current_servers = malloc(sizeof(pdu_server_entry*)*number_servers); //probably wrong
-	*pdu->current_servers = (pdu_server_entry*)malloc(number_servers * sizeof(pdu_server_entry*));
+	pdu->current_servers = malloc(sizeof(pdu_server_entry*)*number_servers);
 	pdu->add_server_entry = add_server_entry2;
 	pdu->create_message = slist_create_message;
     pdu->free_pdu = free_slist;
@@ -283,6 +281,7 @@ int free_server_entry(pdu_server_entry *server){
 	if(server->name != NULL){
 		free(server->name);
 	}
+	free(server);
 	return 0;
 }
 
@@ -293,6 +292,7 @@ int free_pdu_slist(pdu_SLIST *pdu){
 			free_server_entry(pdu->current_servers[i]);
 		}
 	}
+	free(pdu->current_servers);
 	free(pdu);
 	return 0;
 }
@@ -303,6 +303,7 @@ int free_slist(pdu *pdu){
             free_server_entry(pdu->current_servers[i]);
         }
     }
+    free(pdu->current_servers);
     free(pdu);
     return 0;
 }
@@ -455,6 +456,7 @@ int free_pdu_participants(pdu_PARTICIPANTS *pdu){
 		}
 	}
 
+	free(pdu->identities);
 	free(pdu);
 	return 0;
 }
@@ -467,6 +469,7 @@ int free_participants(pdu *pdu){
         }
     }
 
+    free(pdu->identities);
     free(pdu);
     return 0;
 }

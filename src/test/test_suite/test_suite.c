@@ -247,7 +247,7 @@ int main(int argc, char*argv[]){
     }
     printf("\n");
 
-    //slist->free_pdu(slist);
+    slist->free_pdu(slist);
     free_message_byte_array(MBA);
 
 	/*
@@ -284,7 +284,7 @@ int main(int argc, char*argv[]){
     }
     printf("\n");
 
-    //join->free_pdu(join);
+    join->free_pdu(join);
     free_message_byte_array(MBA);
 
 	/*
@@ -492,7 +492,7 @@ int main(int argc, char*argv[]){
     }
     printf("\n");
 
-    //pleave->free_pdu(pleave);
+    pleave->free_pdu(pleave);
     free_message_byte_array(MBA);
 
 	return 0;
