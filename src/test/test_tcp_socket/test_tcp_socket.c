@@ -19,7 +19,7 @@ int main(int argc, char*argv[]){
 	pthread_t* thread_handle;
 	thread_handle = malloc(sizeof(pthread_t));
 
-	char* address = "hplinuxbox";
+	char* address = "localhost";
 	io_handler *server_listener;
 	io_handler *server_com;
 
@@ -43,7 +43,7 @@ int main(int argc, char*argv[]){
 
 
 void * client(void* data){
-	char* address = "hplinuxbox";
+	char* address = "localhost";
 
 	io_handler *client;
 	pdu *test = create_ack(1234);
