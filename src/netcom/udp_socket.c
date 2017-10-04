@@ -5,7 +5,22 @@
  *      Author: lgerber
  */
 #include "udp_socket.h"
+int setup_listener_socket_udp(int *sfd, uint16_t port){
+	if ((*sfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP))==-1){
+		fprintf(stderr, "socket");
+	}
 
+	struct sockaddr_in addr;//, from;
+
+	//memset(&addr, 0, sizeof(addr));
+    memset((char *) &addr, 0, sizeof(addr));
+	addr.sin_family = AF_INET;
+	addr.sin_port = htons(port);
+	addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	if(bind(*sfd, (const struct sockaddr *) &addr, sizeof (addr)) == -1) {
+		fprintf(stderr, "bind");
+	}
+}
 int setup_udp_send_socket(){
 	int sock;
 	if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)

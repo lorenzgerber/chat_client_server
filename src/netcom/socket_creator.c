@@ -42,7 +42,7 @@ io_handler* create_client_udp_socket(char* server_name, uint16_t port){
     io->send_pdu = udp_send_pdu;
     io->socket_entity = setup_udp_send_socket();
 
-    io->hints = get_udp_server_address(server_name, (uint16_t) &port);
+    io->hints = get_udp_server_address(server_name, port);
     connect_to_udp_server(io->socket_entity, io->hints);
 
     return io;
@@ -94,7 +94,18 @@ int tcp_client_send_pdu(struct io_handler *self, pdu* pdu){
 	return 0;
 }
 
+io_handler* create_listen_udp_socket(char *server_name, uint16_t port){
 
+	io_handler *io = malloc(sizeof(io_handler));
+
+	io->socket_entity = ENTITY_SERVER;
+
+	// Register functions
+	//io->listen = tcp_server_listen;
+	setup_listener_socket_udp(&io->sfd_listen, port);
+
+	return io;
+}
 	
 io_handler* create_server_tcp_socket(char *server_name, uint16_t port){
 	io_handler *io = malloc(sizeof(io_handler));

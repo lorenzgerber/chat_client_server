@@ -23,6 +23,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/select.h>
+int setup_listener_socket_udp(int *sfd, uint16_t port);
 
 int setup_udp_send_socket();
 
