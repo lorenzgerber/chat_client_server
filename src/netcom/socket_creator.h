@@ -44,6 +44,8 @@ io_handler* create_server_tcp_socket(char *server_name,  uint16_t port);
 
 int tcp_server_listen(struct io_handler *self);
 
+int udp_server_listen(struct io_handler *self);
+
 io_handler* create_dummy_socket(int op_code, int socket_entity);
 
 int udp_send_pdu(struct io_handler *self, pdu* pdu);

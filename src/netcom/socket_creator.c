@@ -101,7 +101,7 @@ io_handler* create_listen_udp_socket(char *server_name, uint16_t port){
 	io->socket_entity = ENTITY_SERVER;
 
 	// Register functions
-	//io->listen = tcp_server_listen;
+	io->listen = udp_server_listen;
 	setup_listener_socket_udp(&io->sfd_listen, port);
 
 	return io;
@@ -126,6 +126,12 @@ int tcp_server_listen(struct io_handler *self){
 	return 0;
 }
 
+int udp_server_listen(struct io_handler *self){
+
+    udp_listen_obtain_client_socket(&self->sfd_listen, &self->sfd_read_write);
+
+    return 0;
+}
 
 int udp_send_pdu(struct io_handler *self, pdu* pdu){
     message_byte_array *MBA = pdu->create_message(pdu);

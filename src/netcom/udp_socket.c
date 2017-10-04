@@ -4,6 +4,7 @@
  *  Created on: Oct 2, 2017
  *      Author: lgerber
  */
+#include <arpa/inet.h>
 #include "udp_socket.h"
 int setup_listener_socket_udp(int *sfd, uint16_t port){
 	if ((*sfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP))==-1){
@@ -52,4 +53,21 @@ int connect_to_udp_server(int sock, struct addrinfo *res){
 	if(connect(sock, (struct sockaddr *)res->ai_addr, res->ai_addrlen) < 0)
 		return -1;
 	return 0;
+}
+
+int udp_listen_obtain_client_socket(const int *sfd_listen, int *sfd_read_write){
+
+    char buf[1024];
+    struct sockaddr_in from;
+    int slen=sizeof(from);
+
+    printf("waiting\n");
+    if (recvfrom(*sfd_listen, buf, 1024, 0, (struct sockaddr *) &from, (socklen_t *) &slen) == -1){
+        fprintf(stderr, "receive from");
+    }
+
+    printf("Received packet from %s:%d\nData: %s\n\n",
+           inet_ntoa(from.sin_addr) , UDP_PORT, buf);
+    return 0;
+
 }
