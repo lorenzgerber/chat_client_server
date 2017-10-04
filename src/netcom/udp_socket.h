@@ -28,6 +28,6 @@ int setup_udp_send_socket();
 
 struct addrinfo *get_udp_server_address(char* name, uint16_t port);
 
-int connect_to_server(int sock, struct addrinfo *res);
+int connect_to_udp_server(int sock, struct addrinfo *res);
 
 #endif /* SRC_NETCOM_UDP_SOCKET_H_ */

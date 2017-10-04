@@ -7,6 +7,7 @@
 
 #include "socket_creator.h"
 
+
 /**
  * create_client_tcp_socket
  *
@@ -32,6 +33,22 @@ io_handler* create_client_tcp_socket(char *server_name, int port){
 
 	return io;
 }
+
+io_handler* create_client_udp_socket(char* server_name, uint16_t port){
+	
+    io_handler *io = malloc(sizeof(io_handler));
+    
+	io->socket_entity = ENTITY_SERVER;
+    io->send_pdu = udp_send_pdu;
+    io->socket_entity = setup_udp_send_socket();
+
+    io->hints = get_udp_server_address(server_name, (uint16_t) &port);
+    connect_to_udp_server(io->socket_entity, io->hints);
+
+    return io;
+}
+
+
 
 /**
  * tcp_client_connect
@@ -78,6 +95,7 @@ int tcp_client_send_pdu(struct io_handler *self, pdu* pdu){
 }
 
 
+	
 io_handler* create_server_tcp_socket(char *server_name, uint16_t port){
 	io_handler *io = malloc(sizeof(io_handler));
 
@@ -95,6 +113,17 @@ int tcp_server_listen(struct io_handler *self){
 	listen_obtain_client_socket(&self->sfd_listen, &self->sfd_read_write);
 
 	return 0;
+}
+
+
+int udp_send_pdu(struct io_handler *self, pdu* pdu){
+    message_byte_array *MBA = pdu->create_message(pdu);
+
+    if(sendto(self->socket_entity, MBA->array, pdu->get_message_length(pdu), 0, (struct sockaddr *)self->hints->ai_addr, self->hints->ai_addrlen)<0){
+        fprintf(stderr, "sendto failed\n");
+    }
+
+    return 0;
 }
 
 

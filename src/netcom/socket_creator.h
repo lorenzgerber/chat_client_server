@@ -26,8 +26,11 @@
 #include "socket_templates.h"
 #include "dummy_sockets.h"
 #include "tcp_socket.h"
+#include "udp_socket.h"
 
 
+
+io_handler* create_client_udp_socket(char* server_name, uint16_t port);
 
 io_handler* create_client_tcp_socket(char* server_name, int port);
 
@@ -40,6 +43,8 @@ io_handler* create_server_tcp_socket(char *server_name,  uint16_t port);
 int tcp_server_listen(struct io_handler *self);
 
 io_handler* create_dummy_socket(int op_code, int socket_entity);
+
+int udp_send_pdu(struct io_handler *self, pdu* pdu);
 
 uint8_t* dummy_socket_request_n_word(struct io_handler *self, int n_word);
 
