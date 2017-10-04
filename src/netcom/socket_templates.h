@@ -32,6 +32,7 @@
 typedef struct io_handler {
 
 	struct message_byte_array *buffer;
+	uint8_t *read_buffer;
 	int sfd_read_write;
 	int sfd_listen;
 	int read_head;
@@ -49,7 +50,7 @@ typedef struct io_handler {
 	int (*send_pdu)(struct io_handler *self, pdu *pdu);
 
 	// function: listen
-	int (*listen)(struct io_handler *self);
+	struct io_handler* (*listen)(struct io_handler *self);
 
 
 	// function free/close

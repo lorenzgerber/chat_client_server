@@ -4,14 +4,14 @@
  *  Created on: Oct 2, 2017
  *      Author: lgerber
  */
-#include <arpa/inet.h>
+
 #include "udp_socket.h"
 int setup_listener_socket_udp(int *sfd, uint16_t port){
-	if ((*sfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP))==-1){
+
+    if ((*sfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP))==-1){
 		fprintf(stderr, "socket");
 	}
-
-	struct sockaddr_in addr;//, from;
+    struct sockaddr_in addr;//, from;
 
 	//memset(&addr, 0, sizeof(addr));
     memset((char *) &addr, 0, sizeof(addr));
@@ -21,7 +21,9 @@ int setup_listener_socket_udp(int *sfd, uint16_t port){
 	if(bind(*sfd, (const struct sockaddr *) &addr, sizeof (addr)) == -1) {
 		fprintf(stderr, "bind");
 	}
+    return 0;
 }
+
 int setup_udp_send_socket(){
 	int sock;
 	if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
@@ -50,9 +52,10 @@ struct addrinfo *get_udp_server_address(char* name, uint16_t port){
 
 int connect_to_udp_server(int sock, struct addrinfo *res){
 
-	if(connect(sock, (struct sockaddr *)res->ai_addr, res->ai_addrlen) < 0)
-		return -1;
-	return 0;
+	if(connect(sock, (struct sockaddr *)res->ai_addr, res->ai_addrlen) < 0){
+        return -1;
+    }
+    return 0;
 }
 
 int udp_listen_obtain_client_socket(const int *sfd_listen, int *sfd_read_write){
@@ -60,7 +63,8 @@ int udp_listen_obtain_client_socket(const int *sfd_listen, int *sfd_read_write){
     char buf[1024];
     struct sockaddr_in from;
     int slen=sizeof(from);
-
+    memset(buf,0,1024);
+    fcntl(*sfd_listen, F_SETFL, O_NONBLOCK);
     printf("waiting\n");
     if (recvfrom(*sfd_listen, buf, 1024, 0, (struct sockaddr *) &from, (socklen_t *) &slen) == -1){
         fprintf(stderr, "receive from");

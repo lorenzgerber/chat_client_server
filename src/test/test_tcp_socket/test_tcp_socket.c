@@ -5,30 +5,53 @@
  *      Author: lgerber
  */
 #include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
 #include "tcp_socket.h"
 #include "socket_creator.h"
 #include "socket_templates.h"
 #include "pdu_creator.h"
 
+void *client(void* data);
 
 int main(int argc, char*argv[]){
 
-	printf("socket testing\n");
+    pthread_t* thread_handle;
+    thread_handle = malloc(sizeof(pthread_t));
 
-	char* address = "hplinuxbox";
-	//io_handler *server;
-	io_handler *client;
-	pdu *test = create_ack(1234);
+    char* address = "localhost";
+    io_handler *server_listener;
+    io_handler *server_com;
 
-    //server = create_server_tcp_socket(address, 2000);
-	client = create_client_tcp_socket(address, 2000);
+    pthread_create(thread_handle, NULL, client, NULL);
 
-	//server->listen(server);
+    server_listener = create_tcp_server_listener(address, 2000);
 
-	client->connect(client, 5);
-	client->send_pdu(client, test);
-    
-    
-	return 0;
+    server_com = server_listener->listen(server_listener);
+    if(server_com != NULL){
+        printf("tcp server connected to client\n");
+    }
+    server_com->request_n_word(server_com, 1);
+
+    pthread_join(*thread_handle, NULL);
+    free(thread_handle);
+
+    return 0;
 }
+
+
+
+void * client(void* data){
+    char* address = "localhost";
+
+    io_handler *client;
+    pdu *test = create_ack(1234);
+
+    client = create_tcp_client_communicator(address, 2000);
+    client->connect(client, 5);
+    client->send_pdu(client, test);
+
+    return NULL;
+}
+
 
