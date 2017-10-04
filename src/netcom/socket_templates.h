@@ -26,18 +26,20 @@
 #define ENTITY_SERVER 0
 #define ENTITY_CLIENT 1
 
-
 #include "message_byte_array.h"
+
 
 typedef struct io_handler {
 
 	struct message_byte_array *buffer;
-	int socket;
+	int sfd_read_write;
+	int sfd_listen;
 	int read_head;
 	int socket_entity;
 	struct addrinfo *hints;
 
 	// function: connect_socket
+	int (*connect)(struct io_handler *self, int n_times);
 
 	// function: request_n_word
 	uint8_t* (*request_n_word)(struct io_handler *self, int n_word);
@@ -47,8 +49,11 @@ typedef struct io_handler {
 	int (*send_pdu)(struct io_handler *self, pdu *pdu);
 
 	// function: listen
+	int (*listen)(struct io_handler *self);
+
 
 	// function free/close
+
 
 } io_handler;
 

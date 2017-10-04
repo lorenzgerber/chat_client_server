@@ -27,11 +27,19 @@
 #include "dummy_sockets.h"
 #include "tcp_socket.h"
 
-io_handler* create_dummy_socket(int op_code, int socket_entity);
+
 
 io_handler* create_client_tcp_socket(char* server_name, int port);
 
+int tcp_client_connect(struct io_handler *self, int n_times);
+
 int tcp_client_send_pdu(struct io_handler *self, pdu *pdu);
+
+io_handler* create_server_tcp_socket(char *server_name,  uint16_t port);
+
+int tcp_server_listen(struct io_handler *self);
+
+io_handler* create_dummy_socket(int op_code, int socket_entity);
 
 uint8_t* dummy_socket_request_n_word(struct io_handler *self, int n_word);
 

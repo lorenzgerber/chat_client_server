@@ -23,9 +23,9 @@
 #include "socket_templates.h"
 
 
-int setup_listener_socket(int sfd, uint16_t *port);
+int setup_listener_socket(int *sfd, uint16_t *port);
 
-int listen_obtain_client_socket(int sfd);
+int listen_obtain_client_socket(int *sfd_listen, int *srd_read_write);
 
 int setup_tcp_send_socket(void);
 
