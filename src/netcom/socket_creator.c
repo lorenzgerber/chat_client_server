@@ -138,7 +138,7 @@ uint8_t* tcp_server_request_n_word(struct io_handler *self, int n_word){
 		fflush(stderr);
 	} else {
 		for(int i = 0; i < nread; i++){
-			printf("%d", self->read_buffer[i]);
+			printf("%d ", self->read_buffer[i]);
 		}
 	}
 	free(self->read_buffer);
