@@ -41,7 +41,7 @@ int tcp_client_send_pdu(struct io_handler *self, pdu* pdu){
 /**
  * Function read from dummy socket
  *
- * This function is registered in creat_dummy_socket
+ * This function is registered in create_dummy_socket
  *
  */
 uint8_t* dummy_socket_request_n_word(struct io_handler *self, int n_word){

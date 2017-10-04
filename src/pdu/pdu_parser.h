@@ -14,6 +14,14 @@
 #include "pdu_creator.h"
 #include "socket_templates.h"
 
+/**
+ * parse_header parses the the stream into a pdu object. Initially it reads
+ * only the first word to determine what parsing function to call. There is one
+ * such function for each pdu.
+ *
+ * @param socket io_handler, The struct containing the read stream.
+ * @return pdu , the parsed pdu.
+ */
 pdu* parse_header(struct io_handler* socket);
 
 pdu* parse_ACK(struct io_handler* socket,const uint8_t* read_position);
