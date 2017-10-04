@@ -1,6 +1,7 @@
 
 CC = gcc
-CFLAGS = -Wall -std=c99 -Werror -g -pthread
+CFLAGS = -Wall -std=c99 -Werror -g 
+LDFLAGS = -lpthread
 
 TARGET_EXEC ?= $(EXEC)
 

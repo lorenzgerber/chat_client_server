@@ -17,7 +17,7 @@
  * address lookup with the provided arguments
  * server_name and port.
  */
-io_handler* create_client_tcp_socket(char *server_name, int port){
+io_handler* create_tcp_client_communicator(char *server_name, int port){
 	io_handler *io = malloc(sizeof(io_handler));
 
 	io->socket_entity = ENTITY_CLIENT;
@@ -47,13 +47,13 @@ int tcp_client_connect(struct io_handler *self, int n_times){
 	int counter = n_times;
 
 	while(status == -1 && counter > 0){
-		printf("Trying to connect...\n");
+		printf("tcp client tries connecting to server...\n");
 		status = connect_to_tcp_server(self->sfd_read_write, self->hints);
 		sleep(1);
 		counter--;
 	}
 	if(status == 0){
-		printf("connected...\n");
+		printf("tcp client connected to server...\n");
 	}
 
 	return status;
@@ -78,7 +78,7 @@ int tcp_client_send_pdu(struct io_handler *self, pdu* pdu){
 }
 
 
-io_handler* create_server_tcp_socket(char *server_name, uint16_t port){
+io_handler* create_tcp_server_listener(char *server_name, uint16_t port){
 	io_handler *io = malloc(sizeof(io_handler));
 
 	io->socket_entity = ENTITY_SERVER;
@@ -90,13 +90,44 @@ io_handler* create_server_tcp_socket(char *server_name, uint16_t port){
 	return io;
 }
 
-int tcp_server_listen(struct io_handler *self){
+io_handler* tcp_server_listen(struct io_handler *self){
 
-	listen_obtain_client_socket(&self->sfd_listen, &self->sfd_read_write);
+	io_handler *com;
+	int status = 0;
+	status = listen_obtain_client_socket(&self->sfd_listen, &self->sfd_read_write);
+	if(status == 0){
+		com = malloc(sizeof(io_handler));
+		create_tcp_server_communicator(&self->sfd_read_write);
+	}
+
+	return com;
+}
+
+io_handler* create_tcp_server_communicator(int *sfd_read_write){
+	io_handler *io = malloc(sizeof(io_handler));
+	io->socket_entity = ENTITY_SERVER;
+
+	// Register functions
+	//io->request_n_word;
+	//io->send_pdu;
+
+	return io;
+}
+
+int tcp_server_send_pdu(struct io_handler *self, pdu *pdu){
+
+
 
 	return 0;
 }
 
+
+int tcp_server_request_n_word(struct io_handler *self, int n_word){
+
+
+
+	return 0;
+}
 
 
 

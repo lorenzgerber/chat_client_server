@@ -49,7 +49,7 @@ typedef struct io_handler {
 	int (*send_pdu)(struct io_handler *self, pdu *pdu);
 
 	// function: listen
-	int (*listen)(struct io_handler *self);
+	struct io_handler* (*listen)(struct io_handler *self);
 
 
 	// function free/close
