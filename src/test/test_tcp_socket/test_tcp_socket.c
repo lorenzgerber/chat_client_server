@@ -32,6 +32,7 @@ int main(int argc, char*argv[]){
 	if(server_com != NULL){
 		printf("tcp server connected to client\n");
 	}
+	server_com->request_n_word(server_com, 1);
 
 	pthread_join(*thread_handle, NULL);
 	free(thread_handle);

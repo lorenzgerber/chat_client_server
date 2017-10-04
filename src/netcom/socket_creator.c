@@ -96,8 +96,10 @@ io_handler* tcp_server_listen(struct io_handler *self){
 	int status = 0;
 	status = listen_obtain_client_socket(&self->sfd_listen, &self->sfd_read_write);
 	if(status == 0){
+		int *sfd_read_write = malloc(sizeof(int));
+		*sfd_read_write = self->sfd_read_write;
 		com = malloc(sizeof(io_handler));
-		create_tcp_server_communicator(&self->sfd_read_write);
+		com = create_tcp_server_communicator(sfd_read_write);
 	}
 
 	return com;
@@ -106,25 +108,40 @@ io_handler* tcp_server_listen(struct io_handler *self){
 io_handler* create_tcp_server_communicator(int *sfd_read_write){
 	io_handler *io = malloc(sizeof(io_handler));
 	io->socket_entity = ENTITY_SERVER;
+	io->read_buffer = malloc(sizeof(uint8_t)*512);
+	io->sfd_read_write = *sfd_read_write;
 
-	// Register functions
-	//io->request_n_word;
-	//io->send_pdu;
+	io->request_n_word=tcp_server_request_n_word;
 
 	return io;
 }
 
 int tcp_server_send_pdu(struct io_handler *self, pdu *pdu){
 
+	// to be implemented. Mostly copy paste
+	// from tcp client code
 
 
 	return 0;
 }
 
 
-int tcp_server_request_n_word(struct io_handler *self, int n_word){
+uint8_t* tcp_server_request_n_word(struct io_handler *self, int n_word){
 
+	int nread = 0;
+	nread = recv(self->sfd_read_write, self->read_buffer, sizeof(uint8_t)*512, 0);
 
+	// The read part has to be implemented with some buffer functionality
+	// currently just proof of concept for testing communication
+	if(nread == 0){
+		fprintf(stderr, "Receiver - Client disconnected\n");
+		fflush(stderr);
+	} else {
+		for(int i = 0; i < nread; i++){
+			printf("%d", self->read_buffer[i]);
+		}
+	}
+	free(self->read_buffer);
 
 	return 0;
 }
