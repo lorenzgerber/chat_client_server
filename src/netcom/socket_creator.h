@@ -42,9 +42,12 @@ io_handler* create_tcp_server_communicator(int *sfd_read_write);
 
 int tcp_server_send_pdu(struct io_handler *self, pdu *pdu);
 
-uint8_t *tcp_server_request_n_word(struct io_handler *self, int n_word);
+int tcp_server_request_n_word(struct io_handler *self, int n_word);
 
-io_handler* create_client_udp_socket(char* server_name, uint16_t port);
+
+io_handler* create_udp_client_communicator(char* server_name, uint16_t port);
+
+int udp_client_connect(struct io_handler *self, int n_times);
 
 io_handler* create_listen_udp_socket(char *server_name, uint16_t port);
 
@@ -52,7 +55,8 @@ io_handler* udp_server_listen(struct io_handler *self);
 
 int udp_send_pdu(struct io_handler *self, pdu* pdu);
 
-uint8_t* dummy_socket_request_n_word(struct io_handler *self, int n_word);
+
+int dummy_socket_request_n_word(struct io_handler *self, int n_word);
 
 io_handler* create_dummy_socket(int op_code, int socket_entity);
 

@@ -24,22 +24,22 @@
  */
 pdu* parse_header(struct io_handler* socket);
 
-pdu* parse_ACK(struct io_handler* socket,const uint8_t* read_position);
+pdu* parse_ACK(struct io_handler* socket);
 
-pdu* parse_NOTREG(struct io_handler* socket,const uint8_t* read_position);
+pdu* parse_NOTREG(struct io_handler* socket);
 
-pdu* parse_SLIST(struct io_handler* socket,const uint8_t* read_position);
+pdu* parse_SLIST(struct io_handler* socket);
 
-pdu* parse_JOIN(struct io_handler* socket,const uint8_t* read_position);
+pdu* parse_JOIN(struct io_handler* socket);
 
-pdu* parse_PARTICIPANTS(struct io_handler* socket,const uint8_t* read_position);
+pdu* parse_PARTICIPANTS(struct io_handler* socket);
 
-pdu* parse_QUIT(struct io_handler* socket, uint8_t* read_position);
+pdu* parse_QUIT(struct io_handler* socket);
 
-pdu* parse_MESS(struct io_handler* socket, uint8_t *read_position);
+pdu* parse_MESS(struct io_handler* socket);
 
-pdu* parse_PJOIN(struct io_handler* socket,const uint8_t* read_position);
+pdu* parse_PJOIN(struct io_handler* socket);
 
-pdu* parse_PLEAVE(struct io_handler* socket,const uint8_t* read_position);
+pdu* parse_PLEAVE(struct io_handler* socket);
 
 #endif /* PDU_PARSER_H_ */

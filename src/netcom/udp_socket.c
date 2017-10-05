@@ -64,11 +64,10 @@ int udp_listen_obtain_client_socket(const int *sfd_listen, int *sfd_read_write){
     struct sockaddr_in from;
     int slen=sizeof(from);
     memset(buf,0,1024);
-    fcntl(*sfd_listen, F_SETFL, O_NONBLOCK);
+    //fcntl(*sfd_listen, F_SETFL, O_NONBLOCK);
     printf("waiting\n");
-    if (recvfrom(*sfd_listen, buf, 1024, 0, (struct sockaddr *) &from, (socklen_t *) &slen) == -1){
-        fprintf(stderr, "receive from");
-    }
+    recvfrom(*sfd_listen, buf, 1024, 0, (struct sockaddr *) &from, (socklen_t *) &slen);
+
 
     printf("Received packet from %s:%d\nData: %s\n\n",
            inet_ntoa(from.sin_addr) , UDP_PORT, buf);

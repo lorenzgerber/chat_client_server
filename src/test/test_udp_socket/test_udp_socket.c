@@ -10,11 +10,11 @@ int main(int argc, char*argv[]) {
 
     //*******create listen io_handler******
 
-    io_handler* udp_server = create_listen_udp_socket("localhost", UDP_PORT);
-    udp_server->listen(udp_server);
+    //io_handler* udp_server = create_listen_udp_socket("localhost", UDP_PORT);
+    //udp_server->listen(udp_server);
 
     //******Create send io handler*****
-    io_handler *udp_client = create_client_udp_socket("localhost", UDP_PORT);
+    io_handler *udp_client = create_udp_client_communicator("localhost", UDP_PORT);
 
     //create reg pdu and send it
     char hostname[1024];
@@ -30,7 +30,7 @@ int main(int argc, char*argv[]) {
 
     udp_client->send_pdu(udp_client, testREG);
 
-    close(udp_server->sfd_listen);
+    //close(udp_server->sfd_listen);
 
     return 0;
 }  

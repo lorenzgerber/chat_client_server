@@ -125,7 +125,7 @@ int tcp_server_send_pdu(struct io_handler *self, pdu *pdu){
     return 0;
 }
 
-uint8_t* tcp_server_request_n_word(struct io_handler *self, int n_word){
+int tcp_server_request_n_word(struct io_handler *self, int n_word){
 
     int nread = 0;
     nread = recv(self->sfd_read_write, self->read_buffer, sizeof(uint8_t)*512, 0);
@@ -145,18 +145,36 @@ uint8_t* tcp_server_request_n_word(struct io_handler *self, int n_word){
     return 0;
 }
 
-io_handler* create_client_udp_socket(char* server_name, uint16_t port){
+io_handler* create_udp_client_communicator(char* server_name, uint16_t port){
 
     io_handler *io = malloc(sizeof(io_handler));
 
     io->socket_entity = ENTITY_SERVER;
     io->send_pdu = udp_send_pdu;
     io->socket_entity = setup_udp_send_socket();
-
+    io->connect = udp_client_connect;
     io->hints = get_udp_server_address(server_name, port);
     connect_to_udp_server(io->socket_entity, io->hints);
 
     return io;
+}
+
+int udp_client_connect(struct io_handler *self, int n_times){
+
+    int status = -1;
+    int counter = n_times;
+
+    while(status == -1 && counter > 0){
+        printf("udp client tries connecting to server...\n");
+        status = connect_to_udp_server(self->sfd_read_write, self->hints);
+        sleep(1);
+        counter--;
+    }
+    if(status == 0){
+        printf("udp client connected to server...\n");
+    }
+
+    return status;
 }
 
 io_handler* create_listen_udp_socket(char *server_name, uint16_t port){
@@ -196,12 +214,19 @@ int udp_send_pdu(struct io_handler *self, pdu* pdu){
  * This function is registered in create_dummy_socket
  *
  */
-uint8_t* dummy_socket_request_n_word(struct io_handler *self, int n_word){
+int dummy_socket_request_n_word(struct io_handler *self, int n_word){
 
-	uint8_t* next_read = &self->buffer->array[self->read_head];
-	self->read_head += n_word * 4;
+	//uint8_t* next_read = &self->buffer->array[self->read_head];
+	if(self->read_head == NULL){
+		self->read_head = &self->buffer->array[0];
+		self->read_next = self->read_head + n_word *4;
+	} else {
+		self->read_head = self->read_next;
+		self->read_next += n_word * 4;
+	}
 
-	return next_read;
+
+	return 0;//next_read;
 }
 
 /**
@@ -212,7 +237,8 @@ uint8_t* dummy_socket_request_n_word(struct io_handler *self, int n_word){
  */
 io_handler* create_dummy_socket(int op_code, int socket_entity){
 	io_handler *dummy_socket = malloc(sizeof(io_handler));
-	dummy_socket->read_head = 0;
+	dummy_socket->read_head = NULL;
+	dummy_socket->read_next = NULL;
 	dummy_socket->request_n_word = dummy_socket_request_n_word;
 	dummy_socket->socket_entity = socket_entity;
 
