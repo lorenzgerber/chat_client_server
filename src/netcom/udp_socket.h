@@ -25,10 +25,11 @@
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include "socket_templates.h"
 
 #define UDP_PORT 1337
 
-int setup_listener_socket_udp(int *sfd, uint16_t* port);
+int setup_listener_socket_udp(int* sfd, io_handler* self);
 
 int setup_udp_send_socket();
 
@@ -36,5 +37,4 @@ struct addrinfo *get_udp_server_address(int *port, char *name);
 
 int connect_to_udp_server(int sock, struct addrinfo *res);
 
-int udp_listen_obtain_client_socket(const int *sfd_listen, int *sfd_read_write);
 #endif /* SRC_NETCOM_UDP_SOCKET_H_ */

@@ -199,6 +199,27 @@ int udp_send_pdu(struct io_handler *self, pdu* pdu){
     return 0;
 }
 
+io_handler* create_udp_server(char *server_name, int port){
+
+    io_handler *io = malloc(sizeof(io_handler));
+
+    io->socket_entity = ENTITY_SERVER;
+
+    // get server address
+    io->hints = get_udp_server_address(&port, server_name);
+    int* sfd = malloc(sizeof(int));
+    io->sfd_listen = setup_listener_socket_udp(sfd,io);
+    io->read_buffer = malloc(sizeof(uint8_t)*131072);
+    io->recv_length = 0;
+
+
+    io->request_n_word = udp_request_n_word;
+
+    io->listen = udp_server_listen;
+
+    return io;
+}
+
 int udp_client_connect(struct io_handler *self, int n_times){
 
     int status = -1;
@@ -244,47 +265,20 @@ int udp_request_n_word(struct io_handler *self, int n_word){
     return 0;
 }
 
-io_handler* create_udp_server_listener(char *server_name, uint16_t port){
-    io_handler *io = malloc(sizeof(io_handler));
-
-    io->socket_entity = ENTITY_SERVER;
-
-    // Register functions
-    io->listen = udp_server_listen;
-    setup_listener_socket_udp(&io->sfd_listen, &port);
-
-    return io;
-}
 
 io_handler* udp_server_listen(struct io_handler *self){
 
-    io_handler *com;
-    int status = 0;
-    status = udp_listen_obtain_client_socket(&self->sfd_listen, &self->sfd_read_write);
-    if(status == 0){
-        //int *sfd_read_write = malloc(sizeof(int));
-       // *sfd_read_write = self->sfd_read_write;
-        com = malloc(sizeof(io_handler));
-        com = create_udp_server_communicator(self->sfd_read_write);
+    struct sockaddr_in si_other;
+    int slen = sizeof(si_other);
+    for (int i = 0; i < 500; i++) {
+        if (recvfrom(self->sfd_listen , self->read_buffer, 500, 0, &si_other, &slen) == -1)
+           perror("recvfrom()");
+        printf("Received packet from %s:%d\nData: %s\n\n",
+               inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port), self->read_buffer);
+
     }
-
-    return com;
 }
 
-
-io_handler* create_udp_server_communicator(int sfd_read_write){
-
-    io_handler *io = malloc(sizeof(io_handler));
-    io->socket_entity = ENTITY_SERVER;
-    io->read_buffer = malloc(sizeof(uint8_t)*131072);
-    io->recv_length = 0;
-    io->sfd_read_write = sfd_read_write;
-
-    io->request_n_word=udp_request_n_word;
-    io->send_pdu=udp_send_pdu;
-
-    return io;
-}
 
 int udp_server_send_pdu(struct io_handler *self, pdu *pdu){
 
@@ -384,3 +378,8 @@ io_handler* create_dummy_socket(int op_code, int socket_entity){
 
 	return dummy_socket;
 }
+
+
+
+
+
