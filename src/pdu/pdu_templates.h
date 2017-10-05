@@ -90,6 +90,7 @@ typedef struct pdu {
 	int (*add_server_name)(struct pdu *self, char*);
 	struct message_byte_array* (*create_message)(struct pdu *self);
 	uint32_t (*get_message_length)(struct pdu *self);
+	int (*print)(struct pdu *self);
 	int (*free_pdu)(struct pdu *self);
 
 } pdu;
