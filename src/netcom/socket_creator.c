@@ -30,8 +30,8 @@ io_handler* create_tcp_client_communicator(char *server_name, int port){
 
     // Register functions
     io->connect = tcp_client_connect;
-    io->send_pdu = tcp_client_send_pdu;
-    io->request_n_word = tcp_client_request_n_word;
+    io->send_pdu = tcp_send_pdu;
+    io->request_n_word = tcp_request_n_word;
 
     io->sfd_read_write = setup_tcp_send_socket();
 
@@ -67,25 +67,28 @@ int tcp_client_connect(struct io_handler *self, int n_times){
     return status;
 }
 
+
 /**
- * tcp_client_send_pdu
+ * tcp_send_pdu
  *
- * Function to be registered in the tcp client io handler.
+ * Function to be registered in communication io_handler.
  * It takes a pdu struct as argument and tries to send
- * the serialized message on the io handler socket.
+ * the serialized message on the io handler socket. Prior
+ * to use, the client needs to connect.
  */
-int tcp_client_send_pdu(struct io_handler *self, pdu* pdu){
+int tcp_send_pdu(struct io_handler *self, pdu* pdu){
 
     message_byte_array *MBA = pdu->create_message(pdu);
 
-    if(sendto(self->sfd_read_write, MBA->array, pdu->get_message_length(pdu), 0, (struct sockaddr *)self->hints->ai_addr, self->hints->ai_addrlen)<0){
-        fprintf(stderr, "sendto failed\n");
+    if(send(self->sfd_read_write, MBA->array, pdu->get_message_length(pdu), 0)<0){
+        fprintf(stderr, "send failed\n");
     }
 
     return 0;
 }
 
-int tcp_client_request_n_word(struct io_handler *self, int n_word){
+
+int tcp_request_n_word(struct io_handler *self, int n_word){
 
     int nread = 0;
     if(self->buffer != NULL){
@@ -148,49 +151,10 @@ io_handler* create_tcp_server_communicator(int *sfd_read_write){
     io->recv_length = 0;
     io->sfd_read_write = *sfd_read_write;
 
-    io->request_n_word=tcp_server_request_n_word;
-    io->send_pdu=tcp_server_send_pdu;
+    io->request_n_word=tcp_request_n_word;
+    io->send_pdu=tcp_send_pdu;
 
     return io;
-}
-
-int tcp_server_send_pdu(struct io_handler *self, pdu *pdu){
-
-    message_byte_array *MBA = pdu->create_message(pdu);
-
-    if(send(self->sfd_read_write, MBA->array, pdu->get_message_length(pdu), 0)==-1){
-        fprintf(stderr, "sendto failed\n");
-    }
-
-    return 0;
-}
-
-int tcp_server_request_n_word(struct io_handler *self, int n_word){
-
-    int nread = 0;
-    if(self->buffer != NULL){
-        free_message_byte_array(self->buffer);
-    }
-
-    if(self->recv_length >= n_word*4){
-        move_to_process_buffer(self, n_word);
-        return 0;
-    }
-
-    nread = recv(self->sfd_read_write, self->read_buffer, sizeof(uint8_t)*131072, 0);
-
-    if(nread == 0){
-        fprintf(stderr, "Receiver - Client disconnected\n");
-        fflush(stderr);
-    } else if (nread > 0){
-        self->recv_length+=nread;
-        if(self->recv_length >= n_word*4){
-            move_to_process_buffer(self, n_word);
-        }
-    }
-
-
-    return 0;
 }
 
 int move_to_process_buffer(struct io_handler *handler, int n_word){
@@ -214,8 +178,8 @@ io_handler* create_udp_client_communicator(char* server_name, int port){
 
     // Register functions
     io->connect = udp_client_connect;
-    io->send_pdu = udp_client_send_pdu;
-    io->request_n_word = udp_client_request_n_word;
+    io->send_pdu = udp_send_pdu;
+    io->request_n_word = udp_request_n_word;
 
     io->sfd_read_write = setup_udp_send_socket();
 
@@ -225,11 +189,11 @@ io_handler* create_udp_client_communicator(char* server_name, int port){
     return io;
 }
 
-int udp_client_send_pdu(struct io_handler *self, pdu* pdu){
+int udp_send_pdu(struct io_handler *self, pdu* pdu){
     message_byte_array *MBA = pdu->create_message(pdu);
 
-    if(sendto(self->sfd_read_write, MBA->array, pdu->get_message_length(pdu), 0, (struct sockaddr *)self->hints->ai_addr, self->hints->ai_addrlen)<0){
-        fprintf(stderr, "sendto failed\n");
+    if(send(self->sfd_read_write, MBA->array, pdu->get_message_length(pdu), 0)<0){
+        fprintf(stderr, "send failed\n");
     }
 
     return 0;
@@ -253,7 +217,7 @@ int udp_client_connect(struct io_handler *self, int n_times){
     return status;
 }
 
-int udp_client_request_n_word(struct io_handler *self, int n_word){
+int udp_request_n_word(struct io_handler *self, int n_word){
 
     int nread = 0;
     if(self->buffer != NULL){
@@ -316,7 +280,8 @@ io_handler* create_udp_server_communicator(int *sfd_read_write){
     io->recv_length = 0;
     io->sfd_read_write = *sfd_read_write;
 
-    io->request_n_word=udp_server_request_n_word;
+    io->request_n_word=udp_request_n_word;
+    io->send_pdu=udp_send_pdu;
 
     return io;
 }
@@ -368,14 +333,16 @@ int udp_server_request_n_word(struct io_handler *self, int n_word){
  */
 int dummy_socket_request_n_word(struct io_handler *self, int n_word){
 
-	//uint8_t* next_read = &self->buffer->array[self->read_head];
-	if(self->read_head == NULL){
-		self->read_head = &self->buffer->array[0];
-		self->read_next = self->read_head + n_word *4;
-	} else {
-		self->read_head = self->read_next;
-		self->read_next += n_word * 4;
-	}
+    //uint8_t* next_read = &self->buffer->array[self->read_head];
+    if(self->read_head == NULL){
+        self->read_head = &self->buffer->array[0];
+        self->read_next = self->read_head + n_word *4;
+    } else {
+        self->read_head = self->read_next;
+        self->read_next += n_word * 4;
+    }
+
+
     return 0;//next_read;
 }
 

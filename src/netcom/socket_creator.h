@@ -28,46 +28,34 @@
 #include "tcp_socket.h"
 #include "udp_socket.h"
 
-io_handler* create_tcp_client_communicator(char* server_name, int port);
 
+io_handler* create_tcp_client_communicator(char* server_name, int port);
 int tcp_client_connect(struct io_handler *self, int n_times);
 
-int tcp_client_send_pdu(struct io_handler *self, pdu *pdu);
-
-int tcp_client_request_n_word(struct io_handler *self, int n_word);
-
 io_handler* create_tcp_server_listener(char *server_name,  uint16_t port);
-
 io_handler* tcp_server_listen(struct io_handler *self);
 
 io_handler* create_tcp_server_communicator(int *sfd_read_write);
-
 int tcp_server_send_pdu(struct io_handler *self, pdu *pdu);
 
-int tcp_server_request_n_word(struct io_handler *self, int n_word);
+int tcp_request_n_word(struct io_handler *self, int n_word);
+int tcp_send_pdu(struct io_handler *self, pdu* pdu);
 
 
 io_handler* create_udp_client_communicator(char* server_name, int port);
-
 int udp_client_connect(struct io_handler *self, int n_times);
 
-int udp_client_send_pdu(struct io_handler *self, pdu* pdu);
-
-int udp_client_request_n_word(struct io_handler *self, int n_word);
-
 io_handler* create_udp_server_listener(char *server_name, uint16_t port);
-
 io_handler* udp_server_listen(struct io_handler *self);
 
 io_handler* create_udp_server_communicator(int *sfd_read_write);
-
 int udp_server_send_pdu(struct io_handler *self, pdu *pdu);
 
-int udp_server_request_n_word(struct io_handler *self, int n_word);
+int udp_request_n_word(struct io_handler *self, int n_word);
+int udp_send_pdu(struct io_handler *self, pdu* pdu);
 
 
 int dummy_socket_request_n_word(struct io_handler *self, int n_word);
-
 io_handler* create_dummy_socket(int op_code, int socket_entity);
 
 #endif /* SRC_NETCOM_SOCKET_CREATOR_H_ */
