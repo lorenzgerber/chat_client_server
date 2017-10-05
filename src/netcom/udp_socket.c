@@ -54,9 +54,12 @@ int setup_listener_socket_udp(int *sfd, uint16_t* port){
 }
 
 int setup_udp_send_socket(){
-	int sock;
-	if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
+	int sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	printf("\n***sock = %d***\n", sock);
+	if (sock == -1){
 		perror("socket");
+	}
+
 	return sock;
 }
 
@@ -72,7 +75,7 @@ struct addrinfo *get_udp_server_address(int *port, char *name){
 
 	//Translate server port to char
 	char send_port[5];
-	sprintf(send_port, "%d", port);
+	sprintf(send_port, "%d", *port);
 
 	/* Build the network address of server */
 	getaddrinfo(name, send_port, &hints, &res);
@@ -89,13 +92,13 @@ int connect_to_udp_server(int sock, struct addrinfo *res){
 
 int udp_listen_obtain_client_socket(const int *sfd_listen, int *sfd_read_write){
 
-	struct sockaddr_in client;
-	int c;
+	struct sockaddr_storage client;
+	//int c;
 
 	listen(*sfd_listen, 3);
 
-	c = sizeof(struct sockaddr_in);
-	*sfd_read_write = accept(*sfd_listen,(struct sockaddr *)&client, (socklen_t*)&c);
+	socklen_t c = sizeof(client);
+	//*sfd_read_write = accept(*sfd_listen,(struct sockaddr *)&client, &c);
 
 	if(sfd_read_write < 0){
 		perror("Receiver - accept failed");

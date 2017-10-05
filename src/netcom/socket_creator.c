@@ -262,23 +262,23 @@ io_handler* udp_server_listen(struct io_handler *self){
     int status = 0;
     status = udp_listen_obtain_client_socket(&self->sfd_listen, &self->sfd_read_write);
     if(status == 0){
-        int *sfd_read_write = malloc(sizeof(int));
-        *sfd_read_write = self->sfd_read_write;
+        //int *sfd_read_write = malloc(sizeof(int));
+       // *sfd_read_write = self->sfd_read_write;
         com = malloc(sizeof(io_handler));
-        com = create_udp_server_communicator(sfd_read_write);
+        com = create_udp_server_communicator(self->sfd_read_write);
     }
 
     return com;
 }
 
 
-io_handler* create_udp_server_communicator(int *sfd_read_write){
+io_handler* create_udp_server_communicator(int sfd_read_write){
 
     io_handler *io = malloc(sizeof(io_handler));
     io->socket_entity = ENTITY_SERVER;
     io->read_buffer = malloc(sizeof(uint8_t)*131072);
     io->recv_length = 0;
-    io->sfd_read_write = *sfd_read_write;
+    io->sfd_read_write = sfd_read_write;
 
     io->request_n_word=udp_request_n_word;
     io->send_pdu=udp_send_pdu;

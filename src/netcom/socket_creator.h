@@ -48,7 +48,7 @@ int udp_client_connect(struct io_handler *self, int n_times);
 io_handler* create_udp_server_listener(char *server_name, uint16_t port);
 io_handler* udp_server_listen(struct io_handler *self);
 
-io_handler* create_udp_server_communicator(int *sfd_read_write);
+io_handler* create_udp_server_communicator(int sfd_read_write);
 int udp_server_send_pdu(struct io_handler *self, pdu *pdu);
 
 int udp_request_n_word(struct io_handler *self, int n_word);
