@@ -1,10 +1,14 @@
 /*
  * message_byte_array.h
  *
- *  Created on: Sep 20, 2017
- *      Author: lgerber
+ *
+ *  Created on: Oct 1, 2017
+ *     Authors: Lorenz Gerber, Niklas Königsson
+ *
+ *  Chat client server project
+ *  5DV197 Datakom course
+ *	GPLv3
  */
-
 #ifndef MESSAGE_BYTE_ARRAY_H_
 #define MESSAGE_BYTE_ARRAY_H_
 #include "pdu_templates.h"

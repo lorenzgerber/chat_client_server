@@ -1,10 +1,14 @@
 /*
  * pdu_templates.h
  *
- *  Created on: Sep 18, 2017
- *      Author: lgerber
+ *
+ *  Created on: Oct 1, 2017
+ *     Authors: Lorenz Gerber, Niklas Königsson
+ *
+ *  Chat client server project
+ *  5DV197 Datakom course
+ *	GPLv3
  */
-
 #ifndef PDU_TEMPLATES_H_
 #define PDU_TEMPLATES_H_
 #include <stddef.h>

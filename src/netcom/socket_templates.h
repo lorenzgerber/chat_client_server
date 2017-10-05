@@ -1,8 +1,13 @@
 /*
  * socket_templates.h
  *
+ *
  *  Created on: Oct 1, 2017
- *      Author: lgerber
+ *     Authors: Lorenz Gerber, Niklas Königsson
+ *
+ *  Chat client server project
+ *  5DV197 Datakom course
+ *	GPLv3
  */
 
 #ifndef _POSIX_SOURCE
@@ -28,7 +33,19 @@
 
 #include "message_byte_array.h"
 
-
+/**
+ * struct io_handler
+ *
+ * Container object for network io.
+ * It represents the flexible socket
+ * abstraction that can be configured
+ * by constructor  methods to tcp / udp
+ * communicator client / server,
+ * or tcp listener.
+ * Further, it can also be configured
+ * as dummy socket for testing of
+ * the parser functionality.
+ */
 typedef struct io_handler {
 
 	struct message_byte_array *buffer;
@@ -57,6 +74,7 @@ typedef struct io_handler {
 
 
 	// function free/close
+	int (*close)(struct io_handler *self);
 
 
 } io_handler;

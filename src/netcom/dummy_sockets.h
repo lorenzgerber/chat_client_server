@@ -1,8 +1,13 @@
 /*
  * dummy_sockets.h
  *
+ *
  *  Created on: Oct 1, 2017
- *      Author: lgerber
+ *     Authors: Lorenz Gerber, Niklas Königsson
+ *
+ *  Chat client server project
+ *  5DV197 Datakom course
+ *	GPLv3
  */
 
 #ifndef SRC_NETCOM_DUMMY_SOCKETS_H_

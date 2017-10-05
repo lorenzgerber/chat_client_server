@@ -1,11 +1,14 @@
 /*
  * socket_creator.h
  *
+ *
  *  Created on: Oct 1, 2017
- *      Author: lgerber
+ *     Authors: Lorenz Gerber, Niklas Königsson
+ *
+ *  Chat client server project
+ *  5DV197 Datakom course
+ *	GPLv3
  */
-
-
 
 #ifndef _POSIX_SOURCE
 #define _POSIX_SOURCE

@@ -1,8 +1,13 @@
 /*
  * message_byte_array.c
  *
- *  Created on: Sep 20, 2017
- *      Author: lgerber
+ *
+ *  Created on: Oct 1, 2017
+ *     Authors: Lorenz Gerber, Niklas Königsson
+ *
+ *  Chat client server project
+ *  5DV197 Datakom course
+ *	GPLv3
  */
 #include "message_byte_array.h"
 
@@ -50,7 +55,6 @@ int message_byte_array_add_uint32(message_byte_array *self, uint32_t data){
 
 	return 0;
 }
-
 
 int message_byte_array_add_chars(message_byte_array *self, char* data, uint32_t length){
 
