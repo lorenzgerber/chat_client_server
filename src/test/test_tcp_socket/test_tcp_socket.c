@@ -10,6 +10,7 @@
 #include "tcp_socket.h"
 #include "socket_creator.h"
 #include "socket_templates.h"
+#include "pdu_parser.h"
 #include "pdu_creator.h"
 
 void *client(void* data);
@@ -23,6 +24,7 @@ int main(int argc, char*argv[]){
     io_handler *server_listener;
     io_handler *server_com;
 
+
     pthread_create(thread_handle, NULL, client, NULL);
 
     server_listener = create_tcp_server_listener(address, 2000);
@@ -31,7 +33,15 @@ int main(int argc, char*argv[]){
     if(server_com != NULL){
         printf("tcp server connected to client\n");
     }
-    server_com->request_n_word(server_com, 1);
+
+    pdu* ack = parse_header(server_com);
+
+    // receiving and printing of message from client
+    printf("\nACK pdu from dummy\n");
+    printf("op code: %d\n", ack->type);
+    printf("identity nr: %d\n", ack->id_number);
+    ack->free_pdu(ack);
+
 
     pthread_join(*thread_handle, NULL);
     free(thread_handle);

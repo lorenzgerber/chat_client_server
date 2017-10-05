@@ -8,6 +8,9 @@
 #include "socket_creator.h"
 
 
+int move_to_process_buffer(struct io_handler *handler, int n_word);
+
+
 /**
  * create_client_tcp_socket
  *
@@ -108,7 +111,8 @@ io_handler* tcp_server_listen(struct io_handler *self){
 io_handler* create_tcp_server_communicator(int *sfd_read_write){
     io_handler *io = malloc(sizeof(io_handler));
     io->socket_entity = ENTITY_SERVER;
-    io->read_buffer = malloc(sizeof(uint8_t)*512);
+    io->read_buffer = malloc(sizeof(uint8_t)*131072);
+    io->recv_length = 0;
     io->sfd_read_write = *sfd_read_write;
 
     io->request_n_word=tcp_server_request_n_word;
@@ -128,19 +132,31 @@ int tcp_server_send_pdu(struct io_handler *self, pdu *pdu){
 int tcp_server_request_n_word(struct io_handler *self, int n_word){
 
     int nread = 0;
-    nread = recv(self->sfd_read_write, self->read_buffer, sizeof(uint8_t)*512, 0);
+    if(self->buffer != NULL){
+        free_message_byte_array(self->buffer);
+    }
 
-    // The read part has to be implemented with some buffer functionality
-    // currently just proof of concept for testing communication
+    if(self->recv_length >= n_word*4){
+        move_to_process_buffer(self, n_word);
+        return 0;
+    }
+
+    nread = recv(self->sfd_read_write, self->read_buffer, sizeof(uint8_t)*131072, 0);
+
     if(nread == 0){
         fprintf(stderr, "Receiver - Client disconnected\n");
         fflush(stderr);
-    } else {
+    } else if (nread > 0){
+        self->recv_length+=nread;
+        /*
         for(int i = 0; i < nread; i++){
             printf("%d ", self->read_buffer[i]);
+        }*/
+        if(self->recv_length >= n_word*4){
+            move_to_process_buffer(self, n_word);
         }
     }
-    free(self->read_buffer);
+
 
     return 0;
 }
@@ -157,6 +173,18 @@ io_handler* create_udp_client_communicator(char* server_name, uint16_t port){
     connect_to_udp_server(io->socket_entity, io->hints);
 
     return io;
+}
+
+int move_to_process_buffer(struct io_handler *handler, int n_word){
+    size_t length = n_word *4;
+    //handler->process_buffer = malloc(sizeof(uint8_t)* length);
+    handler->buffer = create_message_byte_array(n_word);
+    memcpy(handler->buffer->array, handler->read_buffer, length);
+    handler->read_head = handler->buffer->array;
+    memcpy(handler->read_buffer, handler->read_buffer+length, length);
+    handler->recv_length -= length;
+
+    return 0;
 }
 
 int udp_client_connect(struct io_handler *self, int n_times){
