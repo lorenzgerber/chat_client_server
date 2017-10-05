@@ -2,9 +2,12 @@
 // Created by knig on 2017-10-04.
 //
 
-#include "socket_creator.h"
-#include "pdu_parser.h"
+
+
 #include <pthread.h>
+#include <stdlib.h>
+#include <socket_templates.h>
+#include <socket_creator.h>
 
 void *client(void* data);
 
