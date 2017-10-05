@@ -16,12 +16,12 @@
 #ifndef SRC_NETCOM_SOCKET_CREATOR_H_
 #define SRC_NETCOM_SOCKET_CREATOR_H_
 #include <netdb.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <stdint.h>
-#include <string.h>
 #include <unistd.h>
 #include "socket_templates.h"
 #include "dummy_sockets.h"
