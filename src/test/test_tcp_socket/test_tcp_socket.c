@@ -43,6 +43,11 @@ int main(int argc, char*argv[]){
 	ack->free_pdu(ack);
 
 
+	pdu *participants = create_participants(3, 15);
+	participants->add_identities(participants, "partic\0ipa\0nts\0");
+
+	server_com->send_pdu(server_com, participants);
+
 	pthread_join(*thread_handle, NULL);
 	free(thread_handle);
 
@@ -60,6 +65,17 @@ void * client(void* data){
 	client = create_tcp_client_communicator(address, 2000);
 	client->connect(client, 5);
 	client->send_pdu(client, test);
+
+	pdu *participants = parse_header(client);
+
+	printf("\nPARTICIPANTS pdu from dummy\n");
+	printf("op code: %d\n", participants->type);
+	printf("nr of identities: %d\n", participants->number_identities);
+	printf("identities length: %d\n", participants->length);
+	for(int i = 0; i < participants->number_identities; i++){
+		printf("Identity %d: %s\n",i+1,participants->identities[i]);
+	}
+	participants->free_pdu(participants);
 
 	return NULL;
 }
