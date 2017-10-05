@@ -25,7 +25,7 @@ int main(int argc, char*argv[]){
     io_handler *server_com;
 
 
-    pthread_create(thread_handle, NULL, client, NULL);
+    //pthread_create(thread_handle, NULL, client, NULL);
 
     server_listener = create_tcp_server_listener(address, 2000);
 
@@ -33,7 +33,7 @@ int main(int argc, char*argv[]){
     if(server_com != NULL){
         printf("tcp server connected to client\n");
     }
-
+/*
     pdu* ack = parse_header(server_com);
 
     // receiving and printing of message from client
@@ -41,7 +41,7 @@ int main(int argc, char*argv[]){
     printf("op code: %d\n", ack->type);
     printf("identity nr: %d\n", ack->id_number);
     ack->free_pdu(ack);
-
+*/
 
     pthread_join(*thread_handle, NULL);
     free(thread_handle);

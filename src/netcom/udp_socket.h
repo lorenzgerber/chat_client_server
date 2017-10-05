@@ -24,14 +24,15 @@
 #include <sys/select.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 #define UDP_PORT 1337
 
-int setup_listener_socket_udp(int *sfd, uint16_t port);
+int setup_listener_socket_udp(int *sfd, uint16_t* port);
 
 int setup_udp_send_socket();
 
-struct addrinfo *get_udp_server_address(char* name, uint16_t port);
+struct addrinfo *get_udp_server_address(int *port, char *name);
 
 int connect_to_udp_server(int sock, struct addrinfo *res);
 

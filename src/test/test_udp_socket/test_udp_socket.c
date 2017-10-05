@@ -3,34 +3,56 @@
 //
 
 #include "socket_creator.h"
+#include "pdu_parser.h"
+#include <pthread.h>
 
-int main(int argc, char*argv[]) {
+void *client(void* data);
 
-    printf("\n\n---Socket testing udp---\n");
+int main(int argc, char*argv[]){
 
-    //*******create listen io_handler******
+    pthread_t* thread_handle;
+    thread_handle = malloc(sizeof(pthread_t));
 
-    //io_handler* udp_server = create_listen_udp_socket("localhost", UDP_PORT);
-    //udp_server->listen(udp_server);
+    char* address = "localhost";
+    io_handler *server_listener;
+    io_handler *server_com;
 
-    //******Create send io handler*****
-    io_handler *udp_client = create_udp_client_communicator("localhost", UDP_PORT);
 
-    //create reg pdu and send it
-    char hostname[1024];
-    hostname[1023] = '\0';
-    gethostname(hostname, 1023);
-    pdu *testREG = create_reg((uint8_t) strlen(hostname), 5005);
-    testREG->add_server_name(testREG, hostname);
-    printf("test reg pdu:\n");
-    printf("op: %d\n", testREG->type);
-    printf("servername length: %d\n", testREG->server_name_length);
-    printf("TCP port: %d\n", testREG->tcp_port);
-    printf("servername: %s\n", testREG->server_name);
+    //pthread_create(thread_handle, NULL, client, NULL);
 
-    udp_client->send_pdu(udp_client, testREG);
+    server_listener = create_udp_server_listener(address, 2000);
 
-    //close(udp_server->sfd_listen);
+    server_com = server_listener->listen(server_listener);
+    if(server_com != NULL){
+        printf("udp server connected to client\n");
+    }
+/*
+    pdu* ack = parse_header(server_com);
+
+    // receiving and printing of message from client
+    printf("\nACK pdu from dummy\n");
+    printf("op code: %d\n", ack->type);
+    printf("identity nr: %d\n", ack->id_number);
+    ack->free_pdu(ack);
+*/
+
+    pthread_join(*thread_handle, NULL);
+    free(thread_handle);
 
     return 0;
-}  
+}
+
+
+
+void * client(void* data){
+    char* address = "localhost";
+
+    io_handler *client;
+    pdu *test = create_ack(1234);
+
+    client = create_udp_client_communicator(address, 2000);
+    client->connect(client, 5);
+    client->send_pdu(client, test);
+
+    return NULL;
+}
