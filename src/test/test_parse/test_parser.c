@@ -31,6 +31,8 @@ int main(int argc, char*argv[]){
     free_message_byte_array(dummy_socket_ack->buffer);
     free(dummy_socket_ack);
 
+
+
     io_handler* dummy_socket_notreg;
     dummy_socket_notreg = create_dummy_socket(PDU_NOTREG, ENTITY_SERVER);
     pdu* notreg = parse_header(dummy_socket_notreg);
@@ -142,6 +144,7 @@ int main(int argc, char*argv[]){
     pleave->free_pdu(pleave);
     free_message_byte_array(dummy_socket_pleave->buffer);
     free(dummy_socket_pleave);
+
 
 	return 0;
 

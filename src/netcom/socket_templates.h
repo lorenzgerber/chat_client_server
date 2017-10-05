@@ -35,7 +35,8 @@ typedef struct io_handler {
 	uint8_t *read_buffer;
 	int sfd_read_write;
 	int sfd_listen;
-	int read_head;
+	uint8_t *read_head;
+	uint8_t *read_next;
 	int socket_entity;
 	struct addrinfo *hints;
 
@@ -43,7 +44,7 @@ typedef struct io_handler {
 	int (*connect)(struct io_handler *self, int n_times);
 
 	// function: request_n_word
-	uint8_t* (*request_n_word)(struct io_handler *self, int n_word);
+	int (*request_n_word)(struct io_handler *self, int n_word);
 
 
 	// function: send_n_word

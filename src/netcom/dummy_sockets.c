@@ -12,7 +12,6 @@ io_handler* dummy_socket_ack(io_handler* dummy_socket){
 
 	dummy_socket->buffer = ACK->create_message(ACK);
 	free_ack(ACK);
-
 	return dummy_socket;
 }
 
@@ -108,3 +107,4 @@ io_handler* dummy_socket_pleave(io_handler * dummy_socket){
 
 	return dummy_socket;
 }
+
