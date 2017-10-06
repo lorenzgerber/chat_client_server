@@ -1,10 +1,14 @@
 /*
  * pdu_parser.c
  *
- *  Created on: Sep 30, 2017
- *      Author: lgerber
+ *
+ *  Created on: Oct 1, 2017
+ *     Authors: Lorenz Gerber, Niklas Königsson
+ *
+ *  Chat client server project
+ *  5DV197 Datakom course
+ *	GPLv3
  */
-
 #include "pdu_parser.h"
 
 /**
@@ -58,6 +62,14 @@ pdu* parse_header(struct io_handler *socket){
     return return_pdu;
 }
 
+/**
+ * This function is called from parse_header if the first word read
+ * has the op code for ACK pdu. The function completes the pdu parsing
+ * and sends it back to parse_header who returns it to the caller.
+ *
+ * @param socket io_handler with the read buffer
+ * @return pdu Parsed ACK pdu object
+ */
 pdu* parse_ACK(struct io_handler* socket){
     //assemble the 16 bit id number from two 8 bits read
 	uint16_t id_nr = (*(socket->read_head+2) << 8) | *(socket->read_head+3);
@@ -67,6 +79,14 @@ pdu* parse_ACK(struct io_handler* socket){
     return ack;
 }
 
+/**
+ * This function is called from parse_header if the first word read
+ * has the op code for NOTREG pdu. The function completes the pdu parsing
+ * and sends it back to parse_header who returns it to the caller.
+ *
+ * @param socket io_handler with the read buffer
+ * @return pdu Parsed NOTREG pdu object
+ */
 pdu* parse_NOTREG(struct io_handler* socket){
     //assemble the 16 bit id number from two 8 bits read
 	uint16_t id_nr = (*(socket->read_head+2) << 8) | *(socket->read_head+3);
@@ -76,6 +96,14 @@ pdu* parse_NOTREG(struct io_handler* socket){
 	return notreg;
 }
 
+/**
+ * This function is called from parse_header if the first word read
+ * has the op code for SLIST pdu. The function completes the pdu parsing
+ * and sends it back to parse_header who returns it to the caller.
+ *
+ * @param socket io_handler with the read buffer
+ * @return pdu Parsed SLIST pdu object
+ */
 pdu* parse_SLIST(struct io_handler* socket){
     //assemble the 16 bit number of servers from two 8 bits read
 	uint16_t nr_of_servers = (*(socket->read_head+2) << 8) | *(socket->read_head+3);
@@ -119,6 +147,14 @@ pdu* parse_SLIST(struct io_handler* socket){
 	return slist;
 }
 
+/**
+ * This function is called from parse_header if the first word read
+ * has the op code for JOIN pdu. The function completes the pdu parsing
+ * and sends it back to parse_header who returns it to the caller.
+ *
+ * @param socket io_handler with the read buffer
+ * @return pdu Parsed JOIN pdu object
+ */
 pdu* parse_JOIN(struct io_handler* socket){
     //read the id length
 	uint8_t idlength = *(socket->read_head+1);
@@ -140,6 +176,15 @@ pdu* parse_JOIN(struct io_handler* socket){
 	return join;
 }
 
+/**
+ * This function is called from parse_header if the first word read
+ * has the op code for PARTICIPANTS pdu. The function completes the
+ * pdu parsing and sends it back to parse_header who returns it to
+ * the caller.
+ *
+ * @param socket io_handler with the read buffer
+ * @return pdu Parsed PARTICIPANTS pdu object
+ */
 pdu* parse_PARTICIPANTS(struct io_handler* socket){
     //read number of clients
 	uint8_t nr_of_clients = *(socket->read_head+1);
@@ -165,11 +210,27 @@ pdu* parse_PARTICIPANTS(struct io_handler* socket){
 	return participants;
 }
 
+/**
+ * This function is called from parse_header if the first word read
+ * has the op code for QUIT pdu. The function completes the pdu parsing
+ * and sends it back to parse_header who returns it to the caller.
+ *
+ * @param socket io_handler with the read buffer
+ * @return pdu Parsed QUIT pdu object
+ */
 pdu* parse_QUIT(struct io_handler* socket){
 	pdu *quit = create_quit();
     return quit;
 }
 
+/**
+ * This function is called from parse_header if the first word read
+ * has the op code for MESS pdu. The function completes the pdu parsing
+ * and sends it back to parse_header who returns it to the caller.
+ *
+ * @param socket io_handler with the read buffer
+ * @return pdu Parsed MESS pdu object
+ */
 pdu* parse_MESS(struct io_handler* socket){
 
     //read id length and checksum
@@ -224,6 +285,14 @@ pdu* parse_MESS(struct io_handler* socket){
 
 }
 
+/**
+ * This function is called from parse_header if the first word read
+ * has the op code for PJOIN pdu. The function completes the pdu parsing
+ * and sends it back to parse_header who returns it to the caller.
+ *
+ * @param socket io_handler with the read buffer
+ * @return pdu Parsed PJOIN pdu object
+ */
 pdu* parse_PJOIN(struct io_handler* socket){
     //read identity length
 	uint8_t identity_length = *(socket->read_head+1);
@@ -254,6 +323,14 @@ pdu* parse_PJOIN(struct io_handler* socket){
 	return pjoin;
 }
 
+/**
+ * This function is called from parse_header if the first word read
+ * has the op code for PLEAVE pdu. The function completes the pdu parsing
+ * and sends it back to parse_header who returns it to the caller.
+ *
+ * @param socket io_handler with the read buffer
+ * @return pdu Parsed PLEAVE pdu object
+ */
 pdu* parse_PLEAVE(struct io_handler* socket){
     //read identity length
 	uint8_t identity_length = *(socket->read_head+1);

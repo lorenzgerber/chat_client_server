@@ -1,12 +1,25 @@
 /*
  * message_byte_array.c
  *
- *  Created on: Sep 20, 2017
- *      Author: lgerber
+ *
+ *  Created on: Oct 1, 2017
+ *     Authors: Lorenz Gerber, Niklas Königsson
+ *
+ *  Chat client server project
+ *  5DV197 Datakom course
+ *	GPLv3
  */
 #include "message_byte_array.h"
 
-
+/**
+ * message_byte_array_add_uint8
+ * 
+ * This function stores data of 8 bit size in the array
+ * 
+ * @param self the message_byte_array to store the data
+ * @param data the 8 bit of data to store 
+ * @return 0
+ */
 int message_byte_array_add_uint8(message_byte_array *self, uint8_t data){
 
 	self->array[self->current_write_position] = data;
@@ -15,7 +28,16 @@ int message_byte_array_add_uint8(message_byte_array *self, uint8_t data){
 	return 0;
 }
 
-
+/**
+ * message_byte_array_add_uint16
+ * 
+ * This function stores data of 16 bit size in the array split
+ * into two 8 bit symbols
+ * 
+ * @param self the message_byte_array to store the data
+ * @param data the 16 bit of data to store 
+ * @return 0
+ */
 int message_byte_array_add_uint16(message_byte_array *self, uint16_t data){
 
 	uint16_t value = data;
@@ -32,7 +54,16 @@ int message_byte_array_add_uint16(message_byte_array *self, uint16_t data){
 	return 0;
 }
 
-
+/**
+ * message_byte_array_add_uint32
+ * 
+ * This function stores data of 32 bit size in the array split
+ * into four 8 bit symbols
+ * 
+ * @param self the message_byte_array to store the data
+ * @param data the 32 bit of data to store 
+ * @return 0
+ */
 int message_byte_array_add_uint32(message_byte_array *self, uint32_t data){
 
 	uint32_t value = data;
@@ -51,7 +82,15 @@ int message_byte_array_add_uint32(message_byte_array *self, uint32_t data){
 	return 0;
 }
 
-
+/**
+ * message_byte_array_add_chars
+ * 
+ * This function stores a string of chars in the array
+ * 
+ * @param self the message_byte_array to store the data
+ * @param data the string of chars to store
+ * @return 0
+ */
 int message_byte_array_add_chars(message_byte_array *self, char* data, uint32_t length){
 
 	for(int i = 0; i < length; i++){
@@ -61,7 +100,14 @@ int message_byte_array_add_chars(message_byte_array *self, char* data, uint32_t 
 	return 0;
 }
 
-
+/**
+ * Constructor function for a message_byte_array. It allocates
+ * memory and assigns the functions required to store data of
+ * different sizes in the array
+ * 
+ * @param length of the array
+ * @return mba The message_byte_array
+ */
 message_byte_array* create_message_byte_array(uint32_t length){
 	message_byte_array *mba = malloc(sizeof(message_byte_array));
 	mba->array = malloc(length*8);
@@ -76,6 +122,14 @@ message_byte_array* create_message_byte_array(uint32_t length){
 
 }
 
+/**
+ * free_message_byte_array
+ * 
+ * This function frees the memory used by a message_byte_array
+ * 
+ * @param mba The message_byte_array to bee free'd
+ * @return 0
+ */
 int free_message_byte_array(message_byte_array *mba){
 	free(mba->array);
 	free(mba);

@@ -1,11 +1,14 @@
 /*
  * socket_creator.h
  *
+ *
  *  Created on: Oct 1, 2017
- *      Author: lgerber
+ *     Authors: Lorenz Gerber, Niklas Königsson
+ *
+ *  Chat client server project
+ *  5DV197 Datakom course
+ *	GPLv3
  */
-
-
 
 #ifndef _POSIX_SOURCE
 #define _POSIX_SOURCE
@@ -42,7 +45,6 @@ int tcp_request_n_word(struct io_handler *self, int n_word);
 int tcp_send_pdu(struct io_handler *self, pdu* pdu);
 
 
-
 io_handler* create_udp_client_communicator(char* server_name, int port);
 int udp_client_connect(struct io_handler *self, int n_times);
 
@@ -51,6 +53,7 @@ io_handler* udp_server_listen(struct io_handler *self);
 
 int udp_request_n_word(struct io_handler *self, int n_word);
 int udp_send_pdu(struct io_handler *self, pdu* pdu);
+
 
 int dummy_socket_request_n_word(struct io_handler *self, int n_word);
 io_handler* create_dummy_socket(int op_code, int socket_entity);

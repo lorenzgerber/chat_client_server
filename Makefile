@@ -1,4 +1,17 @@
-
+#
+#  Makefile for Chat client server
+#
+#	Project in 5DV197 Datakom
+#   Created on: Sep 30, 2017
+#       Author: lgerber
+#
+# 
+# Usage: make EXEC=maindir   (e.g. make EXEC=test_parse)
+#
+# argument EXEC=maindir is used to choose which
+# executable to build. It depicts a subdirectory
+# of test/. 
+ 
 CC = gcc
 CFLAGS = -Wall -std=c99 -Werror -g 
 LDFLAGS = -lpthread
@@ -27,7 +40,6 @@ $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
 $(BUILD_DIR)/%.c.o: %.c
 	$(MKDIR_P) $(dir $@)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
-
 
 
 .PHONY: clean

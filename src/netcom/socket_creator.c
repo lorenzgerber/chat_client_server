@@ -1,15 +1,18 @@
 /*
  * socket_creator.c
  *
+ *
  *  Created on: Oct 1, 2017
- *      Author: lgerber
+ *     Authors: Lorenz Gerber, Niklas Königsson
+ *
+ *  Chat client server project
+ *  5DV197 Datakom course
+ *	GPLv3
  */
 
 #include "socket_creator.h"
 
-
 int move_to_process_buffer(struct io_handler *handler, int n_word);
-
 
 /**
  * create_client_tcp_socket
@@ -20,6 +23,15 @@ int move_to_process_buffer(struct io_handler *handler, int n_word);
  * functions. The function also performs the
  * address lookup with the provided arguments
  * server_name and port.
+ *
+ * Creating the tcp_client_communicator will
+ * also try to obtain the address details for
+ * the server to connect to and setup the
+ * communication socket.
+ *
+ * @param server_name host name of server to connect to
+ * @param port number of port to connect to
+ * @return io_handler configured as tcp client communicator
  */
 io_handler* create_tcp_client_communicator(char *server_name, int port){
     io_handler *io = malloc(sizeof(io_handler));
@@ -48,6 +60,9 @@ io_handler* create_tcp_client_communicator(char *server_name, int port){
  * On calling, the function will try n times to connect
  * with the address information available in the io handler
  * struct.
+ * @self self reference
+ * @n_times how many times should we try to connect.
+ * @return int status for connecting attempt
  */
 int tcp_client_connect(struct io_handler *self, int n_times){
 
@@ -75,6 +90,9 @@ int tcp_client_connect(struct io_handler *self, int n_times){
  * It takes a pdu struct as argument and tries to send
  * the serialized message on the io handler socket. Prior
  * to use, the client needs to connect.
+ * @param self reference to io_handler for accessing member variables
+ * @param pdu pointer to pdu to be sent.
+ * @return status of send attempt.
  */
 int tcp_send_pdu(struct io_handler *self, pdu* pdu){
 
@@ -87,7 +105,18 @@ int tcp_send_pdu(struct io_handler *self, pdu* pdu){
     return 0;
 }
 
-
+/**
+ * tcp_request_n_word
+ *
+ * Function to be registered in communication io_handler.
+ * It will obtain n words either directly from existing
+ * data in the read buffer, alternatively, it will first
+ * try to receive data to the read buffer from the configured
+ * communication socket of self.
+ * @param self reference to io_handler for accessing member variables
+ * @param n_word number of word (32 Bytes) to be obtained.
+ * @return int return status
+ */
 int tcp_request_n_word(struct io_handler *self, int n_word){
 
     int nread = 0;
@@ -115,8 +144,17 @@ int tcp_request_n_word(struct io_handler *self, int n_word){
     return 0;
 }
 
-
-
+/**
+ * create_tcp_server_listener
+ *
+ * Constructor for a TCP listener io_handler.
+ * It will set up a port to listen for incoming traffic
+ * on the given hostname.
+ * @param self reference to io_handler for accessing member variables
+ * @param server_name name of local host
+ * @param port number to listen
+ * @return io_handler configured TCP listener
+ */
 io_handler* create_tcp_server_listener(char *server_name, uint16_t port){
     io_handler *io = malloc(sizeof(io_handler));
 
@@ -129,6 +167,17 @@ io_handler* create_tcp_server_listener(char *server_name, uint16_t port){
     return io;
 }
 
+/**
+ * tcp_server_listen
+ *
+ * Function to be registered in the tcp listner io_handler.
+ * On invocation, this function starts listening on
+ * the determined port. If a client tries to connect,
+ * a new io_handler tcp communication struct is constructed
+ * and returned.
+ * @param self reference to io_handler for acessing member variables
+ * @return io_handler configured and connected tcp communicator
+ */
 io_handler* tcp_server_listen(struct io_handler *self){
 
     io_handler *com;
@@ -144,6 +193,15 @@ io_handler* tcp_server_listen(struct io_handler *self){
     return com;
 }
 
+/**
+ * create_tcp_server_communicator
+ *
+ * Constructor for tcp communicator io_handler. This
+ * struct is constructed from the tcp server listener
+ * when a client connects.
+ * @param sfd_read_write socket file descriptor to use for communication
+ * @return io_handler configured as tcp communicator
+ */
 io_handler* create_tcp_server_communicator(int *sfd_read_write){
     io_handler *io = malloc(sizeof(io_handler));
     io->socket_entity = ENTITY_SERVER;
@@ -157,6 +215,17 @@ io_handler* create_tcp_server_communicator(int *sfd_read_write){
     return io;
 }
 
+/**
+ * move_to_process_buffer
+ *
+ * Helper function for communicators that
+ * moves data from the tcp read buffer to the
+ * message byte array where it can be accessed
+ * by the parsers.
+ * @param io_handler to process
+ * @param n_word numbe of words (32 Bytes) to shift
+ * @return status
+ */
 int move_to_process_buffer(struct io_handler *handler, int n_word){
     size_t length = n_word *4;
     handler->buffer = create_message_byte_array(n_word);
@@ -168,6 +237,25 @@ int move_to_process_buffer(struct io_handler *handler, int n_word){
     return 0;
 }
 
+/**
+ * create_udp_client_communicator
+ *
+ * Constructor for a client udp socket. The
+ * function creates an io_handler struct, configures
+ * the member variables and registers the relevant
+ * functions. The function also performs the
+ * address lookup with the provided arguments
+ * server_name and port.
+ *
+ * Creating the udp_client_communicator will
+ * also try to obtain the address details for
+ * the server to connect to and setup the
+ * communication socket.
+ *
+ * @param server_name host name of server to connect to
+ * @param port number of port to connect to
+ * @return io_handler configured as tcp client communicator
+ */
 io_handler* create_udp_client_communicator(char* server_name, int port){
 
     io_handler *io = malloc(sizeof(io_handler));
@@ -189,6 +277,18 @@ io_handler* create_udp_client_communicator(char* server_name, int port){
     return io;
 }
 
+/**
+ * udp_send_pdu
+ *
+ * Function to be registered in communication io_handler.
+ * It takes a pdu struct as argument and tries to send
+ * the serialized message on the io handler socket. Prior
+ * to use, the client needs to connect.
+ *
+ * @param self reference to io_handler for accessing member variables
+ * @param pdu pointer to pdu to be sent.
+ * @return status of send attempt.
+ */
 int udp_send_pdu(struct io_handler *self, pdu* pdu){
     message_byte_array *MBA = pdu->create_message(pdu);
 
@@ -199,6 +299,16 @@ int udp_send_pdu(struct io_handler *self, pdu* pdu){
     return 0;
 }
 
+/**
+ * create_udp_server
+ *
+ * Constructor for udp server io_handler. This
+ * struct can receive udp packets on its socket
+ *
+ * @param server_name the name of the server
+ * @param the port of the server
+ * @return io_handler configured as udp server
+ */
 io_handler* create_udp_server(char *server_name, int port){
 
     io_handler *io = malloc(sizeof(io_handler));
@@ -211,8 +321,6 @@ io_handler* create_udp_server(char *server_name, int port){
     io->sfd_listen = setup_listener_socket_udp(sfd,io);
     io->read_buffer = malloc(sizeof(uint8_t)*131072);
     io->recv_length = 0;
-
-
     io->request_n_word = udp_request_n_word;
 
     io->listen = udp_server_listen;
@@ -220,6 +328,18 @@ io_handler* create_udp_server(char *server_name, int port){
     return io;
 }
 
+/**
+ * udp_client_connect
+ *
+ * Function to be registered in the client udp io handler.
+ * On calling, the function will try n times to connect
+ * with the address information available in the io handler
+ * struct.
+ *
+ * @self self reference
+ * @n_times how many times should we try to connect.
+ * @return int status for connecting attempt
+ */
 int udp_client_connect(struct io_handler *self, int n_times){
 
     int status = -1;
@@ -238,6 +358,19 @@ int udp_client_connect(struct io_handler *self, int n_times){
     return status;
 }
 
+/**
+ * udp_request_n_word
+ *
+ * Function to be registered in communication io_handler.
+ * It will obtain n words either directly from existing
+ * data in the read buffer, alternatively, it will first
+ * try to receive data to the read buffer from the configured
+ * communication socket of self.
+ *
+ * @param self reference to io_handler for accessing member variables
+ * @param n_word number of word (32 Bytes) to be obtained.
+ * @return int return status
+ */
 int udp_request_n_word(struct io_handler *self, int n_word){
 
     int nread = 0;
@@ -265,7 +398,17 @@ int udp_request_n_word(struct io_handler *self, int n_word){
     return 0;
 }
 
-
+/**
+ * udp_server_listen
+ *
+ * Function to be registered in the udp server io_handler.
+ * On invocation, this function starts listening on
+ * the determined port. If a client tries to connect,
+ * a new io_handler tcp communication struct is constructed
+ * and returned.
+ * @param self reference to io_handler for acessing member variables
+ * @return io_handler configured and connected tcp communicator
+ */
 io_handler* udp_server_listen(struct io_handler *self){
 
     struct sockaddr_in si_other;
@@ -289,40 +432,15 @@ int udp_server_send_pdu(struct io_handler *self, pdu *pdu){
     return 0;
 }
 
-int udp_server_request_n_word(struct io_handler *self, int n_word){
-
-    int nread = 0;
-    if(self->buffer != NULL){
-        free_message_byte_array(self->buffer);
-    }
-
-    if(self->recv_length >= n_word*4){
-        move_to_process_buffer(self, n_word);
-        return 0;
-    }
-
-    nread = recv(self->sfd_read_write, self->read_buffer, sizeof(uint8_t)*131072, 0);
-
-    if(nread == 0){
-        fprintf(stderr, "Receiver - Client disconnected\n");
-        fflush(stderr);
-    } else if (nread > 0){
-        self->recv_length+=nread;
-        /*
-        for(int i = 0; i < nread; i++){
-            printf("%d ", self->read_buffer[i]);
-        }*/
-        if(self->recv_length >= n_word*4){
-            move_to_process_buffer(self, n_word);
-        }
-    }
-    return 0;
-}
-
 /**
- * Function read from dummy socket
+ * dummy_socket_request_n_word
  *
- * This function is registered in create_dummy_socket
+ * This function is registered in dummy io_handler
+ * It is used to serve data to parsers for testing
+ * purposes.
+ * @param self reference to access memeber variables
+ * @param n_word number of words to obtain from data
+ * @return status
  *
  */
 int dummy_socket_request_n_word(struct io_handler *self, int n_word){
@@ -337,7 +455,7 @@ int dummy_socket_request_n_word(struct io_handler *self, int n_word){
     }
 
 
-    return 0;//next_read;
+    return 0;
 }
 
 /**
@@ -345,38 +463,42 @@ int dummy_socket_request_n_word(struct io_handler *self, int n_word){
  *
  * This method is used for testing. It creates a socket
  * mock to test the parser functionality.
+ * @param op_code of which pdu the io_handler shall provide
+ * @param socket_entity either SERVER or CLIENT
+ * @return dummy_socket io_handler with pdu data corresponding the
+ * provided op_code
  */
 io_handler* create_dummy_socket(int op_code, int socket_entity){
-	io_handler *dummy_socket = malloc(sizeof(io_handler));
-	dummy_socket->read_head = NULL;
-	dummy_socket->read_next = NULL;
-	dummy_socket->request_n_word = dummy_socket_request_n_word;
-	dummy_socket->socket_entity = socket_entity;
+    io_handler *dummy_socket = malloc(sizeof(io_handler));
+    dummy_socket->read_head = NULL;
+    dummy_socket->read_next = NULL;
+    dummy_socket->request_n_word = dummy_socket_request_n_word;
+    dummy_socket->socket_entity = socket_entity;
 
-	switch(op_code){
-		case PDU_ACK:
-			return dummy_socket_ack(dummy_socket);
-		case PDU_NOTREG:
-			return dummy_socket_notreg(dummy_socket);
-		case PDU_SLIST:
-			return dummy_socket_slist(dummy_socket);
-		case PDU_JOIN:
-			return dummy_socket_join(dummy_socket);
-		case PDU_PARTICIPANTS:
-			return dummy_socket_participants(dummy_socket);
+    switch(op_code){
+        case PDU_ACK:
+            return dummy_socket_ack(dummy_socket);
+        case PDU_NOTREG:
+            return dummy_socket_notreg(dummy_socket);
+        case PDU_SLIST:
+            return dummy_socket_slist(dummy_socket);
+        case PDU_JOIN:
+            return dummy_socket_join(dummy_socket);
+        case PDU_PARTICIPANTS:
+            return dummy_socket_participants(dummy_socket);
         case PDU_QUIT:
             return dummy_socket_quit(dummy_socket);
-		case PDU_MESS:
-			return dummy_socket_mess(dummy_socket);
-		case PDU_PJOIN:
-			return  dummy_socket_pjoin(dummy_socket);
-		case PDU_PLEAVE:
-			return dummy_socket_pleave(dummy_socket);
-		default:
-			break;
-	}
+        case PDU_MESS:
+            return dummy_socket_mess(dummy_socket);
+        case PDU_PJOIN:
+            return  dummy_socket_pjoin(dummy_socket);
+        case PDU_PLEAVE:
+            return dummy_socket_pleave(dummy_socket);
+        default:
+            break;
+    }
 
-	return dummy_socket;
+    return dummy_socket;
 }
 
 

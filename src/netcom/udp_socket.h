@@ -1,8 +1,13 @@
 /*
  * udp_socket.h
  *
- *  Created on: Oct 2, 2017
- *      Author: lgerber
+ *
+ *  Created on: Oct 1, 2017
+ *     Authors: Lorenz Gerber, Niklas Königsson
+ *
+ *  Chat client server project
+ *  5DV197 Datakom course
+ *	GPLv3
  */
 
 #ifndef _POSIX_SOURCE
@@ -29,12 +34,15 @@
 
 #define UDP_PORT 1337
 
+int setup_udp_send_socket(void);
+
 int setup_listener_socket_udp(int* sfd, io_handler* self);
 
-int setup_udp_send_socket();
-
-struct addrinfo *get_udp_server_address(int *port, char *name);
+struct addrinfo *get_udp_server_address(uint16_t* port, char *name);
 
 int connect_to_udp_server(int sock, struct addrinfo *res);
 
 #endif /* SRC_NETCOM_UDP_SOCKET_H_ */
+
+
+

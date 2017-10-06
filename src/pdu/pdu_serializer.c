@@ -1,7 +1,25 @@
+/*
+ * pdu_serializer.c
+ *
+ *
+ *  Created on: Oct 1, 2017
+ *     Authors: Lorenz Gerber, Niklas Königsson
+ *
+ *  Chat client server project
+ *  5DV197 Datakom course
+ *	GPLv3
+ */
 #include "pdu_serializer.h"
 
 
-
+/**
+ * reg_create_message
+ *
+ * Serializer function for the
+ * reg pdu. This function is to be
+ * registered in the pdu struct.
+ * @param self reference to pdu for member variable access
+ */
 message_byte_array* reg_create_message(pdu *self){
 	int length = get_length_reg(self);
     message_byte_array* message = create_message_byte_array(length);
@@ -18,7 +36,14 @@ message_byte_array* reg_create_message(pdu *self){
 	return message;
 }
 
-
+/**
+ * alive_create_message
+ *
+ * Serializer function for the
+ * alive pdu. This function is to be
+ * registered in the pdu struct.
+ * @param self reference to pdu for member variable access
+ */
 message_byte_array* alive_create_message(pdu *self){
 	int length = get_length_alive(self);
 	message_byte_array* message = create_message_byte_array(length);
@@ -29,7 +54,14 @@ message_byte_array* alive_create_message(pdu *self){
 }
 
 
-
+/**
+ * ack_create_message
+ *
+ * Serializer function for the
+ * ack pdu. This function is to be
+ * registered in the pdu struct.
+ * @param self reference to pdu for member variable access
+ */
 message_byte_array* ack_create_message(pdu *self){
 	int length = get_length_ack(self);
 	message_byte_array* message = create_message_byte_array(length);
@@ -41,7 +73,14 @@ message_byte_array* ack_create_message(pdu *self){
 
 
 
-
+/**
+ * notreg_create_message
+ *
+ * Serializer function for the
+ * notreg pdu. This function is to be
+ * registered in the pdu struct.
+ * @param self reference to pdu for member variable access
+ */
 message_byte_array* notreg_create_message(pdu *self){
 	int length = get_length_notreg(self);
 	message_byte_array* message = create_message_byte_array(length);
@@ -52,7 +91,14 @@ message_byte_array* notreg_create_message(pdu *self){
 }
 
 
-
+/**
+ * getlist_create_message
+ *
+ * Serializer function for the
+ * getlist pdu. This function is to be
+ * registered in the pdu struct.
+ * @param self reference to pdu for member variable access
+ */
 message_byte_array* getlist_create_message(pdu *self){
 	message_byte_array* message = create_message_byte_array(4);
 	message->add_uint8(message, self->type);
@@ -62,7 +108,14 @@ message_byte_array* getlist_create_message(pdu *self){
 }
 
 
-
+/**
+ * slist_create_message
+ *
+ * Serializer function for the
+ * slist pdu. This function is to be
+ * registered in the pdu struct.
+ * @param self reference to pdu for member variable access
+ */
 message_byte_array* slist_create_message(pdu *self){
 	int length = get_length_slist(self);
 
@@ -98,7 +151,14 @@ message_byte_array* slist_create_message(pdu *self){
 }
 
 
-
+/**
+ * join_create_message
+ *
+ * Serializer function for the
+ * join pdu. This function is to be
+ * registered in the pdu struct.
+ * @param self reference to pdu for member variable access
+ */
 message_byte_array* join_create_message(pdu *self){
 	int length = get_length_join(self);
 	message_byte_array* message = create_message_byte_array(length);
@@ -115,7 +175,14 @@ message_byte_array* join_create_message(pdu *self){
 	return message;
 }
 
-
+/**
+ * participants_create_message
+ *
+ * Serializer function for the
+ * participants pdu. This function is to be
+ * registered in the pdu struct.
+ * @param self reference to pdu for member variable access
+ */
 message_byte_array* participants_create_message(pdu *self){
 	int length = get_length_participants(self);
 	message_byte_array* message = create_message_byte_array(length);
@@ -133,7 +200,14 @@ message_byte_array* participants_create_message(pdu *self){
 }
 
 
-
+/**
+ * quite_create_message
+ *
+ * Serializer function for the
+ * quit pdu. This function is to be
+ * registered in the pdu struct.
+ * @param self reference to pdu for member variable access
+ */
 message_byte_array* quit_create_message(pdu *self){
 	int length = get_length_quit(self);
 	message_byte_array* message = create_message_byte_array(length);
@@ -144,7 +218,14 @@ message_byte_array* quit_create_message(pdu *self){
 }
 
 
-
+/**
+ * mess_create_message
+ *
+ * Serializer function for the
+ * mess pdu. This function is to be
+ * registered in the pdu struct.
+ * @param self reference to pdu for member variable access
+ */
 message_byte_array* mess_create_message(pdu *self){
 	int length = get_length_mess(self);
 	message_byte_array* message = create_message_byte_array(length);
@@ -173,7 +254,14 @@ message_byte_array* mess_create_message(pdu *self){
 }
 
 
-
+/**
+ * pjoin_create_message
+ *
+ * Serializer function for the
+ * pjoin pdu. This function is to be
+ * registered in the pdu struct.
+ * @param self reference to pdu for member variable access
+ */
 message_byte_array* pjoin_create_message(pdu *self){
 	int length = get_length_pjoin(self);
 	message_byte_array* message = create_message_byte_array(length);
@@ -189,7 +277,14 @@ message_byte_array* pjoin_create_message(pdu *self){
 	return message;
 }
 
-
+/**
+ * pleave_create_message
+ *
+ * Serializer function for the
+ * pleave pdu. This function is to be
+ * registered in the pdu struct.
+ * @param self reference to pdu for member variable access
+ */
 message_byte_array* pleave_create_message(pdu *self){
 	int length = get_length_pleave(self);
 	message_byte_array* message = create_message_byte_array(length);

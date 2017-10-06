@@ -15,17 +15,16 @@ void *client(void* data);
 
 int main(int argc, char*argv[]){
 
+    // Setup Thread for client / server operation
     pthread_t* thread_handle;
     thread_handle = malloc(sizeof(pthread_t));
 
     char* address = "localhost";
-    io_handler *server_listener;
-    io_handler *server_com;
 
-
+    // start client Thread
     pthread_create(thread_handle, NULL, client, NULL);
 
-
+    // create listener server
     io_handler* server = create_udp_server(address, 2000);
     server->listen(server);
     pdu* ack = parse_header(server);
