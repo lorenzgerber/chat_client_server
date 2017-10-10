@@ -45,10 +45,10 @@ int tcp_request_n_word(struct io_handler *self, int n_word);
 int tcp_send_pdu(struct io_handler *self, pdu* pdu);
 
 
-io_handler* create_udp_client_communicator(char* server_name, uint16_t port);
+io_handler* create_udp_client_communicator(char* server_name, int port);
 int udp_client_connect(struct io_handler *self, int n_times);
 
-io_handler* create_udp_server_listener(char *server_name, uint16_t port);
+io_handler* create_udp_server_listener(char *server_name, int port);
 io_handler* udp_server_listen(struct io_handler *self);
 
 //io_handler* create_udp_server_communicator(int *sfd_read_write);

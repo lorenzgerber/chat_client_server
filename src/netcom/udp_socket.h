@@ -37,7 +37,7 @@ int setup_udp_send_socket(void);
 
 int setup_listener_socket_udp(int* sfd, io_handler* self);
 
-struct addrinfo *get_udp_server_address(uint16_t* port, char *name);
+struct addrinfo *get_udp_server_address(int* port, char *name);
 
 int connect_to_udp_server(int sock, struct addrinfo *res);
 

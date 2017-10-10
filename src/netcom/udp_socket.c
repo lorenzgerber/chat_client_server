@@ -65,7 +65,7 @@ int setup_listener_socket_udp(int* sfd, io_handler* self){
  * @return addrinfo struct with the
  * connection parameters
  */
-struct addrinfo* get_udp_server_address(uint16_t* port, char *name){
+struct addrinfo* get_udp_server_address(int* port, char *name){
     int status;
     struct addrinfo hints;
     struct addrinfo *res;
@@ -74,7 +74,6 @@ struct addrinfo* get_udp_server_address(uint16_t* port, char *name){
     memset(&hints, 0, sizeof hints);
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_DGRAM;
-    hints.ai_flags = AI_PASSIVE;
     hints.ai_protocol = 0;
     hints.ai_flags = AI_ADDRCONFIG;
 
