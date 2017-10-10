@@ -18,6 +18,10 @@
 #endif
 #ifndef SRC_NETCOM_SOCKET_TEMPLATES_H_
 #define SRC_NETCOM_SOCKET_TEMPLATES_H_
+
+#define ENTITY_SERVER 0
+#define ENTITY_CLIENT 1
+
 #include <netdb.h>
 #include <sys/socket.h>
 #include <stdlib.h>
@@ -26,10 +30,6 @@
 #include <stdint.h>
 #include <string.h>
 #include <unistd.h>
-
-
-#define ENTITY_SERVER 0
-#define ENTITY_CLIENT 1
 
 #include "message_byte_array.h"
 
@@ -65,13 +65,11 @@ typedef struct io_handler {
 	// function: request_n_word
 	int (*request_n_word)(struct io_handler *self, int n_word);
 
-
 	// function: send_n_word
 	int (*send_pdu)(struct io_handler *self, pdu *pdu);
 
 	// function: listen
 	struct io_handler* (*listen)(struct io_handler *self);
-
 
 	// function free/close
 	int (*close)(struct io_handler *self);

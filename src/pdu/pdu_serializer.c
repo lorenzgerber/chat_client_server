@@ -9,8 +9,8 @@
  *  5DV197 Datakom course
  *	GPLv3
  */
-#include "pdu_serializer.h"
 
+#include "pdu_serializer.h"
 
 /**
  * reg_create_message

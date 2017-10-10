@@ -9,6 +9,7 @@
  *  5DV197 Datakom course
  *	GPLv3
  */
+
 #include "pdu_creator.h"
 
 /*
@@ -96,7 +97,7 @@ pdu* create_ack(uint16_t id_number){
 	pdu->create_message = ack_create_message;
 	pdu->get_message_length = get_length_ack;
 	pdu->print = print_ack;
-    pdu->free_pdu = free_ack;
+	pdu->free_pdu = free_ack;
 
 	return pdu;
 }
@@ -138,7 +139,7 @@ pdu* create_alive(uint8_t number_clients, uint16_t id_number){
 	pdu->create_message = alive_create_message;
 	pdu->get_message_length = get_length_alive;
 	pdu->print = print_alive;
-    pdu->free_pdu = free_alive;
+	pdu->free_pdu = free_alive;
 	return pdu;
 }
 
@@ -554,7 +555,8 @@ pdu* create_mess(uint8_t identity_length, uint8_t checksum){
 	pdu->checksum = checksum;
 	pdu->add_message = mess_add_message;
 	pdu->add_identity = mess_add_client_identity;
-	pdu->calc_checksum = mess_calc_checksum;
+	pdu->verify_checksum = mess_verify_checksum;
+	pdu->set_checksum = mess_set_checksum;
 	pdu->create_message = mess_create_message;
 	pdu->get_message_length = get_length_mess;
 	pdu->print = print_mess;
@@ -595,13 +597,50 @@ int mess_add_message(pdu *pdu, uint16_t message_length, uint32_t time_stamp, cha
 }
 
 /**
- * This function is called from a MESS pdu and calculates a checksum
- * for its message
+ * This function is called from a MESS pdu and validates the checksum
+ * on its message
  *
  * @param pdu The calling MESS pdu
  * @return 0
  */
-int mess_calc_checksum(pdu *pdu){
+int mess_verify_checksum(pdu *pdu){
+	uint16_t message_length = 0;
+	int sum = 0;
+	uint8_t checksum = 0;
+	message_byte_array *MBA;
+	MBA = pdu->create_message(pdu);
+	message_length = pdu->message_length;
+	for(int i = 0; i < message_length; i++){
+		sum += MBA->array[i];
+	}
+
+	checksum = sum % 255;
+
+	if(checksum != 0){
+		return -1;
+	}
+	return 0;
+}
+
+/**
+ * This function is called from a MESS pdu and sets the checksum
+ * on its message
+ *
+ * @param pdu The calling MESS pdu
+ * @return 0
+ */
+uint8_t mess_set_checksum(pdu *pdu){
+
+	uint16_t message_length = 0;
+	int sum = 0;
+	message_byte_array *MBA;
+	MBA = pdu->create_message(pdu);
+	message_length = pdu->message_length;
+	for(int i = 0; i < message_length; i++){
+		sum += MBA->array[i];
+	}
+
+	pdu->checksum = 255 - ((sum - pdu->checksum) % 255);
 
 	return 0;
 }

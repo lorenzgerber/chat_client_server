@@ -12,6 +12,7 @@
 
 #ifndef SRC_NETCOM_DUMMY_SOCKETS_H_
 #define SRC_NETCOM_DUMMY_SOCKETS_H_
+
 #include "pdu_creator.h"
 #include "message_byte_array.h"
 #include "socket_templates.h"

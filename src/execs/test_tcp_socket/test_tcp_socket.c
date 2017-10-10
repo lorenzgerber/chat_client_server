@@ -1,5 +1,5 @@
 /*
- * test_socket.c
+ * test_tcp_socket.c
  *
  *
  *  Created on: Oct 1, 2017
@@ -9,9 +9,11 @@
  *  5DV197 Datakom course
  *	GPLv3
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+
 #include "tcp_socket.h"
 #include "socket_creator.h"
 #include "socket_templates.h"

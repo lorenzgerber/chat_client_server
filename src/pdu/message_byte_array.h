@@ -11,6 +11,7 @@
  */
 #ifndef MESSAGE_BYTE_ARRAY_H_
 #define MESSAGE_BYTE_ARRAY_H_
+
 #include "pdu_templates.h"
 
 /**

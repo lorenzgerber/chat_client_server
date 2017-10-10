@@ -4,7 +4,9 @@
  *  Created on: Oct 5, 2017
  *      Author: lgerber
  */
+
 #include "pdu_print.h"
+
 /**
  * Print function for a pdu of the type REG. The function is registered in a
  * pdu struct in the create function

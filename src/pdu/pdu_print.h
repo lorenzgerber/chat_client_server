@@ -7,6 +7,7 @@
 
 #ifndef SRC_PDU_PDU_PRINT_H_
 #define SRC_PDU_PDU_PRINT_H_
+
 #include "pdu_templates.h"
 
 int print_reg(pdu *self);

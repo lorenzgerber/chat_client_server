@@ -9,13 +9,14 @@
  *  5DV197 Datakom course
  *	GPLv3
  */
+
 #ifndef PDU_SERIALIZER_H_
 #define PDU_SERIALIZER_H_
+
 #include <stdio.h>
+
 #include "pdu_templates.h"
 #include "message_byte_array.h"
-
-
 
 message_byte_array* reg_create_message(pdu *self);
 

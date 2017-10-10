@@ -1,14 +1,21 @@
-//
-// Created by knig on 2017-10-04.
-//
+/*
+ * test_udp_socket.c
+ *
+ *
+ *  Created on: Oct 1, 2017
+ *     Authors: Lorenz Gerber, Niklas Königsson
+ *
+ *  Chat client server project
+ *  5DV197 Datakom course
+ *	GPLv3
+ */
 
+#define NAME_SERVER "itchy.cs.umu.se"
+#define NAME_SERVER_PORT 1337
 
 #include <stdlib.h>
 #include <socket_templates.h>
 #include <socket_creator.h>
-
-#define NAME_SERVER "itchy.cs.umu.se"
-#define NAME_SERVER_PORT 1337
 
 int main(int argc, char*argv[]){
 

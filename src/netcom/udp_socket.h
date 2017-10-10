@@ -30,8 +30,8 @@
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include "socket_templates.h"
 
+#include "socket_templates.h"
 
 int setup_udp_socket(void);
 

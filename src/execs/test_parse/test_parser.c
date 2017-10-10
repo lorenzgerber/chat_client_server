@@ -9,6 +9,7 @@
  *  5DV197 Datakom course
  *	GPLv3
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,8 +21,6 @@
 #include "socket_templates.h"
 #include "socket_creator.h"
 #include "dummy_sockets.h"
-
-
 
 int main(int argc, char*argv[]){
 

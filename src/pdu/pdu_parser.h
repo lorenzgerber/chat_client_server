@@ -9,11 +9,13 @@
  *  5DV197 Datakom course
  *	GPLv3
  */
+
 #ifndef PDU_PARSER_H_
 #define PDU_PARSER_H_
 
 #include <string.h>
 #include <arpa/inet.h>
+
 #include "pdu_templates.h"
 #include "pdu_creator.h"
 #include "socket_templates.h"

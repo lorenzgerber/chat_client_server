@@ -18,6 +18,7 @@
 #endif
 #ifndef SRC_NETCOM_SOCKET_CREATOR_H_
 #define SRC_NETCOM_SOCKET_CREATOR_H_
+
 #include <netdb.h>
 #include <string.h>
 #include <sys/socket.h>
@@ -26,6 +27,7 @@
 #include <sys/types.h>
 #include <stdint.h>
 #include <unistd.h>
+
 #include "socket_templates.h"
 #include "dummy_sockets.h"
 #include "tcp_socket.h"
@@ -53,8 +55,5 @@ int udp_send_pdu(struct io_handler *self, pdu* pdu);
 
 int dummy_socket_request_n_word(struct io_handler *self, int n_word);
 io_handler* create_dummy_socket(int op_code, int socket_entity);
-
-
-
 
 #endif /* SRC_NETCOM_SOCKET_CREATOR_H_ */

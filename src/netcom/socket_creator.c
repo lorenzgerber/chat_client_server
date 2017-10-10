@@ -10,7 +10,6 @@
  *	GPLv3
  */
 
-
 #include "socket_creator.h"
 
 int move_to_process_buffer(struct io_handler *handler, int n_word);
@@ -366,8 +365,6 @@ int udp_request_n_word(struct io_handler *self, int n_word){
     if(nread ==-1){
         perror("recvfrom");
     }
-    printf("\nport: %d", si_other.sin_port);
-
 
     if(nread == 0){
         fprintf(stderr, "Receiver - Server disconnected\n");

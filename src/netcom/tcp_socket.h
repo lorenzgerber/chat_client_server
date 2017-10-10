@@ -17,6 +17,7 @@
 #endif
 #ifndef SRC_NETCOM_TCP_SOCKET_H_
 #define SRC_NETCOM_TCP_SOCKET_H_
+
 #include <netdb.h>
 #include <sys/socket.h>
 #include <stdlib.h>
@@ -25,8 +26,8 @@
 #include <stdint.h>
 #include <string.h>
 #include <unistd.h>
-#include "socket_templates.h"
 
+#include "socket_templates.h"
 
 int setup_listener_socket(int *sfd, uint16_t *port);
 

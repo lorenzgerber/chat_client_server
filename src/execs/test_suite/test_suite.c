@@ -9,14 +9,18 @@
  *  5DV197 Datakom course
  *	GPLv3
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "pdu_templates.h"
+
 #include "pdu_creator.h"
 #include "message_byte_array.h"
 #include "pdu_serializer.h"
-
+#include "pdu_parser.h"
+#include "socket_templates.h"
+#include "socket_creator.h"
+#include "dummy_sockets.h"
 
 int main(int argc, char*argv[]){
 
@@ -213,9 +217,23 @@ int main(int argc, char*argv[]){
 
 
     //--------MESS using new struct--------
-    pdu *mess = create_mess(8, 99);
+    pdu *mess = create_mess(8, 23);
     mess->add_message(mess, 13, 1505933137, "Test Message.");
     mess->add_identity(mess, "identity");
+
+
+    printf("current checksum: %d\n", mess->checksum);
+
+    if (mess->verify_checksum(mess)!=0){
+    	printf("Checksum is incorrect!\n");
+    } else {
+    	printf("Checksum is correct!\n");
+    }
+
+    mess->set_checksum(mess);
+
+    printf("Checksum set to: %d\n", mess->checksum);
+
 
     printf("%s\n", mess->message);
 

@@ -12,7 +12,6 @@
 #ifndef PDU_CREATOR_H_
 #define PDU_CREATOR_H_
 #include <string.h>
-
 #include "pdu_serializer.h"
 #include "pdu_templates.h"
 #include "pdu_print.h"
@@ -98,7 +97,9 @@ int mess_add_message(pdu *pdu,
                      uint32_t time_stamp,
                      char* message);
 
-int mess_calc_checksum(pdu *pdu);
+int mess_verify_checksum(pdu *pdu);
+
+uint8_t mess_set_checksum(pdu *pdu);
 
 int free_mess(pdu *pdu);
 

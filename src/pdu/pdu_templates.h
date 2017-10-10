@@ -9,13 +9,9 @@
  *  5DV197 Datakom course
  *	GPLv3
  */
+
 #ifndef PDU_TEMPLATES_H_
 #define PDU_TEMPLATES_H_
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdint.h>
 
 #define PDU_REG 0
 #define PDU_ACK 1
@@ -45,6 +41,11 @@
 #define LENGTH_TIME 4 				// PLEAVE, PJOIN, MESS
 #define LENGTH_PAD 1
 
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
 
 typedef struct pdu_server_entry {
 	uint8_t address[4];
@@ -80,7 +81,8 @@ typedef struct pdu {
 	uint32_t 			time_stamp;
 
 	int (*add_message)(struct pdu *self, uint16_t, uint32_t, char*);
-	int (*calc_checksum)(struct pdu *self);
+	int (*verify_checksum)(struct pdu *self);
+	uint8_t (*set_checksum)(struct pdu *self);
 	int (*padded_message_length)(struct pdu *self);
 	int (*add_identities)(struct pdu *self, char*);
 	int (*add_identity)(struct pdu *self, char*);
@@ -94,7 +96,6 @@ typedef struct pdu {
 	int (*free_pdu)(struct pdu *self);
 
 } pdu;
-
 
 
 int get_type(void *message);
