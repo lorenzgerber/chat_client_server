@@ -33,9 +33,7 @@
 #include "socket_templates.h"
 
 
-int setup_udp_send_socket(void);
-
-int setup_listener_socket_udp(int* sfd, io_handler* self);
+int setup_udp_socket(void);
 
 struct addrinfo *get_udp_server_address(int* port, char *name);
 

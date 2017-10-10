@@ -13,42 +13,22 @@
 #include "udp_socket.h"
 
 /**
- * setup_udp_send_socket
+ * setup_udp_socket
  *
  * Socket function wrapper
  * to be used in socket abstraction
  * objects. Function that sets
- * up a socket for udp send
- * operation.
+ * up a socket for udp communication
+ * operations.
  * @return socket file descriptor
  */
-int setup_udp_send_socket(void){
+int setup_udp_socket(void){
     int sock;
     if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
         fprintf(stderr, "socket");
     return sock;
 }
 
-/**
- * setup_udp_listener_socket
- *
- * Socket function wrapper
- * to be used in socket abstraction
- * objects. Function that sets up a
- * socket for udp listen operation.
- *
- * @param sfd socket file descriptor
- * @param self the calling io_handler
- * @return  socket file descriptor
- */
-int setup_listener_socket_udp(int* sfd, io_handler* self){
-    if ((*sfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
-        perror("socket");
-    if(bind(*sfd, self->hints->ai_addr,self->hints->ai_addrlen)<0){
-        perror("bind");
-    }
-    return *sfd;
-}
 
 /**
  * get_udp_server_address
@@ -79,7 +59,7 @@ struct addrinfo* get_udp_server_address(int* port, char *name){
 
     char send_port[5];
     sprintf(send_port, "%d", *port);
-    //printf("\n**sending port %s", send_port);
+
     if ((status = getaddrinfo(name, send_port, &hints, &res)) != 0) {
         fprintf(stderr, "getaddrinfo error: %s\n", gai_strerror(status));
         exit(1);
@@ -102,7 +82,7 @@ struct addrinfo* get_udp_server_address(int* port, char *name){
  */
 int connect_to_udp_server(int sock, struct addrinfo *res){
 
-	if(connect(sock, (struct sockaddr *)res->ai_addr, res->ai_addrlen) < 0)
+	if(connect(sock, res->ai_addr, res->ai_addrlen) < 0)
 		return -1;
 	return 0;
 }

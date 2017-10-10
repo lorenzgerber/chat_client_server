@@ -7,15 +7,17 @@
 #include <socket_templates.h>
 #include <socket_creator.h>
 
+#define NAME_SERVER "itchy.cs.umu.se"
+#define NAME_SERVER_PORT 1337
 
 int main(int argc, char*argv[]){
 
-    char* address = "itchy.cs.umu.se";
+    char* address = NAME_SERVER;
     io_handler *udp_com;
 
     message_byte_array* MBA;
     // create udp communicator
-    udp_com = create_udp_client_communicator(address, 1337);
+    udp_com = create_udp_communicator(address, NAME_SERVER_PORT);
     udp_com->connect(udp_com, 5);
 
     //send alive to nameserver (id 10000)
@@ -75,6 +77,7 @@ int main(int argc, char*argv[]){
         return EXIT_FAILURE;
     }
     printf("\n----------");
+
     //send ALIVE to name server with the registered id
     pdu *alive2 = create_alive(100, (uint16_t) registered);
     udp_com->send_pdu(udp_com, alive2);

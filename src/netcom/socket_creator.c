@@ -239,16 +239,16 @@ int move_to_process_buffer(struct io_handler *handler, int n_word){
 }
 
 /**
- * create_udp_client_communicator
+ * create_udp_communicator
  *
- * Constructor for a client udp socket. The
+ * Constructor for a udp socket. The
  * function creates an io_handler struct, configures
  * the member variables and registers the relevant
  * functions. The function also performs the
  * address lookup with the provided arguments
  * server_name and port.
  *
- * Creating the udp_client_communicator will
+ * Creating the udp_communicator will
  * also try to obtain the address details for
  * the server to connect to and setup the
  * communication socket.
@@ -257,7 +257,7 @@ int move_to_process_buffer(struct io_handler *handler, int n_word){
  * @param port number of port to connect to
  * @return io_handler configured as tcp client communicator
  */
-io_handler* create_udp_client_communicator(char* server_name, int port){
+io_handler* create_udp_communicator(char* server_name, int port){
 
     io_handler *io = malloc(sizeof(io_handler));
     io->read_buffer = malloc(sizeof(uint8_t)*131072);
@@ -266,11 +266,10 @@ io_handler* create_udp_client_communicator(char* server_name, int port){
     io->socket_entity = ENTITY_SERVER;
 
     // Register functions
-    io->connect = udp_client_connect;
+    io->sfd_read_write = setup_udp_socket();
+    io->connect = udp_connect;
     io->send_pdu = udp_send_pdu;
     io->request_n_word = udp_request_n_word;
-
-    io->sfd_read_write = setup_udp_send_socket();
 
     // get server address
     io->hints = get_udp_server_address(&port, server_name);
@@ -301,36 +300,6 @@ int udp_send_pdu(struct io_handler *self, pdu* pdu){
 }
 
 /**
- * create_udp_server
- *
- * Constructor for udp server io_handler. This
- * struct can receive udp packets on its socket
- *
- * @param server_name the name of the server
- * @param the port of the server
- * @return io_handler configured as udp server
- */
-io_handler* create_udp_server_listener(char *server_name, int port){
-
-    io_handler *io = malloc(sizeof(io_handler));
-
-    io->socket_entity = ENTITY_SERVER;
-
-    // get server address
-    io->hints = get_udp_server_address(&port, server_name);
-    int* sfd = malloc(sizeof(int));
-    io->sfd_listen = setup_listener_socket_udp(sfd,io);
-    io->read_buffer = malloc(sizeof(uint8_t)*131072);
-    io->recv_length = 0;
-    io->request_n_word = udp_request_n_word;
-
-    io->listen = udp_server_listen;
-
-    return io;
-
-}
-
-/**
  * udp_client_connect
  *
  * Function to be registered in the client udp io handler.
@@ -342,7 +311,7 @@ io_handler* create_udp_server_listener(char *server_name, int port){
  * @n_times how many times should we try to connect.
  * @return int status for connecting attempt
  */
-int udp_client_connect(struct io_handler *self, int n_times){
+int udp_connect(struct io_handler *self, int n_times){
 
     int status = -1;
     int counter = n_times;
@@ -409,41 +378,6 @@ int udp_request_n_word(struct io_handler *self, int n_word){
             move_to_process_buffer(self, n_word);
         }
     }
-
-    return 0;
-}
-
-/**
- * udp_server_listen
- *
- * Function to be registered in the udp server io_handler.
- * On invocation, this function starts listening on
- * the determined port. If a client tries to connect,
- * a new io_handler tcp communication struct is constructed
- * and returned.
- * @param self reference to io_handler for acessing member variables
- * @return io_handler configured and connected tcp communicator
- */
-io_handler *udp_server_listen(struct io_handler *self) {
-
-    //TODO implement select
-/*
-    pdu *ack = parse_header(self);
-    printf("\nOp code: %d", ack->type);
-    printf("\nId nr: %d", ack->id_number);
-
-    //printf("**%d***", mess->id_number);
-*/
-    io_handler* afas = malloc(sizeof(struct io_handler));
-    return afas;
-
-}
-
-int udp_server_send_pdu(struct io_handler *self, pdu *pdu){
-
-    // to be implemented. Mostly copy paste
-    // from tcp client code
-
 
     return 0;
 }
