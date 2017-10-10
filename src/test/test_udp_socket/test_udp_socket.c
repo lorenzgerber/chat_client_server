@@ -8,8 +8,6 @@
 #include <stdlib.h>
 #include <socket_templates.h>
 #include <socket_creator.h>
-#include <errno.h>
-#include "pdu_parser.h"
 
 void *client(void* data);
 
@@ -27,9 +25,11 @@ int main(int argc, char*argv[]){
     pthread_create(thread_handle, NULL, client, NULL);
 
     // create listener server
-    server = create_udp_server_listener(address, 5000);
-    server_com = server->listen(server);
-
+    server = create_udp_server_listener(address, 1337);
+    //server_com = server->listen(server);
+    pdu *ack = parse_header(server);
+    printf("\nOp code: %d", ack->type);
+    printf("\nId nr: %d", ack->id_number);
 
     /*if(server_com != NULL){
         printf("udp server connected to client\n");
@@ -46,17 +46,17 @@ int main(int argc, char*argv[]){
 
 
 void * client(void* data){
-    char* address = "localhost";
+    char* address = "itchy.cs.umu.se";
 
     io_handler *client;
-    /*
-    pdu *reg = create_reg(20,1337);
-    reg->add_server_name(reg,"Torsten Flincks chat");
+
+    pdu *reg = create_reg(9,1337);
+    reg->add_server_name(reg,"skitsnack");
     client = create_udp_client_communicator(address, 1337);
     client->connect(client, 5);
     client->send_pdu(client, reg);
-    free_reg(reg);*/
-
+    free_reg(reg);
+    /*
     pdu *test = create_ack(2324);
 
     client = create_udp_client_communicator(address, 5000);
@@ -64,7 +64,7 @@ void * client(void* data){
     client->send_pdu(client, test);
 
     free_ack(test);
-
+*/
 
     return NULL;
 }

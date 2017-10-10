@@ -10,7 +10,7 @@
  *	GPLv3
  */
 
-#include <pdu_parser.h>
+
 #include "socket_creator.h"
 
 int move_to_process_buffer(struct io_handler *handler, int n_word);
@@ -385,15 +385,19 @@ int udp_request_n_word(struct io_handler *self, int n_word){
         return 0;
     }
 
-    struct sockkaddr_in* si_other;
+    struct sockaddr_in si_other;
     int slen = sizeof(si_other);
 
-    nread = (int) recvfrom(self->sfd_listen , self->read_buffer, 500875, 0,
-                           (struct sockaddr *) &si_other, (socklen_t *) &slen);
+    nread = (int) recvfrom(self->sfd_listen ,
+                           self->read_buffer, 
+                           sizeof(uint8_t)*131072,
+                           0,
+                           (struct sockaddr *) &si_other,
+                           (socklen_t *) &slen);
     if(nread ==-1){
         perror("recvfrom");
     }
-    //printf("\n***%d port", si_other.sin_port);
+    printf("\n***%d port", si_other.sin_port);
 //    printf("Received packet from %s:%d\nData: %s\n\n",
 //           inet_ntoa(si_other.sin_addr),
 //           htons(si_other.sin_port),
@@ -426,14 +430,14 @@ int udp_request_n_word(struct io_handler *self, int n_word){
  */
 io_handler *udp_server_listen(struct io_handler *self) {
 
-
-
+    //TODO implement select
+/*
     pdu *ack = parse_header(self);
     printf("\nOp code: %d", ack->type);
     printf("\nId nr: %d", ack->id_number);
-    
-    //printf("**%d***", mess->id_number);
 
+    //printf("**%d***", mess->id_number);
+*/
 
 
 }

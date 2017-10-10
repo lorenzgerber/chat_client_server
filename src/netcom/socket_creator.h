@@ -30,7 +30,7 @@
 #include "dummy_sockets.h"
 #include "tcp_socket.h"
 #include "udp_socket.h"
-
+#include "pdu_parser.h"
 
 io_handler* create_tcp_client_communicator(char* server_name, int port);
 int tcp_client_connect(struct io_handler *self, int n_times);
