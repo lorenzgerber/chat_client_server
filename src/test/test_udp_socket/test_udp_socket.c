@@ -20,7 +20,7 @@ int main(int argc, char*argv[]){
 
     char* address = "localhost";
     io_handler *server;
-    io_handler *server_com;
+    //io_handler *server_com;
     // start client Thread
     pthread_create(thread_handle, NULL, client, NULL);
 

@@ -389,7 +389,7 @@ int udp_request_n_word(struct io_handler *self, int n_word){
     int slen = sizeof(si_other);
 
     nread = (int) recvfrom(self->sfd_listen ,
-                           self->read_buffer, 
+                           self->read_buffer,
                            sizeof(uint8_t)*131072,
                            0,
                            (struct sockaddr *) &si_other,
@@ -438,7 +438,8 @@ io_handler *udp_server_listen(struct io_handler *self) {
 
     //printf("**%d***", mess->id_number);
 */
-
+    io_handler* afas = malloc(sizeof(struct io_handler));
+    return afas;
 
 }
 
