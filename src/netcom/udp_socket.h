@@ -32,7 +32,6 @@
 #include <unistd.h>
 #include "socket_templates.h"
 
-#define UDP_PORT 1337
 
 int setup_udp_send_socket(void);
 

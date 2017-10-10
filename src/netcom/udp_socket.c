@@ -42,7 +42,6 @@ int setup_udp_send_socket(void){
  * @return  socket file descriptor
  */
 int setup_listener_socket_udp(int* sfd, io_handler* self){
-
     if ((*sfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
         perror("socket");
     if(bind(*sfd, self->hints->ai_addr,self->hints->ai_addrlen)<0){
@@ -81,7 +80,7 @@ struct addrinfo* get_udp_server_address(uint16_t* port, char *name){
 
     char send_port[5];
     sprintf(send_port, "%d", *port);
-
+    //printf("\n**sending port %s", send_port);
     if ((status = getaddrinfo(name, send_port, &hints, &res)) != 0) {
         fprintf(stderr, "getaddrinfo error: %s\n", gai_strerror(status));
         exit(1);

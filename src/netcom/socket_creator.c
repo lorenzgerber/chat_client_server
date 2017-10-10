@@ -10,6 +10,7 @@
  *	GPLv3
  */
 
+#include <pdu_parser.h>
 #include "socket_creator.h"
 
 int move_to_process_buffer(struct io_handler *handler, int n_word);
@@ -256,7 +257,7 @@ int move_to_process_buffer(struct io_handler *handler, int n_word){
  * @param port number of port to connect to
  * @return io_handler configured as tcp client communicator
  */
-io_handler* create_udp_client_communicator(char* server_name, int port){
+io_handler* create_udp_client_communicator(char* server_name, uint16_t port){
 
     io_handler *io = malloc(sizeof(io_handler));
     io->read_buffer = malloc(sizeof(uint8_t)*131072);
@@ -309,7 +310,7 @@ int udp_send_pdu(struct io_handler *self, pdu* pdu){
  * @param the port of the server
  * @return io_handler configured as udp server
  */
-io_handler* create_udp_server(char *server_name, int port){
+io_handler* create_udp_server_listener(char *server_name, uint16_t port){
 
     io_handler *io = malloc(sizeof(io_handler));
 
@@ -326,6 +327,7 @@ io_handler* create_udp_server(char *server_name, int port){
     io->listen = udp_server_listen;
 
     return io;
+
 }
 
 /**
@@ -383,7 +385,20 @@ int udp_request_n_word(struct io_handler *self, int n_word){
         return 0;
     }
 
-    nread = recv(self->sfd_read_write, self->read_buffer, sizeof(uint8_t)*131072, 0);
+    struct sockkaddr_in* si_other;
+    int slen = sizeof(si_other);
+
+    nread = (int) recvfrom(self->sfd_listen , self->read_buffer, 500875, 0,
+                           (struct sockaddr *) &si_other, (socklen_t *) &slen);
+    if(nread ==-1){
+        perror("recvfrom");
+    }
+    //printf("\n***%d port", si_other.sin_port);
+//    printf("Received packet from %s:%d\nData: %s\n\n",
+//           inet_ntoa(si_other.sin_addr),
+//           htons(si_other.sin_port),
+//           self->read_buffer);
+    //nread = recv(self->sfd_read_write, self->read_buffer, sizeof(uint8_t)*131072, 0);
 
     if(nread == 0){
         fprintf(stderr, "Receiver - Server disconnected\n");
@@ -409,19 +424,19 @@ int udp_request_n_word(struct io_handler *self, int n_word){
  * @param self reference to io_handler for acessing member variables
  * @return io_handler configured and connected tcp communicator
  */
-io_handler* udp_server_listen(struct io_handler *self){
+io_handler *udp_server_listen(struct io_handler *self) {
 
-    struct sockaddr_in si_other;
-    int slen = sizeof(si_other);
-    for (int i = 0; i < 500; i++) {
-        if (recvfrom(self->sfd_listen , self->read_buffer, 500, 0, &si_other, &slen) == -1)
-           perror("recvfrom()");
-        printf("Received packet from %s:%d\nData: %s\n\n",
-               inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port), self->read_buffer);
 
-    }
+
+    pdu *ack = parse_header(self);
+    printf("\nOp code: %d", ack->type);
+    printf("\nId nr: %d", ack->id_number);
+    
+    //printf("**%d***", mess->id_number);
+
+
+
 }
-
 
 int udp_server_send_pdu(struct io_handler *self, pdu *pdu){
 

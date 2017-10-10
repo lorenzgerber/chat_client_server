@@ -215,8 +215,7 @@ int main(int argc, char*argv[]){
     //--------MESS using new struct--------
     pdu *mess = create_mess(8, 99);
     mess->add_message(mess, 13, 1505933137, "Test Message.");
-    mess->add_identity(mess, "identity"); // add identity vs add_client_identity
-    //mess->add_client_identity(mess, "identity");
+    mess->add_identity(mess, "identity");
 
     printf("%s\n", mess->message);
 
