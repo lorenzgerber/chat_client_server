@@ -213,10 +213,22 @@ int main(int argc, char*argv[]){
 
 
     //--------MESS using new struct--------
-    pdu *mess = create_mess(8, 99);
+    pdu *mess = create_mess(8, 23);
     mess->add_message(mess, 13, 1505933137, "Test Message.");
-    mess->add_identity(mess, "identity"); // add identity vs add_client_identity
-    //mess->add_client_identity(mess, "identity");
+    mess->add_identity(mess, "identity");
+
+    printf("current checksum: %d\n", mess->checksum);
+
+    if (mess->verify_checksum(mess)!=0){
+    	printf("Checksum is incorrect!\n");
+    } else {
+    	printf("Checksum is correct!\n");
+    }
+
+    mess->set_checksum(mess);
+
+    printf("Checksum set to: %d\n", mess->checksum);
+
 
     printf("%s\n", mess->message);
 

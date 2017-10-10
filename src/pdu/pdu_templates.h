@@ -80,7 +80,8 @@ typedef struct pdu {
 	uint32_t 			time_stamp;
 
 	int (*add_message)(struct pdu *self, uint16_t, uint32_t, char*);
-	int (*calc_checksum)(struct pdu *self);
+	int (*verify_checksum)(struct pdu *self);
+	uint8_t (*set_checksum)(struct pdu *self);
 	int (*padded_message_length)(struct pdu *self);
 	int (*add_identities)(struct pdu *self, char*);
 	int (*add_identity)(struct pdu *self, char*);

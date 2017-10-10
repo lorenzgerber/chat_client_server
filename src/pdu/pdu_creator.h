@@ -86,7 +86,9 @@ pdu* create_quit(void);
 int free_quit(pdu* pdu);
 
 // MESS
-int mess_calc_checksum(pdu *pdu);
+int mess_verify_checksum(pdu *pdu);
+
+uint8_t mess_set_checksum(pdu *pdu);
 
 int mess_add_identity(pdu *pdu, char* identity);
 
