@@ -24,7 +24,7 @@
  */
 int setup_udp_socket(void){
     int sock;
-    if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
+    if ((sock = socket(PF_INET, SOCK_DGRAM | SOCK_NONBLOCK, IPPROTO_UDP)) == -1)
         fprintf(stderr, "socket");
     return sock;
 }

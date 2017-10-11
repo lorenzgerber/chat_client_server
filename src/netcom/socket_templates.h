@@ -55,6 +55,7 @@ typedef struct io_handler {
 
 	int sfd_read_write;
 	int sfd_listen;
+
 	uint8_t *read_head;
 	uint8_t *read_next;
 	int socket_entity;

@@ -14,8 +14,11 @@
 #define NAME_SERVER_PORT 1337
 
 #include <stdlib.h>
-#include <socket_templates.h>
-#include <socket_creator.h>
+
+#include "socket_templates.h"
+#include "socket_creator.h"
+
+void *client(void* data);
 
 int main(int argc, char*argv[]){
 
@@ -69,7 +72,7 @@ int main(int argc, char*argv[]){
     pdu* answer_pdu_2 = parse_header(udp_com);
     int registered;
     if(answer_pdu_2->type == 1){
-        printf("\nACK received as answer to REG:");
+        printf("\nACK %d received as answer to REG:", answer_pdu_2->id_number);
         printf("\nOp code: %d", answer_pdu_2->type);
         printf("\nId: %d\n", answer_pdu_2->id_number);
         MBA = answer_pdu_2->create_message(answer_pdu_2);
@@ -93,7 +96,9 @@ int main(int argc, char*argv[]){
     //Receive answer
     pdu* answer_pdu_3 = parse_header(udp_com);
     if(answer_pdu_3->type == 1){
-        printf("\nACK received as answer to ALIVE %d:", registered);
+        printf("\nACK %d received as answer to ALIVE %d:",
+               answer_pdu_3->id_number,
+               registered);
         printf("\nOp code: %d", answer_pdu_3->type);
         printf("\nId: %d\n", answer_pdu_3->id_number);
         MBA = answer_pdu_3->create_message(answer_pdu_2);

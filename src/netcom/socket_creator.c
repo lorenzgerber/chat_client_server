@@ -386,7 +386,22 @@ int udp_connect(struct io_handler *self, int n_times){
  */
 int udp_request_n_word(struct io_handler *self, int n_word){
 
+    //status holders
     int nread = 0;
+    int got_data;
+
+    //select() variables
+    struct timeval tv;
+    tv.tv_sec = 10;
+    tv.tv_usec = 500000;
+    fd_set readfds;
+    FD_ZERO(&readfds);
+    FD_SET(self->sfd_read_write, &readfds);
+
+    //source address struct
+    struct sockaddr_in si_other;
+    int slen = sizeof(si_other);
+
     if(self->buffer != NULL){
         free_message_byte_array(self->buffer);
     }
@@ -396,26 +411,35 @@ int udp_request_n_word(struct io_handler *self, int n_word){
         return 0;
     }
 
-    struct sockaddr_in si_other;
-    int slen = sizeof(si_other);
+    //Read from socket using select
+    // wait until either socket has data ready to be recv()d (timeout 1 secs)
+    tv.tv_sec = 1;
+    tv.tv_usec = 0;
 
-    nread = (int) recvfrom(self->sfd_read_write ,
-                           self->read_buffer,
-                           sizeof(uint8_t)*131072,
-                           0,
-                           (struct sockaddr *) &si_other,
-                           (socklen_t *) &slen);
-    if(nread ==-1){
-        perror("recvfrom");
-    }
+    got_data = select(self->sfd_read_write + 1, &readfds, NULL, NULL, &tv);
 
-    if(nread == 0){
-        fprintf(stderr, "Receiver - Server disconnected\n");
-        fflush(stderr);
-    } else if (nread > 0){
-        self->recv_length+=nread;
-        if(self->recv_length >= n_word*4){
-            move_to_process_buffer(self, n_word);
+    if (got_data == -1) {
+        perror("select");
+    } else if (got_data == 0) {
+        printf("Timeout occurred!  No data after 1 seconds.\n");
+    } else {
+        // one or both of the descriptors have data
+        nread = (int) recvfrom(self->sfd_read_write ,
+                               self->read_buffer,
+                               sizeof(uint8_t)*131072,
+                               0,
+                               (struct sockaddr *) &si_other,
+                               (socklen_t *) &slen);
+        if(nread ==-1){
+            perror("recvfrom");
+        }else if(nread == 0){
+            fprintf(stderr, "Receiver - Server disconnected\n");
+            fflush(stderr);
+        }else if (nread > 0){
+            self->recv_length+=nread;
+            if(self->recv_length >= n_word*4){
+                move_to_process_buffer(self, n_word);
+            }
         }
     }
 
