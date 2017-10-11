@@ -44,6 +44,7 @@ io_handler* create_tcp_client_communicator(char *server_name, int port){
     io->connect = tcp_client_connect;
     io->send_pdu = tcp_send_pdu;
     io->request_n_word = tcp_request_n_word;
+    io->close = close_tcp_socket_communicator;
 
     io->sfd_read_write = setup_tcp_send_socket();
 
@@ -98,7 +99,7 @@ int tcp_send_pdu(struct io_handler *self, pdu* pdu){
 
     message_byte_array *MBA = pdu->create_message(pdu);
 
-    if(send(self->sfd_read_write, MBA->array, pdu->get_message_length(pdu), 0)<0){
+    if(send(self->sfd_read_write, MBA->array, pdu->get_message_length(pdu), MSG_NOSIGNAL)<0){
         fprintf(stderr, "send failed\n");
     }
 
@@ -119,6 +120,18 @@ int tcp_send_pdu(struct io_handler *self, pdu* pdu){
  */
 int tcp_request_n_word(struct io_handler *self, int n_word){
 
+	struct timeval tv;
+	fd_set readfds;
+	tv.tv_sec =1;
+	tv.tv_usec = 0;
+	int got_data;
+
+	FD_ZERO(&readfds);
+	FD_SET(self->sfd_read_write, &readfds);
+	got_data = select(self->sfd_read_write+1, &readfds, NULL, NULL, &tv);
+
+
+
     int nread = 0;
     if(self->buffer != NULL){
         free_message_byte_array(self->buffer);
@@ -129,16 +142,21 @@ int tcp_request_n_word(struct io_handler *self, int n_word){
         return 0;
     }
 
-    nread = recv(self->sfd_read_write, self->read_buffer, sizeof(uint8_t)*131072, 0);
+    if(got_data){
 
-    if(nread == 0){
-        fprintf(stderr, "Receiver - Server disconnected\n");
-        fflush(stderr);
-    } else if (nread > 0){
-        self->recv_length+=nread;
-        if(self->recv_length >= n_word*4){
-            move_to_process_buffer(self, n_word);
-        }
+    	nread = recv(self->sfd_read_write, self->read_buffer, sizeof(uint8_t)*131072, 0);
+
+    	if(nread == 0 || nread == -1){
+			fprintf(stderr, "Receiver - Server disconnected\n");
+			fflush(stderr);
+			return -1;
+		} else if (nread > 0){
+			self->recv_length+=nread;
+			if(self->recv_length >= n_word*4){
+				move_to_process_buffer(self, n_word);
+			}
+		}
+
     }
 
     return 0;
@@ -162,6 +180,8 @@ io_handler* create_tcp_server_listener(char *server_name, uint16_t port){
 
     // Register functions
     io->listen = tcp_server_listen;
+    io->close = close_tcp_socket_listener;
+
     setup_listener_socket(&io->sfd_listen, &port);
 
     return io;
@@ -209,10 +229,33 @@ io_handler* create_tcp_server_communicator(int *sfd_read_write){
     io->recv_length = 0;
     io->sfd_read_write = *sfd_read_write;
 
-    io->request_n_word=tcp_request_n_word;
-    io->send_pdu=tcp_send_pdu;
+    io->request_n_word = tcp_request_n_word;
+    io->send_pdu = tcp_send_pdu;
+    io->close = close_tcp_socket_communicator;
 
     return io;
+}
+
+int close_tcp_socket_listener(struct io_handler *self){
+	int status = 0;
+	status = shutdown(self->sfd_listen, SHUT_RDWR);
+	if(status == 0){
+		status = close(self->sfd_listen);
+	}
+
+	return status;
+}
+
+
+int close_tcp_socket_communicator(struct io_handler *self){
+
+	int status = 0;
+	status = shutdown(self->sfd_read_write, SHUT_RDWR);
+	if(status == 0){
+		status = close(self->sfd_read_write);
+	}
+
+	return status;
 }
 
 /**

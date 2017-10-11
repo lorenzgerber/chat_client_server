@@ -51,6 +51,7 @@ typedef struct io_handler {
 	struct message_byte_array *buffer;
 	uint8_t *read_buffer;
 	uint8_t recv_length;
+	int status;
 
 	int sfd_read_write;
 	int sfd_listen;

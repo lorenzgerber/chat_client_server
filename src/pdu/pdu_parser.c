@@ -23,12 +23,17 @@
 pdu* parse_header(struct io_handler *socket){
 
 	uint8_t op_code;
+	int status;
+	pdu* return_pdu = NULL;
 
 
-	socket->request_n_word(socket, 1);
-	op_code = socket->buffer->array[0];
+	status = socket->request_n_word(socket, 1);
+	if (status != -1){
+		op_code = socket->buffer->array[0];
+	} else {
+		op_code = -1;
+	}
 
-    pdu* return_pdu = NULL;
 
 	switch(op_code){
 		case PDU_ACK:

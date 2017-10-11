@@ -57,6 +57,16 @@ int main(int argc, char*argv[]){
     participants->add_identities(participants, "partic\0ipa\0nts\0");
 
     server_com->send_pdu(server_com, participants);
+    server_com->close(server_com);
+
+    // what happens if the client hangs up?
+    pdu* whatever;
+    if((whatever = parse_header(server_com)) == NULL){
+    	printf("looks like we got nothing (which was expected)\n");
+    }
+    if(whatever != NULL){
+    	printf("we got something\n");
+    }
 
     pthread_join(*thread_handle, NULL);
     free(thread_handle);
@@ -81,6 +91,10 @@ void * client(void* data){
     participants->print(participants);
     participants->free_pdu(participants);
     printf("----\n");
+
+    // close connection
+    client->close(client);
+
 
     return NULL;
 }

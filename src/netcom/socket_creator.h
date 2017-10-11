@@ -39,9 +39,11 @@ int tcp_client_connect(struct io_handler *self, int n_times);
 
 io_handler* create_tcp_server_listener(char *server_name,  uint16_t port);
 io_handler* tcp_server_listen(struct io_handler *self);
+int close_tcp_socket_listener(struct io_handler *self);
 
 io_handler* create_tcp_server_communicator(int *sfd_read_write);
 int tcp_server_send_pdu(struct io_handler *self, pdu *pdu);
+int close_tcp_socket_communicator(struct io_handler *self);
 
 int tcp_request_n_word(struct io_handler *self, int n_word);
 int tcp_send_pdu(struct io_handler *self, pdu* pdu);
