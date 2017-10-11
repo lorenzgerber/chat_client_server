@@ -21,6 +21,9 @@ TARGET_EXEC ?= $(EXEC)
 BUILD_DIR ?= ./build
 SRC_DIRS ?= ./src/pdu
 SRC_DIRS += ./src/netcom
+SRC_DIRS += ./src/data_structures
+SRC_DIRS += ./src/server
+SRC_DIRS += ./src/client
 SRC_DIRS += ./src/execs/$(EXEC)
 
 SRCS := $(shell find $(SRC_DIRS) -name *.c )
