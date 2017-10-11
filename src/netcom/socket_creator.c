@@ -317,6 +317,7 @@ io_handler* create_udp_communicator(char* server_name, int port){
     io->connect = udp_connect;
     io->send_pdu = udp_send_pdu;
     io->request_n_word = udp_request_n_word;
+    io->close = close_udp_socket;
 
     // get server address
     io->hints = get_udp_server_address(&port, server_name);
@@ -394,11 +395,12 @@ int udp_request_n_word(struct io_handler *self, int n_word){
     //status holders
     int nread = 0;
     int got_data;
+    self->status = 0;
 
     //select() variables
     struct timeval tv;
-    tv.tv_sec = 10;
-    tv.tv_usec = 500000;
+    tv.tv_sec = 4;
+    tv.tv_usec = 0;
     fd_set readfds;
     FD_ZERO(&readfds);
     FD_SET(self->sfd_read_write, &readfds);
@@ -413,21 +415,16 @@ int udp_request_n_word(struct io_handler *self, int n_word){
 
     if(self->recv_length >= n_word*4){
         move_to_process_buffer(self, n_word);
-        return 0;
+        self->status = STATUS_RECEIVE_OK;
+        return self->status;
     }
 
     //Read from socket using select
     // wait until either socket has data ready to be recv()d (timeout 1 secs)
-    tv.tv_sec = 1;
-    tv.tv_usec = 0;
-
     got_data = select(self->sfd_read_write + 1, &readfds, NULL, NULL, &tv);
 
-    if (got_data == -1) {
-        perror("select");
-    } else if (got_data == 0) {
-        printf("Timeout occurred!  No data after 1 seconds.\n");
-    } else {
+    if (got_data) {
+
         // one or both of the descriptors have data
         nread = (int) recvfrom(self->sfd_read_write ,
                                self->read_buffer,
@@ -435,20 +432,32 @@ int udp_request_n_word(struct io_handler *self, int n_word){
                                0,
                                (struct sockaddr *) &si_other,
                                (socklen_t *) &slen);
-        if(nread ==-1){
-            perror("recvfrom");
-        }else if(nread == 0){
-            fprintf(stderr, "Receiver - Server disconnected\n");
-            fflush(stderr);
-        }else if (nread > 0){
+        if(nread == 0 || nread == -1){
+            self->status = STATUS_RECEIVE_ERROR;
+            return self->status;
+        } else if (nread > 0){
             self->recv_length+=nread;
             if(self->recv_length >= n_word*4){
                 move_to_process_buffer(self, n_word);
             }
+
+            self->status = STATUS_RECEIVE_OK;
         }
+    }else {
+        self->status = STATUS_RECEIVE_EMPTY;
     }
 
-    return 0;
+    return self->status;
+}
+
+int close_udp_socket(struct io_handler *self){
+    int status = 0;
+    status = shutdown(self->sfd_read_write, SHUT_RDWR);
+    if(status == 0){
+        status = close(self->sfd_read_write);
+    }
+
+    return status;
 }
 
 /**
@@ -472,7 +481,6 @@ int dummy_socket_request_n_word(struct io_handler *self, int n_word){
         self->read_head = self->read_next;
         self->read_next += n_word * 4;
     }
-
 
     return 0;
 }

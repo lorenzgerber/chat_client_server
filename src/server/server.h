@@ -8,7 +8,7 @@
 #ifndef SRC_SERVER_SERVER_H_
 #define SRC_SERVER_SERVER_H_
 
-#include "../data_structures/linked_list.h"
+#include "linked_list.h"
 #include "socket_templates.h"
 
 typedef struct server {

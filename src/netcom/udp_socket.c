@@ -28,8 +28,12 @@ int setup_udp_socket(void){
         fprintf(stderr, "socket");
     return sock;
 }
-
-
+int setup_udp_send_socket(void){
+    int sock;
+    if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
+        fprintf(stderr, "socket");
+    return sock;
+}
 /**
  * get_udp_server_address
  *

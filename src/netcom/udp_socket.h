@@ -35,6 +35,8 @@
 
 int setup_udp_socket(void);
 
+int setup_udp_send_socket(void);
+
 struct addrinfo *get_udp_server_address(int* port, char *name);
 
 int connect_to_udp_server(int sock, struct addrinfo *res);
