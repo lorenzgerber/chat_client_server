@@ -32,7 +32,7 @@ void queueSetMemHandler(queue *q, memFreeFunc *f){
 
 
 // enqueue
-int enqueue(queue *q, data* d){
+int enqueue(queue *q, data d){
 	queue_element *new_element = malloc(sizeof(queue_element));
 	if(new_element == NULL){
 		perror("element memory allocation\n");
@@ -40,18 +40,23 @@ int enqueue(queue *q, data* d){
 	}
 	new_element->data = d;
 	new_element->next = NULL;
-	queue_position current_position = q->first;
-	while(current_position->next != NULL){
-		current_position = current_position->next;
+	if(q->first == NULL){
+		q->first = new_element;
+	} else {
+		queue_position current_position = q->first;
+		while(current_position->next != NULL){
+			current_position = current_position->next;
+		}
+		current_position->next = new_element;
 	}
-	current_position->next = new_element;
+
 
 	return 0;
 }
 
 // IsEmpty
 int is_empty(queue *q){
-	if (q->first->next == NULL){
+	if (q->first == NULL){
 		return 1;
 	} else {
 		return 0;
@@ -60,16 +65,10 @@ int is_empty(queue *q){
 
 // get Front
 data* front(queue *q){
-	queue_position current_position = q->first;
-	if(current_position->next == NULL){
-		return NULL;
+	if(q->first!=NULL){
+		return q->first->data;
 	}
-
-	while(current_position->next != NULL){
-		current_position = current_position->next;
-	}
-
-	return current_position->data;
+	return NULL;
 }
 
 // dequeue

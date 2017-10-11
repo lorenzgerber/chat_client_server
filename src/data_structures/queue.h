@@ -30,7 +30,7 @@ typedef struct queue {
 } queue;
 
 // create empty queue
-queue *queue_emtpy(void);
+queue *queue_empty(void);
 
 // set mem handler
 void queueSetMemHandler(queue *q, memFreeFunc *f);
@@ -38,7 +38,7 @@ void queueSetMemHandler(queue *q, memFreeFunc *f);
 
 
 // enqueue
-int enqueue(queue *q, data*);
+int enqueue(queue *q, data d);
 
 // IsEmpty
 int is_empty(queue *q);
