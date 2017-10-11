@@ -28,10 +28,10 @@ pdu* parse_header(struct io_handler *socket){
 
 
 	status = socket->request_n_word(socket, 1);
-	if (status != -1){
+	if (status == STATUS_RECEIVE_OK){
 		op_code = socket->buffer->array[0];
 	} else {
-		op_code = -1;
+		return NULL;
 	}
 
 

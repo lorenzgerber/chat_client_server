@@ -122,9 +122,10 @@ int tcp_request_n_word(struct io_handler *self, int n_word){
 
 	struct timeval tv;
 	fd_set readfds;
-	tv.tv_sec =1;
+	tv.tv_sec = 0;
 	tv.tv_usec = 0;
 	int got_data;
+	self->status = 0;
 
 	FD_ZERO(&readfds);
 	FD_SET(self->sfd_read_write, &readfds);
@@ -139,7 +140,8 @@ int tcp_request_n_word(struct io_handler *self, int n_word){
 
     if(self->recv_length >= n_word*4){
         move_to_process_buffer(self, n_word);
-        return 0;
+        self->status = STATUS_RECEIVE_OK;
+        return self->status;
     }
 
     if(got_data){
@@ -147,19 +149,22 @@ int tcp_request_n_word(struct io_handler *self, int n_word){
     	nread = recv(self->sfd_read_write, self->read_buffer, sizeof(uint8_t)*131072, 0);
 
     	if(nread == 0 || nread == -1){
-			fprintf(stderr, "Receiver - Server disconnected\n");
-			fflush(stderr);
-			return -1;
+			self->status = STATUS_RECEIVE_ERROR;
+			return self->status;
 		} else if (nread > 0){
 			self->recv_length+=nread;
 			if(self->recv_length >= n_word*4){
 				move_to_process_buffer(self, n_word);
 			}
+
+			self->status = STATUS_RECEIVE_OK;
 		}
 
+    } else {
+    	self->status = STATUS_RECEIVE_EMPTY;
     }
 
-    return 0;
+    return self->status;
 }
 
 /**

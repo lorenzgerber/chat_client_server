@@ -47,7 +47,17 @@ int main(int argc, char*argv[]){
 
     // receive and parse pdu
     printf("----\n");
-    pdu* ack = parse_header(server_com);
+    pdu* ack;
+
+    // looping until an error happens or we get data
+    while(server_com->status == STATUS_RECEIVE_EMPTY || server_com->status == 0){
+    	ack = parse_header(server_com);
+    }
+    if(server_com->status != STATUS_RECEIVE_OK){
+    	printf("something wrong with receive\n");
+    }
+    server_com->status = 0;
+
     ack->print(ack);
     ack->free_pdu(ack);
     printf("----\n");
@@ -59,14 +69,19 @@ int main(int argc, char*argv[]){
     server_com->send_pdu(server_com, participants);
     server_com->close(server_com);
 
+
     // what happens if the client hangs up?
     pdu* whatever;
-    if((whatever = parse_header(server_com)) == NULL){
-    	printf("looks like we got nothing (which was expected)\n");
+    while(server_com->status == STATUS_RECEIVE_EMPTY || server_com->status == 0){
+    	whatever = parse_header(server_com);
     }
-    if(whatever != NULL){
-    	printf("we got something\n");
+    if(server_com->status != STATUS_RECEIVE_OK){
+    	printf("something wrong with receive in Server (As Expected)\n");
+    } else {
+    	whatever->print(whatever);
     }
+    server_com->status = 0;
+
 
     pthread_join(*thread_handle, NULL);
     free(thread_handle);
@@ -87,7 +102,16 @@ void * client(void* data){
     client->send_pdu(client, test);
     test->free_pdu(test);
 
-    pdu *participants = parse_header(client);
+    pdu* participants;
+    // looping until an error happens or we get data
+    while(client->status == STATUS_RECEIVE_EMPTY || client->status == 0){
+       	participants = parse_header(client);
+    }
+    if(client->status != STATUS_RECEIVE_OK){
+    	printf("something wrong with receive in Client\n");
+    }
+    client->status = 0;
+
     participants->print(participants);
     participants->free_pdu(participants);
     printf("----\n");

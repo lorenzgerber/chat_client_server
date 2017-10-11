@@ -22,6 +22,10 @@
 #define ENTITY_SERVER 0
 #define ENTITY_CLIENT 1
 
+#define STATUS_RECEIVE_EMPTY 1
+#define STATUS_RECEIVE_ERROR 2
+#define STATUS_RECEIVE_OK 3
+
 #include <netdb.h>
 #include <sys/socket.h>
 #include <stdlib.h>
