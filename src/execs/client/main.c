@@ -13,7 +13,7 @@ int main (int argc, char*argv[]){
 
 	printf("I'm the super chat client\n");
 
-	io_handler* client = create_udp_communicator("itchy.cs.umu.se", 1337);
+	io_handler* client = create_tcp_client_communicator("itchy.cs.umu.se", 1337);
 	client->connect(client, 5);
 	client->status = 0;
 
