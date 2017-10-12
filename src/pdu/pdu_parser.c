@@ -112,7 +112,7 @@ pdu* parse_NOTREG(struct io_handler* socket){
  */
 pdu* parse_SLIST(struct io_handler* socket){
     //assemble the 16 bit number of servers from two 8 bits read
-	uint16_t nr_of_servers = (*(socket->read_head+2) << 8) | *(socket->read_head+3);
+	uint16_t nr_of_servers =   (*(socket->read_head+3) << 8) | *(socket->read_head+2);
 	nr_of_servers = ntohs(nr_of_servers);
     pdu *slist = create_slist(nr_of_servers);
 
