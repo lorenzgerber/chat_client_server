@@ -58,6 +58,9 @@ io_handler* create_tcp_client_communicator(char *server_name, int port){
 int free_tcp_client_communicator(io_handler* self){
 	free(self->read_buffer);
 	freeaddrinfo(self->hints);
+	if(self->buffer != NULL){
+		free_message_byte_array(self->buffer);
+	}
 	free(self);
 	return(0);
 }

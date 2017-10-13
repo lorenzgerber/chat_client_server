@@ -36,4 +36,7 @@ int main (int argc, char*argv[]){
 		slist->free_pdu(slist);
 	}
 
+	free_tcp_client_communicator(client);
+
+
 }
