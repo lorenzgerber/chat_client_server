@@ -45,9 +45,11 @@ int setup_listener_socket(int *sfd, uint16_t *port){
     /* Get addrinfo for the receiving part */
     s = getaddrinfo(NULL, listeningPort, &hints, &result);
     if (s != 0) {
-       fprintf(stderr, "Receiver, could not find host: %s\n", gai_strerror(s));
-       exit(-1);
+    	free(listeningPort);
+    	fprintf(stderr, "Receiver, could not find host: %s\n", gai_strerror(s));
+    	exit(-1);
     }
+    free(listeningPort);
 
     /* Find correct address and try to bind a socket */
     for (rp = result; rp != NULL; rp = rp->ai_next) {
@@ -66,6 +68,7 @@ int setup_listener_socket(int *sfd, uint16_t *port){
         fprintf(stderr,"Receiver, could not bind");
        exit(-1);
     }
+
     freeaddrinfo(result);
 
     return 0;

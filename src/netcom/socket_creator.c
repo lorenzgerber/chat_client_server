@@ -54,6 +54,13 @@ io_handler* create_tcp_client_communicator(char *server_name, int port){
     return io;
 }
 
+int free_tcp_client_communicator(io_handler* self){
+	free(self->read_buffer);
+	freeaddrinfo(self->hints);
+	free(self);
+	return(0);
+}
+
 /**
  * tcp_client_connect
  *
@@ -102,6 +109,7 @@ int tcp_send_pdu(struct io_handler *self, pdu* pdu){
     if(send(self->sfd_read_write, MBA->array, pdu->get_message_length(pdu), MSG_NOSIGNAL)<0){
         fprintf(stderr, "send failed\n");
     }
+    free_message_byte_array(MBA);
 
     return 0;
 }
@@ -192,6 +200,11 @@ io_handler* create_tcp_server_listener(char *server_name, uint16_t port){
     return io;
 }
 
+int free_tcp_server_listener(io_handler* self){
+	free(self);
+	return(0);
+}
+
 /**
  * tcp_server_listen
  *
@@ -239,6 +252,11 @@ io_handler* create_tcp_server_communicator(int *sfd_read_write){
     io->close = close_tcp_socket_communicator;
 
     return io;
+}
+
+int free_tcp_server_communicator(io_handler* self){
+	free(self);
+	return(0);
 }
 
 int close_tcp_socket_listener(struct io_handler *self){
