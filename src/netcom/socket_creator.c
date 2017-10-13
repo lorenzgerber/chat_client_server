@@ -224,7 +224,6 @@ io_handler* tcp_server_listen(struct io_handler *self){
     if(status == 0){
         int *sfd_read_write = malloc(sizeof(int));
         *sfd_read_write = self->sfd_read_write;
-        com = malloc(sizeof(io_handler));
         com = create_tcp_server_communicator(sfd_read_write);
         free(sfd_read_write);
     }
