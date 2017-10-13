@@ -473,7 +473,6 @@ int close_udp_socket(struct io_handler *self){
  */
 int dummy_socket_request_n_word(struct io_handler *self, int n_word){
 
-    //uint8_t* next_read = &self->buffer->array[self->read_head];
     if(self->read_head == NULL){
         self->read_head = &self->buffer->array[0];
         self->read_next = self->read_head + n_word *4;
@@ -481,8 +480,9 @@ int dummy_socket_request_n_word(struct io_handler *self, int n_word){
         self->read_head = self->read_next;
         self->read_next += n_word * 4;
     }
+    self->status = STATUS_RECEIVE_OK;
 
-    return 0;
+    return self->status;
 }
 
 /**
