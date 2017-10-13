@@ -226,6 +226,7 @@ io_handler* tcp_server_listen(struct io_handler *self){
         *sfd_read_write = self->sfd_read_write;
         com = malloc(sizeof(io_handler));
         com = create_tcp_server_communicator(sfd_read_write);
+        free(sfd_read_write);
     }
 
     return com;
@@ -255,6 +256,7 @@ io_handler* create_tcp_server_communicator(int *sfd_read_write){
 }
 
 int free_tcp_server_communicator(io_handler* self){
+	free(self->read_buffer);
 	free(self);
 	return(0);
 }
