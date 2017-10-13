@@ -303,7 +303,7 @@ int move_to_process_buffer(struct io_handler *handler, int n_word){
     handler->buffer = create_message_byte_array(n_word);
     memcpy(handler->buffer->array, handler->read_buffer, length);
     handler->read_head = handler->buffer->array;
-    memcpy(handler->read_buffer, handler->read_buffer+length, handler->recv_length - length);
+    memmove(handler->read_buffer, handler->read_buffer+length, handler->recv_length - length);
     handler->recv_length -= length;
 
     return 0;
