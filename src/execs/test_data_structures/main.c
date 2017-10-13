@@ -64,6 +64,10 @@ int main (int argc, char*args[]){
 		printf("this queue is not empty\n");
 	}
 
+	queue_free(test_queue);
+	list_free(test_list);
+	free(data1);
+	free(data2);
 
 	return 0;
 }

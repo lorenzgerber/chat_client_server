@@ -82,3 +82,11 @@ int dequeue(queue *q){
 	return 0;
 }
 
+// free memory
+void queue_free(queue *q){
+    while(!is_empty(q)){
+    	dequeue(q);
+    }
+    free(q);
+};
+

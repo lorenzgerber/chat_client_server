@@ -49,4 +49,6 @@ data* front(queue *q);
 // dequeue
 int dequeue(queue *q);
 
+void queue_free(queue *q);
+
 #endif /* SRC_DATA_STRUCTURES_QUEUE_H_ */
