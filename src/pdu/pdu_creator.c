@@ -614,6 +614,8 @@ int mess_verify_checksum(pdu *pdu){
 		sum += MBA->array[i];
 	}
 
+	free_message_byte_array(MBA);
+
 	checksum = sum % 255;
 
 	if(checksum != 0){
@@ -639,6 +641,7 @@ uint8_t mess_set_checksum(pdu *pdu){
 	for(int i = 0; i < message_length; i++){
 		sum += MBA->array[i];
 	}
+	free_message_byte_array(MBA);
 
 	pdu->checksum = 255 - ((sum - pdu->checksum) % 255);
 
