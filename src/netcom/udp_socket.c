@@ -88,5 +88,6 @@ int connect_to_udp_server(int sock, struct addrinfo *res){
 
 	if(connect(sock, res->ai_addr, res->ai_addrlen) < 0)
 		return -1;
+    freeaddrinfo(res);
 	return 0;
 }

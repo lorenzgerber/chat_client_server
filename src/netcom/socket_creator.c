@@ -328,6 +328,7 @@ io_handler* create_udp_communicator(char* server_name, int port){
     io_handler *io = malloc(sizeof(io_handler));
     io->read_buffer = malloc(sizeof(uint8_t)*131072);
     io->recv_length = 0;
+    io->buffer = NULL;
 
     io->socket_entity = ENTITY_SERVER;
 
@@ -362,6 +363,7 @@ int udp_send_pdu(struct io_handler *self, pdu* pdu){
     if(send(self->sfd_read_write, MBA->array, pdu->get_message_length(pdu), 0)<0){
         fprintf(stderr, "send failed\n");
     }
+    free_message_byte_array(MBA);
 
     return 0;
 }
@@ -430,6 +432,8 @@ int udp_request_n_word(struct io_handler *self, int n_word){
 
     if(self->buffer != NULL){
         free_message_byte_array(self->buffer);
+    }else{
+
     }
 
     if(self->recv_length >= n_word*4){

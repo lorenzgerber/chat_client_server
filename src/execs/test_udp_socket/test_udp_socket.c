@@ -75,7 +75,7 @@ int main(int argc, char*argv[]){
     }
     udp_com->status = 0;
 
-    int registered;
+    int registered = 0;
     if(answer_pdu_2 != NULL && answer_pdu_2->type == 1) {
         printf("\nACK %d received as answer to REG:\n",
                answer_pdu_2->id_number);
@@ -122,8 +122,9 @@ int main(int argc, char*argv[]){
         fflush(stderr);
         return EXIT_FAILURE;
     }
-
+    free_message_byte_array(udp_com->buffer);
+    free(udp_com->read_buffer);
     udp_com->close(udp_com);
-
+    free(udp_com);
     return 0;
 }
