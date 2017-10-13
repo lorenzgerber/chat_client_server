@@ -30,8 +30,9 @@ int main(int argc, char*argv[]){
 
     // setup variables for listener and communication server
     char* address = "localhost";
-    io_handler *server_listener;
-    io_handler *server_com;
+    io_handler *server_listener = NULL;
+    io_handler *server_com = NULL;
+
 
     // start client Thread
     pthread_create(thread_handle, NULL, client, NULL);
@@ -43,44 +44,48 @@ int main(int argc, char*argv[]){
     server_com = server_listener->listen(server_listener);
     if(server_com != NULL){
         printf("tcp server connected to client\n");
+
+        // receive and parse pdu
+        printf("----\n");
+        pdu* ack = NULL;
+
+        // looping until an error happens or we get data
+        while(server_com->status == STATUS_RECEIVE_EMPTY || server_com->status == 0){
+            ack = parse_header(server_com);
+        }
+        if(server_com->status != STATUS_RECEIVE_OK){
+            printf("something wrong with receive\n");
+        }
+        server_com->status = 0;
+
+        ack->print(ack);
+        ack->free_pdu(ack);
+        printf("----\n");
+
+
+        pdu *participants = create_participants(3, 15);
+        participants->add_identities(participants, "partic\0ipa\0nts\0");
+
+        server_com->send_pdu(server_com, participants);
+        free_participants(participants);
+        server_com->close(server_com);
+
+
+        // what happens if the client hangs up?
+        pdu* whatever = NULL;
+        while(server_com->status == STATUS_RECEIVE_EMPTY || server_com->status == 0){
+            whatever = parse_header(server_com);
+        }
+        if(server_com->status != STATUS_RECEIVE_OK || whatever == NULL){
+            printf("something wrong with receive in Server (As Expected)\n");
+        } else {
+            whatever->print(whatever);
+        }
+        server_com->status = 0;
     }
 
-    // receive and parse pdu
-    printf("----\n");
-    pdu* ack;
-
-    // looping until an error happens or we get data
-    while(server_com->status == STATUS_RECEIVE_EMPTY || server_com->status == 0){
-    	ack = parse_header(server_com);
-    }
-    if(server_com->status != STATUS_RECEIVE_OK){
-    	printf("something wrong with receive\n");
-    }
-    server_com->status = 0;
-
-    ack->print(ack);
-    ack->free_pdu(ack);
-    printf("----\n");
-
-
-    pdu *participants = create_participants(3, 15);
-    participants->add_identities(participants, "partic\0ipa\0nts\0");
-
-    server_com->send_pdu(server_com, participants);
-    server_com->close(server_com);
-
-
-    // what happens if the client hangs up?
-    pdu* whatever;
-    while(server_com->status == STATUS_RECEIVE_EMPTY || server_com->status == 0){
-    	whatever = parse_header(server_com);
-    }
-    if(server_com->status != STATUS_RECEIVE_OK){
-    	printf("something wrong with receive in Server (As Expected)\n");
-    } else {
-    	whatever->print(whatever);
-    }
-    server_com->status = 0;
+    free_tcp_server_communicator(server_com);
+    free_tcp_server_listener(server_listener);
 
 
     pthread_join(*thread_handle, NULL);
@@ -102,7 +107,7 @@ void * client(void* data){
     client->send_pdu(client, test);
     test->free_pdu(test);
 
-    pdu* participants;
+    pdu* participants = NULL;
     // looping until an error happens or we get data
     while(client->status == STATUS_RECEIVE_EMPTY || client->status == 0){
        	participants = parse_header(client);
@@ -113,11 +118,13 @@ void * client(void* data){
     client->status = 0;
 
     participants->print(participants);
-    participants->free_pdu(participants);
+    free_participants(participants);
     printf("----\n");
 
     // close connection
     client->close(client);
+    free_message_byte_array(client->buffer);
+    free_tcp_client_communicator(client);
 
 
     return NULL;

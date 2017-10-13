@@ -122,6 +122,7 @@ int main(int argc, char*argv[]){
         fflush(stderr);
         return EXIT_FAILURE;
     }
+    //TODO: build better freefunction
     free_message_byte_array(udp_com->buffer);
     free(udp_com->read_buffer);
     udp_com->close(udp_com);

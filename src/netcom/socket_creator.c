@@ -37,8 +37,9 @@ io_handler* create_tcp_client_communicator(char *server_name, int port){
     io_handler *io = malloc(sizeof(io_handler));
     io->read_buffer = malloc(sizeof(uint8_t)*131072);
     io->recv_length = 0;
-
+    io->buffer = NULL;
     io->socket_entity = ENTITY_CLIENT;
+    io->status = STATUS_RECEIVE_EMPTY;
 
     // Register functions
     io->connect = tcp_client_connect;
@@ -190,7 +191,8 @@ io_handler* create_tcp_server_listener(char *server_name, uint16_t port){
     io_handler *io = malloc(sizeof(io_handler));
 
     io->socket_entity = ENTITY_SERVER;
-
+    io->status = STATUS_RECEIVE_EMPTY;
+    io->buffer = NULL;
     // Register functions
     io->listen = tcp_server_listen;
     io->close = close_tcp_socket_listener;
@@ -219,6 +221,7 @@ int free_tcp_server_listener(io_handler* self){
 io_handler* tcp_server_listen(struct io_handler *self){
 
     io_handler *com;
+
     int status = 0;
     status = listen_obtain_client_socket(&self->sfd_listen, &self->sfd_read_write);
     if(status == 0){
@@ -246,6 +249,8 @@ io_handler* create_tcp_server_communicator(int *sfd_read_write){
     io->read_buffer = malloc(sizeof(uint8_t)*131072);
     io->recv_length = 0;
     io->sfd_read_write = *sfd_read_write;
+    io->status = STATUS_RECEIVE_EMPTY;
+    io->buffer = NULL;
 
     io->request_n_word = tcp_request_n_word;
     io->send_pdu = tcp_send_pdu;
