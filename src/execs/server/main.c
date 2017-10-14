@@ -92,6 +92,9 @@ void * listen_loop(void* data){
 		int assigned = 0;
 		new_com = NULL;
 		new_com = server->listener->listen(server->listener);
+		sleep(2);
+
+
 
 		// implement here transfer of io_handler to com_array
 		if(bail_out != 1){
@@ -151,6 +154,7 @@ void * com_loop(void* data){
 			if(com->handler->status == STATUS_RECEIVE_OK){
 				pdu->print(pdu);
 			}
+
 		}
 
 	}
