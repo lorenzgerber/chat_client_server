@@ -148,6 +148,7 @@ int tcp_request_n_word(struct io_handler *self, int n_word){
     int nread = 0;
     if(self->buffer != NULL){
         free_message_byte_array(self->buffer);
+        self->buffer = NULL;
     }
 
     if(self->recv_length >= n_word*4){

@@ -30,23 +30,25 @@ void * listen_loop(void* data);
 int main (int argc, char*argv[]){
 
 	// setup variables for listener and communication server
-	pthread_t thread_handle[255];
+	pthread_t thread_handle[2];
 	pthread_t thread_listen;
-	communicator com[255];
+	communicator com[2];
 
 	server server;
 	signal(SIGINT, intHandler);
 
 
 	// start com threads
-	for(int i = 0; i < 255; i++){
+	for(int i = 0; i < 2; i++){
 		server.client_array[i] = NULL;
+		server.com_array = com;
 		pthread_mutex_init(&server.com_mutex[i], NULL);
 		com[i].thread_id = i;
 		com[i].handler = NULL;
 		com[i].com_array = com;
 		pthread_create(&thread_handle[i], NULL, com_loop, &com[i]);
 	}
+
 
 	// start listener
 	pthread_create(&thread_listen, NULL, listen_loop, &server);
@@ -67,7 +69,7 @@ int main (int argc, char*argv[]){
 	bail_out = 1;
 	pthread_cond_broadcast(&cond_var);
 
-	for(int i = 0; i < 255; i++){
+	for(int i = 0; i < 2; i++){
 		pthread_join(thread_handle[i], NULL);
 		pthread_mutex_destroy(&server.com_mutex[i]);
 	}
@@ -93,10 +95,11 @@ void * listen_loop(void* data){
 
 		// implement here transfer of io_handler to com_array
 		if(bail_out != 1){
-			for(int i = 0; i < 255 && assigned == 0; i++){
+
+			for(int i = 0; i < 2 && assigned == 0; i++){
 				pthread_mutex_lock(&server->com_mutex[i]);
-				if(server->client_array[i] == NULL){
-					server->client_array[i] = new_com;
+				if(server->com_array[i].handler == NULL){
+					server->com_array[i].handler = new_com;
 					assigned = 1;
 				}
 				pthread_mutex_unlock(&server->com_mutex[i]);
@@ -109,6 +112,7 @@ void * listen_loop(void* data){
 
 			// after transfer - signal all threads
 			pthread_cond_broadcast(&cond_var);
+
 
 		}
 
@@ -138,18 +142,15 @@ void * com_loop(void* data){
 		}
 		pthread_mutex_unlock(&cond_mutex);
 
-		//printf("thread %d here!\n", com->thread_id);
+
 
 		if(bail_out == 0){
 			// receive and parse
-			pdu* pdu = parse_header(com->handler);
-			pdu->print(pdu);
-
-
-			// if receive/parse error, remove io_handler from list
-
-			// send message to everybody
-
+			pdu* pdu;
+			pdu = parse_header(com->handler);
+			if(com->handler->status == STATUS_RECEIVE_OK){
+				pdu->print(pdu);
+			}
 		}
 
 	}
