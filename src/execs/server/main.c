@@ -11,22 +11,33 @@
 #include "socket_creator.h"
 
 
-void * main_loop(void* data);
+// shared variables
+pthread_mutex_t cond_mutex;
+pthread_cond_t cond_var;
+int  bail_out = 0;
+
+
+void * com_loop(void* data);
 
 int main (int argc, char*argv[]){
 
-	pthread_t thread_handle[255];
-	communicator com[255];
 
 	// setup variables for listener and communication server
+	pthread_t thread_handle[255];
+	communicator com[255];
 	char* address = "localhost";
 	server server;
+
+	int test_sfd = 10;
+
+
+	// start com threads
 	for(int i = 0; i < 255; i++){
 		server.client_array[i] = NULL;
 		com[i].thread_id = i;
 		com[i].handler = NULL;
 		com[i].com_array = com;
-		pthread_create(&thread_handle[i], NULL, main_loop, &com[i]);
+		pthread_create(&thread_handle[i], NULL, com_loop, &com[i]);
 	}
 
 
@@ -37,6 +48,18 @@ int main (int argc, char*argv[]){
 	// broadcast on conditional var
 	// signal handling
 	// restart
+
+	// listen loop
+	for(int i = 0; i < 10; i++){
+		com[i].handler = create_tcp_server_communicator(&test_sfd);
+
+	}
+
+	pthread_cond_broadcast(&cond_var);
+	sleep(2);
+	// now we go down
+	bail_out = 1;
+	pthread_cond_broadcast(&cond_var);
 
 
 
@@ -49,39 +72,39 @@ int main (int argc, char*argv[]){
 	return 0;
 }
 
-void * main_loop(void* data){
+void * com_loop(void* data){
 
 	communicator *com = data;
-	int counter = 0;
-	int sfd = 1;
-	com->handler = create_tcp_server_communicator(&sfd);
+	//int counter = 0;
+	//int sfd = 1;
+	//com->handler = create_tcp_server_communicator(&sfd);
 
 
-	while(counter < 10){
-		printf("thread %d here!\n", com->thread_id);
+	while(bail_out == 0){
 
-		if(com->thread_id == 10){
-			sleep(1);
-			if(com->handler != NULL){
-				free_tcp_server_communicator(com->handler);
-				com->handler = NULL;
-			}
+		// lock the cond mut
+		pthread_mutex_lock(&cond_mutex);
+
+		// check condition
+		while(com->handler == NULL && bail_out == 0){
+			// if still NULL -> sleep
+			pthread_cond_wait(&cond_var, &cond_mutex);
+			//printf("thread %d woken up!\n", com->thread_id);
 
 		}
+		pthread_mutex_unlock(&cond_mutex);
 
-		/*if(com->com_array[10].handler != NULL){
-			printf("com 10 is not empty\n");
-		} else {
-			printf("com 10 is now emtpy\n");
-		}*/
-
+		printf("thread %d here!\n", com->thread_id);
 
 		sleep(1);
-		counter++;
 	}
-	if(com->thread_id != 10){
+
+	if(com->handler != NULL){
 		free_tcp_server_communicator(com->handler);
 	}
+
+	//free_tcp_server_communicator(com->handler);
+
 
 	/// Main loop
 	/// ---------
