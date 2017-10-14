@@ -13,7 +13,7 @@
 # of test/. 
  
 CC = gcc
-CFLAGS = -Wall -std=c99 -Werror -g 
+CFLAGS = -Wall -std=c99 -g 
 LDFLAGS = -lpthread
 
 TARGET_EXEC ?= $(EXEC)
