@@ -10,31 +10,31 @@
 #include <socket_creator.h>
 #include <linked_list.h>
 
-void print_slist_servers(pdu* slist);
+void get_list_to_user(pdu* slist, list* servers);
 void print_welcome(void);
+list* request_chat_servers();
 
-void request_chat_servers(io_handler *com);
+typedef struct chat_server{
+    char name[255];
+    char address[20];
+    uint16_t port;
+}chat_server;
 
 int main (int argc, char*argv[]){
 
-	//list* servers = list_empty();
+
 
     char *input;
     int bufsize = 255;
     __ssize_t characters;
-    int command = 1;
     input = (char *)malloc(bufsize * sizeof(char));
     if( input == NULL) {
         perror("Unable to allocate buffer\n");
         EXIT_FAILURE;
     }
 
-    io_handler* name_server_com = create_tcp_client_communicator("itchy.cs.umu.se", 1337);
-    name_server_com->connect(name_server_com, 5);
-    name_server_com->status = 0;
-
-    while(command){
-
+    while(true){
+        list* servers = list_empty();
         print_welcome();
         memset(input, 0, (size_t) bufsize);
         characters = getline(&input, (size_t *) &bufsize, stdin);
@@ -42,47 +42,69 @@ int main (int argc, char*argv[]){
         if(characters > bufsize){
             printf("input too long\n");
             continue;
-        }else if(strcmp(input,"/servers\n") == 0){
-            request_chat_servers(name_server_com);
-            name_server_com->status = 0;
+        }else if(strcmp(input,"servers\n") == 0){
+            if(servers != NULL){
+                list_free(servers);
+            }
+            servers = request_chat_servers();
+            list_free(servers);
             continue;
-        }else if(strcmp(input,"/exit\n") == 0){
+        }else if(strcmp(input,"exit\n") == 0) {
+            list_free(servers);
             break;
+        }else if(strncmp(input,"join ",5) == 0){
+            printf("\njoining %s\n", input+5);
+            list_free(servers);
+            continue;
+        }else{
+            printf("unkown command\n");
+            list_free(servers);
+            continue;
         }
-        printf("%zu characters were read.\n",characters);
-        printf("You typed: '%s'\n",input);
-        command = 0;
     }
 
     free(input);
-	free_tcp_client_communicator(name_server_com);
+
 }
 
-void request_chat_servers(io_handler *com) {
+list* request_chat_servers() {
 
+    list* servers = list_empty();
+    list_set_mem_handler(servers,free);
+
+    io_handler* name_server_com = create_tcp_client_communicator("itchy.cs.umu.se", 1337);
+    name_server_com->connect(name_server_com, 5);
     pdu *getlist = create_getlist();
-
-    com->send_pdu(com, getlist);
+    name_server_com->send_pdu(name_server_com, getlist);
     getlist->free_pdu(getlist);
 
+    name_server_com->status = 0;
     pdu* slist = NULL;
     // looping until an error happens or we get data
-    while(com->status == STATUS_RECEIVE_EMPTY || com->status == 0){
-        slist = parse_header(com);
+    while(name_server_com->status == STATUS_RECEIVE_EMPTY || name_server_com->status == 0){
+        slist = parse_header(name_server_com);
     }
-    if(com->status != STATUS_RECEIVE_OK){
-
+    if(name_server_com->status != STATUS_RECEIVE_OK){
         printf("\nsomething wrong with receive in Client\n");
-        return;
+        free_tcp_client_communicator(name_server_com);
+        return servers;
     }else{
-        print_slist_servers(slist);
-        return;
+        get_list_to_user(slist, servers);
+        free_tcp_client_communicator(name_server_com);
+        return servers;
     }
 }
 
-void print_slist_servers(pdu* slist){
+void get_list_to_user(pdu* slist, list* servers){
     for(int i = 0; i< slist->number_servers;i++){
-        printf("\nName: %s, address: %d.%d.%d.%d, port: %d\n",
+
+        chat_server* server = malloc(sizeof(chat_server));
+        strcpy(server->name, slist->current_servers[i]->name);
+        strcpy(server->address, (char *) slist->current_servers[i]->address);
+        server->port = slist->current_servers[i]->port;
+
+        list_insert(list_first(servers),server);
+        printf("\nNAME: %s\nADDRESS: %d.%d.%d.%d\nPORT: %d\n",
                slist->current_servers[i]->name,
                slist->current_servers[i]->address[0],
                slist->current_servers[i]->address[1],
@@ -95,7 +117,8 @@ void print_slist_servers(pdu* slist){
 
 void print_welcome(void){
     printf("\nWelcome to the super chat client!\n");
-    printf("'/help' displays a list of commands\n");
-    printf("Type the name or address of an active chat server to join\n");
+    printf("'servers' updates the current active chat servers\n");
+    printf("'join x' joins the chat server x\n");
+    printf("'exit' shuts down the client\n");
     printf(">");
 }
