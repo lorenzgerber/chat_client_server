@@ -12,6 +12,8 @@
 #include "pdu_parser.h"
 #include "socket_creator.h"
 
+#define NUMBER_HANDLERS 255
+
 
 // shared variables
 pthread_mutex_t cond_mutex;
@@ -30,16 +32,16 @@ void * listen_loop(void* data);
 int main (int argc, char*argv[]){
 
 	// setup variables for listener and communication server
-	pthread_t thread_handle[2];
+	pthread_t thread_handle[NUMBER_HANDLERS];
 	pthread_t thread_listen;
-	communicator com[2];
+	communicator com[NUMBER_HANDLERS];
 
 	server server;
 	signal(SIGINT, intHandler);
 
 
 	// start com threads
-	for(int i = 0; i < 2; i++){
+	for(int i = 0; i < NUMBER_HANDLERS; i++){
 		server.client_array[i] = NULL;
 		server.com_array = com;
 		pthread_mutex_init(&server.com_mutex[i], NULL);
@@ -69,7 +71,7 @@ int main (int argc, char*argv[]){
 	bail_out = 1;
 	pthread_cond_broadcast(&cond_var);
 
-	for(int i = 0; i < 2; i++){
+	for(int i = 0; i < NUMBER_HANDLERS; i++){
 		pthread_join(thread_handle[i], NULL);
 		pthread_mutex_destroy(&server.com_mutex[i]);
 	}
@@ -99,7 +101,7 @@ void * listen_loop(void* data){
 		// implement here transfer of io_handler to com_array
 		if(bail_out != 1){
 
-			for(int i = 0; i < 2 && assigned == 0; i++){
+			for(int i = 0; i < NUMBER_HANDLERS && assigned == 0; i++){
 				pthread_mutex_lock(&server->com_mutex[i]);
 				if(server->com_array[i].handler == NULL){
 					server->com_array[i].handler = new_com;
