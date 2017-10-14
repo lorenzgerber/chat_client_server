@@ -15,6 +15,7 @@
 
 typedef struct server {
 	io_handler *client_array[255];
+	pthread_mutex_t com_mutex[255];
 	io_handler *listener;
 	list *client_list;
 	queue *message_list;

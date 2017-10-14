@@ -9,6 +9,7 @@
 #include <pthread.h>
 #include <signal.h>
 #include "server.h"
+#include "pdu_parser.h"
 #include "socket_creator.h"
 
 
@@ -40,6 +41,7 @@ int main (int argc, char*argv[]){
 	// start com threads
 	for(int i = 0; i < 255; i++){
 		server.client_array[i] = NULL;
+		pthread_mutex_init(&server.com_mutex[i], NULL);
 		com[i].thread_id = i;
 		com[i].handler = NULL;
 		com[i].com_array = com;
@@ -59,16 +61,19 @@ int main (int argc, char*argv[]){
 	// shutting down orderly
 	server.listener->close(server.listener);
 
-	pthread_cond_broadcast(&cond_var);
-	sleep(2);
+	//pthread_cond_broadcast(&cond_var);
+	//sleep(2);
 	// now we go down
 	bail_out = 1;
 	pthread_cond_broadcast(&cond_var);
 
 	for(int i = 0; i < 255; i++){
 		pthread_join(thread_handle[i], NULL);
+		pthread_mutex_destroy(&server.com_mutex[i]);
 	}
 	pthread_join(thread_listen, NULL);
+	pthread_mutex_destroy(&cond_mutex);
+	pthread_cond_destroy(&cond_var);
 
 	return 0;
 }
@@ -79,12 +84,33 @@ void * listen_loop(void* data){
 	server->listener = create_tcp_server_listener(address, 2000);
 	io_handler *new_com;
 
+
 	// listener
 	while(keep_running){
+		int assigned = 0;
+		new_com = NULL;
 		new_com = server->listener->listen(server->listener);
-		// implement here transfer of io_handler to com_array
 
-		// after transfer - signal all threads
+		// implement here transfer of io_handler to com_array
+		if(bail_out != 1){
+			for(int i = 0; i < 255 && assigned == 0; i++){
+				pthread_mutex_lock(&server->com_mutex[i]);
+				if(server->client_array[i] == NULL){
+					server->client_array[i] = new_com;
+					assigned = 1;
+				}
+				pthread_mutex_unlock(&server->com_mutex[i]);
+			}
+
+			// if iterated over whole array and still not assigned
+			if(assigned == 0){
+				printf("no more free client slots on server\n");
+			}
+
+			// after transfer - signal all threads
+			pthread_cond_broadcast(&cond_var);
+
+		}
 
 	}
 
@@ -112,25 +138,25 @@ void * com_loop(void* data){
 		}
 		pthread_mutex_unlock(&cond_mutex);
 
-		printf("thread %d here!\n", com->thread_id);
+		//printf("thread %d here!\n", com->thread_id);
 
-		sleep(1);
+		if(bail_out == 0){
+			// receive and parse
+			pdu* pdu = parse_header(com->handler);
+			pdu->print(pdu);
+
+
+			// if receive/parse error, remove io_handler from list
+
+			// send message to everybody
+
+		}
+
 	}
 
 	if(com->handler != NULL){
 		free_tcp_server_communicator(com->handler);
 	}
-
-	/// com loop
-	/// ---------
-	/// conditional, if my io_handler is not zero run else hold
-	/// receive
-	/// if error remove client from list (use locking)
-	/// if receive OK, parse
-	/// if parse OK, prepare message
-	/// send to all clients, by using their sfds (use locking to access sfds)
-	/// if send fails, nothing happens
-	/// start over
 
     return NULL;
 }
