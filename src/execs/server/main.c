@@ -148,14 +148,20 @@ void * com_loop(void* data){
 		pthread_mutex_unlock(&cond_mutex);
 
 
-
 		if(bail_out == 0){
 			// receive and parse
 			pdu* pdu;
 			pdu = parse_header(com->handler);
 			if(com->handler->status == STATUS_RECEIVE_OK){
 				pdu->print(pdu);
+				// interprete pdu
+
+
+			} else if (com->handler->status != STATUS_RECEIVE_EMPTY){
+				printf("We shoudld probably shut this one down\n");
 			}
+
+
 
 		}
 
