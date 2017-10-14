@@ -25,7 +25,7 @@
 int main(int argc, char*argv[]){
 
     io_handler* dummy_socket_ack;
-    dummy_socket_ack = create_dummy_socket(PDU_ACK, ENTITY_SERVER);
+    dummy_socket_ack = create_dummy_socket(PDU_ACK, ENTITY_DUMMY);
     pdu* ack = parse_header(dummy_socket_ack);
 
     printf("\nACK pdu from dummy\n");
@@ -37,7 +37,7 @@ int main(int argc, char*argv[]){
 
 
     io_handler* dummy_socket_notreg;
-    dummy_socket_notreg = create_dummy_socket(PDU_NOTREG, ENTITY_SERVER);
+    dummy_socket_notreg = create_dummy_socket(PDU_NOTREG, ENTITY_DUMMY);
     pdu* notreg = parse_header(dummy_socket_notreg);
 
     printf("\nNOTREG pdu from dummy\n");
@@ -50,7 +50,7 @@ int main(int argc, char*argv[]){
 
 
     io_handler* dummy_socket_slist;
-    dummy_socket_slist = create_dummy_socket(PDU_SLIST, ENTITY_CLIENT);
+    dummy_socket_slist = create_dummy_socket(PDU_SLIST, ENTITY_DUMMY);
     pdu* slist = parse_header(dummy_socket_slist);
 
     printf("\nSLIST pdu from dummy\n");
@@ -63,7 +63,7 @@ int main(int argc, char*argv[]){
 
 
     io_handler* dummy_socket_join;
-    dummy_socket_join = create_dummy_socket(PDU_JOIN, ENTITY_SERVER);
+    dummy_socket_join = create_dummy_socket(PDU_JOIN, ENTITY_DUMMY);
     pdu* join = parse_header(dummy_socket_join);
 
     printf("\nJOIN pdu from dummy\n");
@@ -75,7 +75,7 @@ int main(int argc, char*argv[]){
 
 
     io_handler* dummy_socket_participants;
-    dummy_socket_participants = create_dummy_socket(PDU_PARTICIPANTS, ENTITY_CLIENT);
+    dummy_socket_participants = create_dummy_socket(PDU_PARTICIPANTS, ENTITY_DUMMY);
     pdu* participants = parse_header(dummy_socket_participants);
 
     printf("\nPARTICIPANTS pdu from dummy\n");
@@ -88,7 +88,7 @@ int main(int argc, char*argv[]){
 
 
     io_handler* dummy_socket_quit;
-    dummy_socket_quit = create_dummy_socket(PDU_QUIT, ENTITY_CLIENT);
+    dummy_socket_quit = create_dummy_socket(PDU_QUIT, ENTITY_DUMMY);
     pdu* quit = parse_header(dummy_socket_quit);
 
     printf("\nQUIT pdu from dummy\n");
@@ -101,7 +101,7 @@ int main(int argc, char*argv[]){
 
 
 	io_handler *dummy_socket_mess;
-    dummy_socket_mess = create_dummy_socket(PDU_MESS, ENTITY_CLIENT);
+    dummy_socket_mess = create_dummy_socket(PDU_MESS, ENTITY_DUMMY);
 	pdu* mess = parse_header(dummy_socket_mess);
 
     printf("\nMESS pdu from dummy\n");
@@ -114,7 +114,7 @@ int main(int argc, char*argv[]){
 
 
     io_handler* dummy_socket_pjoin;
-    dummy_socket_pjoin = create_dummy_socket(PDU_PJOIN, ENTITY_CLIENT);
+    dummy_socket_pjoin = create_dummy_socket(PDU_PJOIN, ENTITY_DUMMY);
     pdu* pjoin = parse_header(dummy_socket_pjoin);
 
     printf("\nPJOIN pdu from dummy\n");
@@ -127,7 +127,7 @@ int main(int argc, char*argv[]){
 
 
     io_handler* dummy_socket_pleave;
-    dummy_socket_pleave = create_dummy_socket(PDU_PLEAVE, ENTITY_CLIENT);
+    dummy_socket_pleave = create_dummy_socket(PDU_PLEAVE, ENTITY_DUMMY);
     pdu* pleave = parse_header(dummy_socket_pleave);
 
     printf("\nPJLEAVE pdu from dummy\n");

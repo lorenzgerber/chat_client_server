@@ -123,7 +123,6 @@ void * client(void* data){
 
     // close connection
     client->close(client);
-    free_message_byte_array(client->buffer);
     free_tcp_client_communicator(client);
 
 
