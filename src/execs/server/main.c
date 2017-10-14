@@ -24,18 +24,17 @@ void intHandler(int dummy) {
 
 
 void * com_loop(void* data);
+void * listen_loop(void* data);
 
 int main (int argc, char*argv[]){
 
-
 	// setup variables for listener and communication server
 	pthread_t thread_handle[255];
+	pthread_t thread_listen;
 	communicator com[255];
-	char* address = "localhost";
+
 	server server;
 	signal(SIGINT, intHandler);
-
-	int test_sfd = 10;
 
 
 	// start com threads
@@ -47,20 +46,18 @@ int main (int argc, char*argv[]){
 		pthread_create(&thread_handle[i], NULL, com_loop, &com[i]);
 	}
 
+	// start listener
+	pthread_create(&thread_listen, NULL, listen_loop, &server);
 
-	// Main loop in listener
-	// listen
-	// when new client shows up, find empty communicator slot
-	// assign io_handler to empty communicator slot (use locking)
-	// broadcast on conditional var
-	// signal handling
-	// restart
 
-	// listen loop
+	// Exit / shutdown condition
 	while(keep_running){
 		sleep(1);
-
 	}
+
+
+	// shutting down orderly
+	server.listener->close(server.listener);
 
 	pthread_cond_broadcast(&cond_var);
 	sleep(2);
@@ -68,23 +65,40 @@ int main (int argc, char*argv[]){
 	bail_out = 1;
 	pthread_cond_broadcast(&cond_var);
 
-
-
-
-
 	for(int i = 0; i < 255; i++){
 		pthread_join(thread_handle[i], NULL);
 	}
+	pthread_join(thread_listen, NULL);
 
 	return 0;
 }
 
+void * listen_loop(void* data){
+	char* address = "localhost";
+	server *server = data;
+	server->listener = create_tcp_server_listener(address, 2000);
+	io_handler *new_com;
+
+	// listener
+	while(keep_running){
+		new_com = server->listener->listen(server->listener);
+		// implement here transfer of io_handler to com_array
+
+		// after transfer - signal all threads
+
+	}
+
+	// clean up in case of shutdown
+	free_tcp_server_listener(server->listener);
+	free_tcp_server_communicator(new_com);
+	printf("stop listening\n");
+	return NULL;
+}
+
+
 void * com_loop(void* data){
 
 	communicator *com = data;
-	//int counter = 0;
-	//int sfd = 1;
-	//com->handler = create_tcp_server_communicator(&sfd);
 
 
 	while(bail_out == 0){
@@ -94,10 +108,7 @@ void * com_loop(void* data){
 
 		// check condition
 		while(com->handler == NULL && bail_out == 0){
-			// if still NULL -> sleep
 			pthread_cond_wait(&cond_var, &cond_mutex);
-			//printf("thread %d woken up!\n", com->thread_id);
-
 		}
 		pthread_mutex_unlock(&cond_mutex);
 
@@ -110,10 +121,7 @@ void * com_loop(void* data){
 		free_tcp_server_communicator(com->handler);
 	}
 
-	//free_tcp_server_communicator(com->handler);
-
-
-	/// Main loop
+	/// com loop
 	/// ---------
 	/// conditional, if my io_handler is not zero run else hold
 	/// receive
@@ -123,7 +131,6 @@ void * com_loop(void* data){
 	/// send to all clients, by using their sfds (use locking to access sfds)
 	/// if send fails, nothing happens
 	/// start over
-
 
     return NULL;
 }
