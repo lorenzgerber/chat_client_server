@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <signal.h>
 #include "server.h"
 #include "socket_creator.h"
 
@@ -15,6 +16,11 @@
 pthread_mutex_t cond_mutex;
 pthread_cond_t cond_var;
 int  bail_out = 0;
+static volatile int keep_running = 1;
+
+void intHandler(int dummy) {
+    keep_running = 0;
+}
 
 
 void * com_loop(void* data);
@@ -27,6 +33,7 @@ int main (int argc, char*argv[]){
 	communicator com[255];
 	char* address = "localhost";
 	server server;
+	signal(SIGINT, intHandler);
 
 	int test_sfd = 10;
 
@@ -50,8 +57,8 @@ int main (int argc, char*argv[]){
 	// restart
 
 	// listen loop
-	for(int i = 0; i < 10; i++){
-		com[i].handler = create_tcp_server_communicator(&test_sfd);
+	while(keep_running){
+		sleep(1);
 
 	}
 
