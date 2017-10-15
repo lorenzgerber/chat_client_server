@@ -25,6 +25,7 @@ typedef struct server {
 typedef struct communicator {
 	int thread_id;
 	io_handler * handler;
+	pthread_mutex_t *handler_lock;
 	struct communicator *com_array;
 	queue *message_list;
 } communicator;

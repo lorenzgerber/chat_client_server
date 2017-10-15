@@ -238,6 +238,16 @@ io_handler* tcp_server_listen(struct io_handler *self){
     return com;
 }
 
+int close_tcp_socket_listener(struct io_handler *self){
+	int status = 0;
+	status = shutdown(self->sfd_listen, SHUT_RDWR);
+	if(status == 0){
+		status = close(self->sfd_listen);
+	}
+
+	return status;
+}
+
 /**
  * create_tcp_server_communicator
  *
@@ -264,20 +274,15 @@ io_handler* create_tcp_server_communicator(int *sfd_read_write){
 }
 
 int free_tcp_server_communicator(io_handler* self){
-	free(self->read_buffer);
+	if(self->read_buffer != NULL){
+		free(self->read_buffer);
+	}
+
 	free(self);
 	return(0);
 }
 
-int close_tcp_socket_listener(struct io_handler *self){
-	int status = 0;
-	status = shutdown(self->sfd_listen, SHUT_RDWR);
-	if(status == 0){
-		status = close(self->sfd_listen);
-	}
 
-	return status;
-}
 
 
 int close_tcp_socket_communicator(struct io_handler *self){

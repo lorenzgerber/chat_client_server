@@ -45,6 +45,7 @@ int main (int argc, char*argv[]){
 		server.client_array[i] = NULL;
 		server.com_array = com;
 		pthread_mutex_init(&server.com_mutex[i], NULL);
+		com[i].handler_lock = &server.com_mutex[i];
 		com[i].thread_id = i;
 		com[i].handler = NULL;
 		com[i].com_array = com;
@@ -159,6 +160,11 @@ void * com_loop(void* data){
 
 			} else if (com->handler->status != STATUS_RECEIVE_EMPTY){
 				printf("We shoudld probably shut this one down\n");
+				com->handler->close(com->handler);
+				pthread_mutex_lock(com->handler_lock);
+				free_tcp_server_communicator(com->handler);
+				com->handler = NULL;
+				pthread_mutex_unlock(com->handler_lock);
 			}
 
 
