@@ -51,7 +51,7 @@ int main (int argc, char*argv[]){
         //all other iterations
         }else{
             //get command from user
-            print_welcome();
+            print_main();
             memset(input, 0, (size_t) bufsize);
             characters = getline(&input, (size_t *) &bufsize, stdin);
 
@@ -70,29 +70,12 @@ int main (int argc, char*argv[]){
             //join command
             }else if(strncmp(input,"join ",5) == 0){
                 user->join_status = join_server_in_list(user, input+5,servers);
-                if (user->join_status == JOIN_FAIL){
-                    printf("could not find server: %s", input);
-                    continue;
-                }else if(user->join_status == JOIN_SUCCESS){
-                    continue;
-                }else{
-                    printf("Unexpected error\n");
-                    list_free(servers);
-                    break;
-                }
+                continue;
             //connect command
             }else if(strncmp(input,"connect ",8) == 0){
-                //TODO implement
                 printf("\njoining %s\n", input+8);
                 user->join_status = direct_connect(user, input+8);
-                //join_status = chat_loop(cs);
-                if (user->join_status == JOIN_FAIL){
-                    printf("Unable to connect to server: %s", input+8);
-                    continue;
-                }else{
-                    list_free(servers);
-                    break;
-                }
+                continue;
             //help command
             }else if(strncmp(input,"help",4) == 0){
                 print_help();
@@ -106,7 +89,6 @@ int main (int argc, char*argv[]){
                 continue;
             }
         }
-
     }
     free(ns);
     free(user);
@@ -245,8 +227,8 @@ void get_list_to_user(pdu* slist, list* servers){
     slist->free_pdu(slist);
 }
 
-void print_welcome(void){
-    printf("\nWelcome to the super chat client!\n");
+void print_main(void){
+    printf("\n---Super chat client---\n");
     printf("type 'help' to get a list of commands\n");
     printf(">");
 }
@@ -273,19 +255,56 @@ int join_server_in_list(current_user* user, char* input,list* servers){
                 user->join_status = chat_loop(user);
                 if(user->join_status == JOIN_SUCCESS){
                     return JOIN_SUCCESS;
+                }else{
+                    printf("\nError connecting to server\n");
+                    return JOIN_FAIL;
                 }
             }
         }
 
     } while(!list_is_end(servers, p));
-
+    printf("\nCould not find the server in the serverlist\n");
     return JOIN_FAIL;
 
 }
 
-int direct_connect(current_user* user, char* input){
+int direct_connect(current_user* user, const char* input){
+
+    chat_server* cs = malloc(sizeof(struct chat_server));
+    char address[strlen(input)];
+    char* strtol_ptr;
+    int status = 0;
+
+    memset(address,0,strlen(input));
+    memset(cs->address,0,255);
     int i = 0;
-    while(input[i] != ':'){
+
+    while(input[i] != '\n'){
+        address[i] = input[i];
+        if(input[i] == ':'){
+            status = 1;
+        }
         i++;
+    }
+    if(!status){
+        printf("\nSpecify address with 'serveraddress:port'\n");
+        return JOIN_FAIL;
+    }
+    i = 0;
+    while(address[i] != ':'){
+        cs->address[i] = address[i];
+        i++;
+    }
+    i++;
+    cs->port = (uint16_t )strtol(&address[i], &strtol_ptr, 10);
+    user->join_server = cs;
+    user->join_status = chat_loop(user);
+    if(user->join_status == JOIN_SUCCESS){
+        free(cs);
+        return JOIN_SUCCESS;
+    }else{
+        free(cs);
+        printf("\nError connecting to server\n");
+        return JOIN_FAIL;
     }
 }

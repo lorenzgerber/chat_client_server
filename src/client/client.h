@@ -43,7 +43,7 @@ typedef struct client{
 
 void get_list_to_user(pdu* slist, list* servers);
 
-void print_welcome(void);
+void print_main(void);
 
 list* request_chat_servers(current_user* u, list* server_list);
 
@@ -57,6 +57,6 @@ void print_help(void);
 
 int join_server_in_list(current_user* user, char* input, list* servers);
 
-int direct_connect(current_user* user, char* input);
+int direct_connect(current_user* user, const char* input);
 
 #endif /* SRC_CLIENT_CLIENT_H_ */
