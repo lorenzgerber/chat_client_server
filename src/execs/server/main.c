@@ -10,6 +10,7 @@
 #include <signal.h>
 #include "server.h"
 #include "pdu_parser.h"
+#include "pdu_creator.h"
 #include "socket_creator.h"
 
 #define NUMBER_HANDLERS 255
@@ -52,23 +53,17 @@ int main (int argc, char*argv[]){
 		pthread_create(&thread_handle[i], NULL, com_loop, &com[i]);
 	}
 
-
 	// start listener
 	pthread_create(&thread_listen, NULL, listen_loop, &server);
-
 
 	// Exit / shutdown condition
 	while(keep_running){
 		sleep(1);
 	}
 
-
 	// shutting down orderly
 	server.listener->close(server.listener);
 
-	//pthread_cond_broadcast(&cond_var);
-	//sleep(2);
-	// now we go down
 	bail_out = 1;
 	pthread_cond_broadcast(&cond_var);
 
@@ -89,15 +84,12 @@ void * listen_loop(void* data){
 	server->listener = create_tcp_server_listener(address, 2000);
 	io_handler *new_com;
 
-
 	// listener
 	while(keep_running){
 		int assigned = 0;
 		new_com = NULL;
 		new_com = server->listener->listen(server->listener);
 		sleep(2);
-
-
 
 		// implement here transfer of io_handler to com_array
 		if(bail_out != 1){
@@ -119,9 +111,7 @@ void * listen_loop(void* data){
 			// after transfer - signal all threads
 			pthread_cond_broadcast(&cond_var);
 
-
 		}
-
 	}
 
 	// clean up in case of shutdown
@@ -136,6 +126,8 @@ void * com_loop(void* data){
 
 	communicator *com = data;
 	com->joined = 0;
+	pdu* pdu_receive;
+	pdu_receive = NULL;
 
 	while(bail_out == 0){
 
@@ -151,26 +143,64 @@ void * com_loop(void* data){
 
 		if(bail_out == 0){
 			// receive and parse
-			pdu* pdu;
-			pdu = parse_header(com->handler);
+			pdu_receive = parse_header(com->handler);
 			if(com->handler->status == STATUS_RECEIVE_OK){
-				pdu->print(pdu);
-				// interprete pdu
-				if(pdu->type == 1){
+				pdu_receive->print(pdu_receive);
+				com->handler->status = 0;
+
+				// here we check for JOIN message
+				if(pdu_receive->type == 12 && com->joined == 0){
+
+					com->joined = 1;
+
+					// prepare and send participants to new user
+					// todo
+					// add new client identity to list
+
+
+					// here we prepare the pjoined message
+					pdu* pdu_response = create_pjoin(pdu_receive->identity_length);
+					pdu_response->add_client_identity_timestamp(pdu_response, time(NULL), pdu_receive->identity);
+
+					// cycle through all io_handlers
 					for(int i = 0; i < NUMBER_HANDLERS; i++){
+
+						// lock handler for access and potential send
 						pthread_mutex_lock(com->com_array[i].handler_lock);
-						printf("try to send on %d\n, ", i);
+
+						// check if io_handler is in use
 						if(com->com_array[i].handler != NULL){
-							com->com_array[i].handler->send_pdu(com->com_array[i].handler, pdu);
-							printf("\nsent on %d\n", i);
+
+							// Don't send PJOIN to the joining client, though for testing at the moment
+							// we send anyway
+							//if(i != com->thread_id){
+								com->com_array[i].handler->send_pdu(com->com_array[i].handler, pdu_response);
+								printf("\nsent on %d\n", i);
+							//}
+
 						}
 						pthread_mutex_unlock(com->com_array[i].handler_lock);
 					}
+					pdu_response->free_pdu(pdu_response);
+
+				} else if(pdu_receive->type == 12 && com->joined == 1){
+					printf("client sends second join while already joined\n");
 				}
-				pdu->free_pdu(pdu);
+				// here we check for QUIT message
+				// todo
+				// remove client identity from list
+
+				// here we check for MESS message
+				// todo
+
+				pdu_receive->free_pdu(pdu_receive);
+				pdu_receive = NULL;
+
 
 
 			} else if (com->handler->status != STATUS_RECEIVE_EMPTY){
+				// here we handle connections that were
+				// terminated wihtout notice
 				printf("We shoudld probably shut this one down\n");
 				com->handler->close(com->handler);
 				pthread_mutex_lock(com->handler_lock);
@@ -179,8 +209,6 @@ void * com_loop(void* data){
 				pthread_mutex_unlock(com->handler_lock);
 				com->joined = 0;
 			}
-
-
 
 		}
 
