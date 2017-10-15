@@ -197,11 +197,11 @@ uint32_t get_length_mess(pdu *pdu){
                               LENGTH_MESSAGE_LENGTH +
                               LENGTH_PAD * 2 +
                               LENGTH_TIME;
-    length_of_mess += pdu->message_length +
-                      calc_word_padding(length_of_mess);
+    length_of_mess += pdu->message_length;
+    length_of_mess += calc_word_padding(length_of_mess);
     if(pdu->identity_length > 0){
-        length_of_mess += pdu->identity_length +
-                          calc_word_padding(length_of_mess);
+        length_of_mess += pdu->identity_length;
+        length_of_mess += calc_word_padding(length_of_mess);
     }
 
 	return length_of_mess;
