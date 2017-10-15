@@ -135,7 +135,7 @@ void * listen_loop(void* data){
 void * com_loop(void* data){
 
 	communicator *com = data;
-
+	com->joined = 0;
 
 	while(bail_out == 0){
 
@@ -156,6 +156,18 @@ void * com_loop(void* data){
 			if(com->handler->status == STATUS_RECEIVE_OK){
 				pdu->print(pdu);
 				// interprete pdu
+				if(pdu->type == 1){
+					for(int i = 0; i < NUMBER_HANDLERS; i++){
+						pthread_mutex_lock(com->com_array[i].handler_lock);
+						printf("try to send on %d\n, ", i);
+						if(com->com_array[i].handler != NULL){
+							com->com_array[i].handler->send_pdu(com->com_array[i].handler, pdu);
+							printf("\nsent on %d\n", i);
+						}
+						pthread_mutex_unlock(com->com_array[i].handler_lock);
+					}
+				}
+				pdu->free_pdu(pdu);
 
 
 			} else if (com->handler->status != STATUS_RECEIVE_EMPTY){
@@ -165,6 +177,7 @@ void * com_loop(void* data){
 				free_tcp_server_communicator(com->handler);
 				com->handler = NULL;
 				pthread_mutex_unlock(com->handler_lock);
+				com->joined = 0;
 			}
 
 

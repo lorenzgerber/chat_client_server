@@ -28,6 +28,7 @@ typedef struct communicator {
 	pthread_mutex_t *handler_lock;
 	struct communicator *com_array;
 	queue *message_list;
+	int joined;
 } communicator;
 
 

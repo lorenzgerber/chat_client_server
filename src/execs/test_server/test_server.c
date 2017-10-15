@@ -26,9 +26,6 @@ int main(int argc, char*argv[]){
 	client = create_tcp_client_communicator(address, 2000);
 	client->connect(client, 50);
 	client->send_pdu(client, test);
-	client->send_pdu(client, test);
-	client->send_pdu(client, test);
-	client->send_pdu(client, test);
 	test->free_pdu(test);
 
 
@@ -41,8 +38,6 @@ int main(int argc, char*argv[]){
 	if(client->status != STATUS_RECEIVE_OK){
 		printf("something wrong with receive in Client\n");
 	}
-
-	/*
 	client->status = 0;
 
 	participants->print(participants);
@@ -52,9 +47,6 @@ int main(int argc, char*argv[]){
 	// close connection
 	client->close(client);
 	free_tcp_client_communicator(client);
-
-	*/
-
 
     return 0;
 }
