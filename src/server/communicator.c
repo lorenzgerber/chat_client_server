@@ -6,6 +6,8 @@
  */
 #include "communicator.h"
 
+char* build_client_name_string(list* name_list, int * number_of_clients);
+
 void * com_loop(void* data){
 
 	communicator *com = data;
@@ -37,9 +39,21 @@ void * com_loop(void* data){
 
 					com->joined = 1;
 
-					// prepare and send participants to new user
-					// todo
+
+
+
 					// add new client identity to list
+					char * client_identity = malloc((pdu_receive->identity_length+1)*sizeof(char));
+					strcpy(client_identity, pdu_receive->identity);
+					list_insert(list_last(com->client_list), client_identity);
+
+					// prepare and send participants to new user
+					int number_of_clients = 0;
+					char * participants = build_client_name_string(com->client_list, &number_of_clients);
+					pdu * pdu_participants = create_participants(number_of_clients, strlen(participants)+1);
+					pdu_participants->add_identities(pdu_participants, participants);
+					com->handler->send_pdu(com->handler, pdu_participants);
+					pdu_participants->free_pdu(pdu_participants);
 
 
 					// here we prepare the pjoined message
@@ -57,10 +71,10 @@ void * com_loop(void* data){
 
 							// Don't send PJOIN to the joining client, though for testing at the moment
 							// we send anyway
-							//if(i != com->thread_id){
+							if(i != com->thread_id){
 								com->com_array[i].handler->send_pdu(com->com_array[i].handler, pdu_response);
 								printf("\nsent on %d\n", i);
-							//}
+							}
 
 						}
 						pthread_mutex_unlock(com->com_array[i].handler_lock);
@@ -103,5 +117,36 @@ void * com_loop(void* data){
 	}
 
     return NULL;
+}
+
+char* build_client_name_string(list* name_list, int *number_of_clients){
+	int length = 0;
+	int str_position = 0;
+	int clients_count = 0;
+
+	list_position current_position = list_first(name_list);
+
+	// determine length
+	if(!list_is_empty(name_list)){
+		do{
+			length += strlen((char*)list_inspect(current_position))+1;
+			clients_count++;
+		} while (!list_is_end(name_list, current_position));
+	}
+	*number_of_clients = clients_count;
+
+	// allocate memory, iterate and collect all names
+	char* target_string = malloc(length * sizeof(char));
+	current_position = list_first(name_list);
+
+	if(!list_is_empty(name_list)){
+		do{
+			strcpy(target_string, (char*) list_inspect(current_position));
+			str_position += strlen((char*)list_inspect(current_position))+1;
+		} while (!list_is_end(name_list, current_position));
+	}
+
+
+	return target_string;
 }
 

@@ -205,7 +205,7 @@ pdu* parse_PARTICIPANTS(struct io_handler* socket){
     //assemble 16 bit number of clients from two 8 bits
 	uint16_t length_of_clients = *(socket->read_head+3) << 8 | *(socket->read_head+2);
     if(socket->socket_entity != ENTITY_DUMMY){
-        length_of_clients = ntohs(length_of_clients);
+        //length_of_clients = ntohs(length_of_clients);
     }
     //read sufficient number of words to assign participants
 	socket->request_n_word(socket,

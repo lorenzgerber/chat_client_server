@@ -33,12 +33,17 @@ int main (int argc, char*argv[]){
 	communicator com[NUMBER_HANDLERS];
 	int bail_out = 0;
 
+	// Server Struct
 	server server;
 	server.bail_out = &bail_out;
+	server.client_list = list_empty();
+	list_set_mem_handler(server.client_list, free);
 	signal(SIGINT, intHandler);
 
 
-	// start com threads
+
+
+	// Start Communication threads
 	for(int i = 0; i < NUMBER_HANDLERS; i++){
 		server.client_array[i] = NULL;
 		server.com_array = com;
@@ -48,10 +53,11 @@ int main (int argc, char*argv[]){
 		com[i].handler = NULL;
 		com[i].com_array = com;
 		com[i].bail_out = &bail_out;
+		com[i].client_list = server.client_list;
 		pthread_create(&thread_handle[i], NULL, com_loop, &com[i]);
 	}
 
-	// start listener
+	// Start Listener thread
 	pthread_create(&thread_listen, NULL, listen_loop, &server);
 
 	// Exit / shutdown condition

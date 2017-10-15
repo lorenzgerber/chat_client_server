@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include <signal.h>
+#include <string.h>
 #include "server.h"
 #include "pdu_parser.h"
 #include "pdu_creator.h"
