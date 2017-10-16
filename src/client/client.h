@@ -1,16 +1,42 @@
 /*
  * client.h
  *
- *  Created on: Oct 11, 2017
- *      Author: lgerber
+ *
+ *  Created on: Oct 1, 2017
+ *     Authors: Lorenz Gerber, Niklas Königsson
+ *
+ *  Chat client server project
+ *  5DV197 Datakom course
+ *	GPLv3
  */
 
 #ifndef SRC_CLIENT_CLIENT_H_
 #define SRC_CLIENT_CLIENT_H_
+
+#define TYPE_CHAT_SERVER 1
+#define TYPE_NAME_SERVER 0
+
+#define JOIN_INITIAL -2
+#define JOIN_FAIL -1
+#define JOIN_SUCCESS 0
+
+#define NAME_SERVER "itchy.cs.umu.se"
+#define NAME_SERVER_PORT 1337
+
 #include <stdio.h>
-#include <socket_templates.h>
-#include <socket_creator.h>
-#include <linked_list.h>
+#include <ctype.h>
+
+#include "socket_templates.h"
+#include "socket_creator.h"
+#include "linked_list.h"
+
+typedef struct current_user{
+	struct chat_server* join_server;
+	struct chat_server* name_server;
+	char identity[255];
+	int server_type;
+	int join_status;
+}current_user;
 
 typedef struct chat_server{
 	char server_name[255];
@@ -18,21 +44,13 @@ typedef struct chat_server{
 	uint16_t port;
 }chat_server;
 
-typedef struct current_user{
-	chat_server* join_server;
-    char identity[255];
-    int server_type; //0 name server, 1 chatserver
-}current_user;
 
 typedef struct client{
 	int myId;
 } client;
 
-void get_list_to_user(pdu* slist, list* servers);
-
-void print_welcome(void);
-
-list* request_chat_servers();
+#include "client_command.h"
+#include "client_connect.h"
 
 int chat_loop(current_user *server);
 
