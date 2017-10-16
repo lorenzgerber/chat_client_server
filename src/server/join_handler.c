@@ -10,15 +10,21 @@ int join_handler(pdu* pdu_receive, communicator *com){
 	// add new client identity to list
 	char * client_identity = malloc((pdu_receive->identity_length+1)*sizeof(char));
 	strcpy(client_identity, pdu_receive->identity);
+	pthread_mutex_lock(com->client_list_lock);
 	list_insert(list_last(com->client_list), client_identity);
+	pthread_mutex_unlock(com->client_list_lock);
 	com->client_name = malloc((pdu_receive->identity_length+1)*sizeof(char));
 	strcpy(com->client_name, pdu_receive->identity);
 
 
 	// prepare and send participants to new user
+
+	pthread_mutex_lock(com->client_list_lock);
 	uint8_t number_identities = get_number_identities(com->client_list);
 	uint16_t length_identities = calc_length_identities(com->client_list);
 	char *identities = build_identities(com->client_list, length_identities);
+	pthread_mutex_unlock(com->client_list_lock);
+
 	pdu * pdu_participants = create_participants(number_identities, length_identities);
 	pdu_participants->add_identities(pdu_participants, identities);
 	com->handler->send_pdu(com->handler, pdu_participants);

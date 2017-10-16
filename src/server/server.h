@@ -18,15 +18,10 @@
 pthread_mutex_t cond_mutex;
 pthread_cond_t cond_var;
 
-
-
-
-
-
-
 typedef struct server {
 	io_handler *client_array[255];
 	pthread_mutex_t com_mutex[255];
+	pthread_mutex_t client_list_lock;
 	struct communicator *com_array;
 	io_handler *listener;
 	list *client_list;
@@ -39,14 +34,11 @@ typedef struct communicator {
 	pthread_mutex_t *handler_lock;
 	struct communicator *com_array;
 	list *client_list;
+	pthread_mutex_t *client_list_lock;
 	char *client_name;
 	int joined;
 	int *bail_out;
 } communicator;
-
-
-
-
 
 
 #endif /* SRC_SERVER_SERVER_H_ */

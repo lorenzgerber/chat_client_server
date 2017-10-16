@@ -102,7 +102,9 @@ int shutdown_connection(communicator *com){
 	com->handler = NULL;
 	pthread_mutex_unlock(com->handler_lock);
 	com->joined = 0;
+	pthread_mutex_lock(com->client_list_lock);
 	remove_identity(com->client_list, com->client_name);
+	pthread_mutex_unlock(com->client_list_lock);
 	free(com->client_name);
 
 	return 0;

@@ -38,6 +38,7 @@ int main (int argc, char*argv[]){
 	server server;
 	server.bail_out = &bail_out;
 	server.client_list = list_empty();
+	pthread_mutex_init(&server.client_list_lock, NULL);
 	list_set_mem_handler(server.client_list, free);
 	signal(SIGINT, intHandler);
 
@@ -48,6 +49,7 @@ int main (int argc, char*argv[]){
 		server.com_array = com;
 		pthread_mutex_init(&server.com_mutex[i], NULL);
 		com[i].handler_lock = &server.com_mutex[i];
+		com[i].client_list_lock = &server.client_list_lock;
 		com[i].thread_id = i;
 		com[i].handler = NULL;
 		com[i].com_array = com;
@@ -78,6 +80,7 @@ int main (int argc, char*argv[]){
 	pthread_join(thread_listen, NULL);
 	pthread_mutex_destroy(&cond_mutex);
 	pthread_cond_destroy(&cond_var);
+	pthread_mutex_destroy(&server.client_list_lock);
 
 	// remove client/participants list
 	list_free(server.client_list);
