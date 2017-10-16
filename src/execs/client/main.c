@@ -8,6 +8,7 @@
 
 #define _GNU_SOURCE
 
+
 #include "client.h"
 
 int main (int argc, char*argv[]){
@@ -82,7 +83,7 @@ int main (int argc, char*argv[]){
                 continue;
             //invalid command
             }else if(strncmp(input,"ns ",3) == 0){
-                //TODO implement
+                user->join_status = set_name_server(user, input+3);
                 continue;
             }else{
                 printf("unknown command\n");
@@ -279,6 +280,7 @@ int direct_connect(current_user* user, const char* input){
     memset(cs->address,0,255);
     int i = 0;
 
+    //make sure format is correct
     while(input[i] != '\n'){
         address[i] = input[i];
         if(input[i] == ':'){
@@ -290,6 +292,20 @@ int direct_connect(current_user* user, const char* input){
         printf("\nSpecify address with 'serveraddress:port'\n");
         return JOIN_FAIL;
     }
+    i = 0;
+    while(input[i] != ':'){
+        i++;
+    }
+    i++;
+    //make sure port is integers
+    while(input[i] != '\n'){
+        if(!isdigit(input[i])){
+            printf("\nPort number must be integers\n");
+            return JOIN_FAIL;
+        }
+        i++;
+    }
+    //copy data
     i = 0;
     while(address[i] != ':'){
         cs->address[i] = address[i];
@@ -307,4 +323,51 @@ int direct_connect(current_user* user, const char* input){
         printf("\nError connecting to server\n");
         return JOIN_FAIL;
     }
+}
+
+int set_name_server(current_user* user, const char* input){
+
+    char address[strlen(input)];
+    char* strtol_ptr;
+    int status = 0;
+
+    memset(address,0,strlen(input));
+
+    int i = 0;
+    //make sure the format is correct
+    while(input[i] != '\n'){
+        address[i] = input[i];
+        if(input[i] == ':'){
+            status = 1;
+        }
+        i++;
+    }
+    if(!status){
+        printf("\nSpecify address with 'serveraddress:port'\n");
+        return JOIN_FAIL;
+    }
+    i = 0;
+    while(input[i] != ':'){
+        i++;
+    }
+    i++;
+    //make sure port is integers
+    while(input[i] != '\n'){
+        if(!isdigit(input[i])){
+            printf("\nPort number must be integers\n");
+            return JOIN_FAIL;
+        }
+        i++;
+    }
+    //copy data
+    memset(user->name_server->address,0,255);
+    i = 0;
+    while(address[i] != ':'){
+        user->name_server->address[i] = address[i];
+        i++;
+    }
+    i++;
+    user->name_server->port = (uint16_t )strtol(&address[i], &strtol_ptr, 10);
+    printf("\nName server changed\n");
+    return JOIN_SUCCESS;
 }

@@ -19,6 +19,7 @@
 #define NAME_SERVER_PORT 1337
 
 #include <stdio.h>
+#include <ctype.h>
 #include <socket_templates.h>
 #include <socket_creator.h>
 #include <linked_list.h>
@@ -58,5 +59,7 @@ void print_help(void);
 int join_server_in_list(current_user* user, char* input, list* servers);
 
 int direct_connect(current_user* user, const char* input);
+
+int set_name_server(current_user* user, const char* input);
 
 #endif /* SRC_CLIENT_CLIENT_H_ */
