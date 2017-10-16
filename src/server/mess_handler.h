@@ -1,17 +1,12 @@
 /*
- * communicator.h
+ * mess_handler.h
  *
- *  Created on: Oct 15, 2017
+ *  Created on: Oct 16, 2017
  *      Author: lgerber
  */
 
-#ifndef SRC_SERVER_COMMUNICATOR_H_
-#define SRC_SERVER_COMMUNICATOR_H_
-
-
-
-
-
+#ifndef SRC_SERVER_MESS_HANDLER_H_
+#define SRC_SERVER_MESS_HANDLER_H_
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
@@ -24,12 +19,9 @@
 #include "participant_list_handler.h"
 #include "join_handler.h"
 #include "pleave_handler.h"
-#include "mess_handler.h"
 
 
-void * com_loop(void* data);
-int shutdown_connection(communicator *com);
+int mess_handler(pdu* pdu_receive, communicator *com);
 
 
-
-#endif /* SRC_SERVER_COMMUNICATOR_H_ */
+#endif /* SRC_SERVER_MESS_HANDLER_H_ */

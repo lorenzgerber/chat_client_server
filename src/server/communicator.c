@@ -25,7 +25,6 @@ void * com_loop(void* data){
 		}
 		pthread_mutex_unlock(&cond_mutex);
 
-
 		if(*com->bail_out == 0){
 			// receive and parse
 			pdu_receive = parse_header(com->handler);
@@ -38,35 +37,38 @@ void * com_loop(void* data){
 
 					com->joined = 1;
 
-					// join_handler adds client identity to list,
-					// prepares and sends PARTICIPANTS,
-					// prepares and sends PJOIN
+					// handling JOIN messages
 					join_handler(pdu_receive, com);
-
 
 				// if client sends JOIN while already joined, kick out
 				} else if(pdu_receive->type == 12 && com->joined == 1){
 					printf("client sends second join while already joined\n");
 					shutdown_connection(com);
+					send_pleave(pdu_receive, com);
 
 				} else if(pdu_receive->type == 11){
 					// QUIT, close connection and send PLEAVE to all others
 					shutdown_connection(com);
 					send_pleave(pdu_receive, com);
 
-				} else if(pdu_receive->type == 10){
+				} else if(pdu_receive->type == 10 && com->joined == 1){
 					// here we check for MESS message
-					// todo
-
+					if(pdu_receive->verify_checksum(pdu_receive)!=0){
+						//Checksum incorrect
+						printf("checksum incorrect!\n Shutting down client\n");
+						shutdown_connection(com);
+						send_pleave(pdu_receive, com);
+					} else {
+						mess_handler(pdu_receive, com);
+					}
+				} else {
+					// unrecognized / wrong message. shutting down
+					shutdown_connection(com);
+					send_pleave(pdu_receive, com);
 				}
-
-
-
 
 				pdu_receive->free_pdu(pdu_receive);
 				pdu_receive = NULL;
-
-
 
 			} else if (com->handler->status != STATUS_RECEIVE_EMPTY){
 				// here we handle connections that were
@@ -74,9 +76,7 @@ void * com_loop(void* data){
 				printf("We shoudld probably shut this one down\n");
 				shutdown_connection(com);
 			}
-
 		}
-
 	}
 
 	if(com->handler != NULL){
@@ -84,12 +84,10 @@ void * com_loop(void* data){
 		if(com->client_name != NULL){
 			free(com->client_name);
 		}
-
 	}
 
     return NULL;
 }
-
 
 
 int shutdown_connection(communicator *com){
