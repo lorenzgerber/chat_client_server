@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <ctype.h>
 
+#include "chat_loop.h"
 #include "socket_templates.h"
 #include "socket_creator.h"
 #include "linked_list.h"

@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <signal.h>
+#include "client.h"
 #include "server.h"
 #include "pdu_parser.h"
 #include "pdu_creator.h"
