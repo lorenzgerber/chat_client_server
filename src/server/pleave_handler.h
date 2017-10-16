@@ -19,6 +19,6 @@
 #include "participant_list_handler.h"
 
 
-int send_pleave(pdu *pdu_receive, communicator *com);
+int send_pleave(pdu *pdu_receive, communicator *com, int server_message);
 
 #endif /* SRC_SERVER_PLEAVE_HANDLER_H_ */

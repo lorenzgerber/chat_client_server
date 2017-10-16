@@ -766,8 +766,11 @@ int pleave_add_client_identity(pdu *pdu,
 							   uint32_t time_stamp,
 							   char* client_identity){
 	pdu->time_stamp = time_stamp;
-	pdu->identity = malloc((pdu->identity_length+1)*sizeof(char));
-	strcpy(pdu->identity, client_identity);
+	if(pdu->identity_length != 0){
+		pdu->identity = malloc((pdu->identity_length+1)*sizeof(char));
+		strcpy(pdu->identity, client_identity);
+	}
+
 	return 0;
 }
 

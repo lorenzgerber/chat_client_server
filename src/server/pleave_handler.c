@@ -7,11 +7,18 @@
 #include "pleave_handler.h"
 
 
-int send_pleave(pdu *pdu_receive, communicator *com){
-
+int send_pleave(pdu *pdu_receive, communicator *com, int server_message){
+	pdu* pdu_response;
 	// prepare and send PLEAVE to all other clients
-	pdu* pdu_response = create_pleave(pdu_receive->identity_length);
-	pdu_response->add_client_identity_timestamp(pdu_response, time(NULL), pdu_receive->identity);
+	if(server_message){
+		pdu_response = create_pleave(0);
+		pdu_response->add_client_identity_timestamp(pdu_response, time(NULL), NULL);
+
+	} else {
+		pdu_response = create_pleave(pdu_receive->identity_length);
+		pdu_response->add_client_identity_timestamp(pdu_response, time(NULL), pdu_receive->identity);
+	}
+
 
 	// cycle through all io_handlers
 	for(int i = 0; i < NUMBER_HANDLERS; i++){
