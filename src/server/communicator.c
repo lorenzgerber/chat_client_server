@@ -6,7 +6,7 @@
  */
 #include "communicator.h"
 
-char* build_client_name_string(list* name_list, int * number_of_clients);
+char* build_client_name_string(list* name_list, uint16_t * number_of_clients);
 
 void * com_loop(void* data){
 
@@ -48,15 +48,16 @@ void * com_loop(void* data){
 					list_insert(list_last(com->client_list), client_identity);
 
 					// prepare and send participants to new user
-					int number_of_clients = 0;
+					uint16_t number_of_clients = 0;
 					char * participants = build_client_name_string(com->client_list, &number_of_clients);
+
 					pdu * pdu_participants = create_participants(number_of_clients, strlen(participants)+1);
 					pdu_participants->add_identities(pdu_participants, participants);
 					com->handler->send_pdu(com->handler, pdu_participants);
 					pdu_participants->free_pdu(pdu_participants);
 
 
-					// here we prepare the pjoined message
+					// prepare and send PJOIN to all other clients
 					pdu* pdu_response = create_pjoin(pdu_receive->identity_length);
 					pdu_response->add_client_identity_timestamp(pdu_response, time(NULL), pdu_receive->identity);
 
@@ -119,10 +120,10 @@ void * com_loop(void* data){
     return NULL;
 }
 
-char* build_client_name_string(list* name_list, int *number_of_clients){
+char* build_client_name_string(list* name_list, uint16_t *number_of_clients){
 	int length = 0;
 	int str_position = 0;
-	int clients_count = 0;
+	uint16_t clients_count = 0;
 
 	list_position current_position = list_first(name_list);
 

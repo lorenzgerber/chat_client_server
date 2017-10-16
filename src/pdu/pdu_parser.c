@@ -285,6 +285,7 @@ pdu* parse_MESS(struct io_handler* socket){
     //add client identity if client
     char identity[identity_length+1];
 	if(socket->socket_entity==ENTITY_SERVER){
+		mess->identity = NULL;
         if(identity_length > 0){
 			printf("something wrong, client sent entity length\n");
 		}
