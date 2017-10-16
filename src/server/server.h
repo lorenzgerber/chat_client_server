@@ -39,6 +39,7 @@ typedef struct communicator {
 	pthread_mutex_t *handler_lock;
 	struct communicator *com_array;
 	list *client_list;
+	char *client_name;
 	int joined;
 	int *bail_out;
 } communicator;

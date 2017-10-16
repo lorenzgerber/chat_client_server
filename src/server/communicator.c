@@ -6,7 +6,9 @@
  */
 #include "communicator.h"
 
-char* build_client_name_string(list* name_list, uint16_t * number_of_clients);
+char* build_identities(list* name_list, uint16_t length_identities);
+uint16_t calc_length_identities(list* name_list);
+uint8_t get_number_identities(list* name_list);
 
 void * com_loop(void* data){
 
@@ -48,13 +50,15 @@ void * com_loop(void* data){
 					list_insert(list_last(com->client_list), client_identity);
 
 					// prepare and send participants to new user
-					uint16_t number_of_clients = 0;
-					char * participants = build_client_name_string(com->client_list, &number_of_clients);
+					uint8_t number_identities = get_number_identities(com->client_list);
+					uint16_t length_identities = calc_length_identities(com->client_list);
+					char * identities = build_identities(com->client_list, length_identities);
 
-					pdu * pdu_participants = create_participants(number_of_clients, strlen(participants)+1);
-					pdu_participants->add_identities(pdu_participants, participants);
+					pdu * pdu_participants = create_participants(number_identities, length_identities);
+					pdu_participants->add_identities(pdu_participants, identities);
 					com->handler->send_pdu(com->handler, pdu_participants);
 					pdu_participants->free_pdu(pdu_participants);
+					free(identities);
 
 
 					// prepare and send PJOIN to all other clients
@@ -120,9 +124,8 @@ void * com_loop(void* data){
     return NULL;
 }
 
-char* build_client_name_string(list* name_list, uint16_t *number_of_clients){
+uint8_t get_number_identities(list* name_list){
 	int length = 0;
-	int str_position = 0;
 	uint16_t clients_count = 0;
 
 	list_position current_position = list_first(name_list);
@@ -131,23 +134,68 @@ char* build_client_name_string(list* name_list, uint16_t *number_of_clients){
 	if(!list_is_empty(name_list)){
 		do{
 			length += strlen((char*)list_inspect(current_position))+1;
-			clients_count++;
+			if(!list_is_end(name_list, current_position)){
+				current_position = list_next(current_position);
+				clients_count++;
+			}
 		} while (!list_is_end(name_list, current_position));
+		clients_count++;
 	}
-	*number_of_clients = clients_count;
+
+	return clients_count;
+}
+
+uint16_t calc_length_identities(list* name_list){
+	uint16_t length = 0;
+
+	list_position current_position = list_first(name_list);
+
+	// determine length
+	if(!list_is_empty(name_list)){
+		do{
+
+			if(!list_is_end(name_list, current_position)){
+				length += strlen((char*)list_inspect(current_position))+1;
+				current_position = list_next(current_position);
+			}
+		} while (!list_is_end(name_list, current_position));
+		length += strlen((char*)list_inspect(current_position))+1;
+	}
+
+	return length;
+
+}
+
+
+char* build_identities(list* name_list, uint16_t length_identities){
+	uint16_t length = length_identities;
+	int length_of_name;
+	int str_position = 0;
+
+	list_position current_position = list_first(name_list);
+
 
 	// allocate memory, iterate and collect all names
-	char* target_string = malloc(length * sizeof(char));
+	char* new_client = malloc(length * sizeof(char));
 	current_position = list_first(name_list);
+
 
 	if(!list_is_empty(name_list)){
 		do{
-			strcpy(target_string, (char*) list_inspect(current_position));
-			str_position += strlen((char*)list_inspect(current_position))+1;
+			length_of_name = strlen((char *)list_inspect(current_position));
+			memmove(&new_client[str_position], (char*) list_inspect(current_position), length_of_name);
+			str_position += length_of_name+1;
+			if(!list_is_end(name_list, current_position)){
+				current_position = list_next(current_position);
+			}
+
 		} while (!list_is_end(name_list, current_position));
+		length_of_name = strlen((char *)list_inspect(current_position));
+		memmove(&new_client[str_position], (char*) list_inspect(current_position), length_of_name);
 	}
 
 
-	return target_string;
+
+	return new_client;
 }
 

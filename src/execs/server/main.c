@@ -42,8 +42,6 @@ int main (int argc, char*argv[]){
 	signal(SIGINT, intHandler);
 
 
-
-
 	// Start Communication threads
 	for(int i = 0; i < NUMBER_HANDLERS; i++){
 		server.client_array[i] = NULL;

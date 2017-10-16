@@ -8,6 +8,10 @@
 #ifndef SRC_SERVER_COMMUNICATOR_H_
 #define SRC_SERVER_COMMUNICATOR_H_
 
+
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
