@@ -1,16 +1,12 @@
 /*
- * communicator.h
+ * join_handler.h
  *
- *  Created on: Oct 15, 2017
+ *  Created on: Oct 16, 2017
  *      Author: lgerber
  */
 
-#ifndef SRC_SERVER_COMMUNICATOR_H_
-#define SRC_SERVER_COMMUNICATOR_H_
-
-
-
-
+#ifndef SRC_SERVER_JOIN_HANDLER_H_
+#define SRC_SERVER_JOIN_HANDLER_H_
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,12 +18,7 @@
 #include "socket_creator.h"
 #include "listener.h"
 #include "participant_list_handler.h"
-#include "join_handler.h"
 
+int join_handler(pdu* pdu_receive, communicator *com);
 
-void * com_loop(void* data);
-int shutdown_connection(communicator *com);
-
-
-
-#endif /* SRC_SERVER_COMMUNICATOR_H_ */
+#endif /* SRC_SERVER_JOIN_HANDLER_H_ */
