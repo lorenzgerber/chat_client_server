@@ -9,6 +9,7 @@
 char* build_identities(list* name_list, uint16_t length_identities);
 uint16_t calc_length_identities(list* name_list);
 uint8_t get_number_identities(list* name_list);
+int remove_identity(list *identity_list, char* identity);
 
 void * com_loop(void* data){
 
@@ -48,6 +49,8 @@ void * com_loop(void* data){
 					char * client_identity = malloc((pdu_receive->identity_length+1)*sizeof(char));
 					strcpy(client_identity, pdu_receive->identity);
 					list_insert(list_last(com->client_list), client_identity);
+					com->client_name = malloc(pdu_receive->identity_length*sizeof(char));
+					strcpy(com->client_name, pdu_receive->identity);
 
 					// prepare and send participants to new user
 					uint8_t number_identities = get_number_identities(com->client_list);
@@ -88,6 +91,8 @@ void * com_loop(void* data){
 
 				} else if(pdu_receive->type == 12 && com->joined == 1){
 					printf("client sends second join while already joined\n");
+					// we should kill the client
+
 				}
 				// here we check for QUIT message
 				// todo
@@ -111,6 +116,7 @@ void * com_loop(void* data){
 				com->handler = NULL;
 				pthread_mutex_unlock(com->handler_lock);
 				com->joined = 0;
+				remove_identity(com->client_list, com->client_name);
 			}
 
 		}
@@ -197,5 +203,32 @@ char* build_identities(list* name_list, uint16_t length_identities){
 
 
 	return new_client;
+}
+
+int remove_identity(list *identity_list, char* identity){
+
+	list_position current_position = list_first(identity_list);
+
+	if(!list_is_empty(identity_list)){
+		do{
+			if(strcmp(identity, (char*)list_inspect(current_position))==0){
+				list_remove(identity_list, current_position);
+				return 0;
+			}
+
+			if(!list_is_end(identity_list, current_position)){
+
+				current_position = list_next(current_position);
+			}
+		} while (!list_is_end(identity_list, current_position));
+
+		if(strcmp(identity, (char*)list_inspect(current_position))==0){
+			list_remove(identity_list, current_position);
+			return 0;
+		}
+
+	}
+
+	return 0;
 }
 
