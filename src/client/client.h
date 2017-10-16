@@ -1,8 +1,13 @@
 /*
  * client.h
  *
- *  Created on: Oct 11, 2017
- *      Author: lgerber
+ *
+ *  Created on: Oct 1, 2017
+ *     Authors: Lorenz Gerber, Niklas Königsson
+ *
+ *  Chat client server project
+ *  5DV197 Datakom course
+ *	GPLv3
  */
 
 #ifndef SRC_CLIENT_CLIENT_H_
@@ -20,9 +25,18 @@
 
 #include <stdio.h>
 #include <ctype.h>
-#include <socket_templates.h>
-#include <socket_creator.h>
-#include <linked_list.h>
+
+#include "socket_templates.h"
+#include "socket_creator.h"
+#include "linked_list.h"
+
+typedef struct current_user{
+	struct chat_server* join_server;
+	struct chat_server* name_server;
+	char identity[255];
+	int server_type;
+	int join_status;
+}current_user;
 
 typedef struct chat_server{
 	char server_name[255];
@@ -30,36 +44,14 @@ typedef struct chat_server{
 	uint16_t port;
 }chat_server;
 
-typedef struct current_user{
-	chat_server* join_server;
-	chat_server* name_server;
-    char identity[255];
-    int server_type;
-	int join_status;
-}current_user;
 
 typedef struct client{
 	int myId;
 } client;
 
-void get_list_to_user(pdu* slist, list* servers);
-
-void print_main(void);
-
-list* request_chat_servers(current_user* u, list* server_list);
+#include "client_command.h"
+#include "client_connect.h"
 
 int chat_loop(current_user *server);
-
-int parse_arguments(int argc, char *argv[], current_user* u);
-
-void print_usage_error(void);
-
-void print_help(void);
-
-int join_server_in_list(current_user* user, char* input, list* servers);
-
-int direct_connect(current_user* user, const char* input);
-
-int set_name_server(current_user* user, const char* input);
 
 #endif /* SRC_CLIENT_CLIENT_H_ */
