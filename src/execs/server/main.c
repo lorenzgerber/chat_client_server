@@ -9,10 +9,7 @@
 #include <pthread.h>
 #include <signal.h>
 #include "server.h"
-#include "pdu_parser.h"
-#include "pdu_creator.h"
-#include "socket_creator.h"
-#include "listener.h"
+
 
 static volatile int keep_running = 1;
 
@@ -20,17 +17,16 @@ void intHandler(int dummy) {
     keep_running = 0;
 }
 
-
-
-
 void * com_loop(void* data);
 void * listen_loop(void* data);
+void* name_server_loop(void *data);
 
 int main (int argc, char*argv[]){
 
 	// setup variables for listener and communication server
 	pthread_t thread_handle[NUMBER_HANDLERS];
 	pthread_t thread_listen;
+	pthread_t thread_name_server;
 	communicator com[NUMBER_HANDLERS];
 	int bail_out = 0;
 
@@ -59,6 +55,9 @@ int main (int argc, char*argv[]){
 		com[i].client_name = NULL;
 	}
 
+	// Start Nameserver Connection
+	pthread_create(&thread_name_server, NULL, name_server_loop, &server );
+
 	// Start Listener thread
 	pthread_create(&thread_listen, NULL, listen_loop, &server);
 
@@ -77,6 +76,7 @@ int main (int argc, char*argv[]){
 		pthread_join(thread_handle[i], NULL);
 		pthread_mutex_destroy(&server.com_mutex[i]);
 	}
+	pthread_join(thread_name_server, NULL);
 	pthread_join(thread_listen, NULL);
 	pthread_mutex_destroy(&cond_mutex);
 	pthread_cond_destroy(&cond_var);
@@ -87,12 +87,3 @@ int main (int argc, char*argv[]){
 
 	return 0;
 }
-
-
-
-
-
-
-
-
-

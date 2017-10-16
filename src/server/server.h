@@ -19,6 +19,7 @@ pthread_mutex_t cond_mutex;
 pthread_cond_t cond_var;
 
 typedef struct server {
+	uint16_t our_id;
 	io_handler *client_array[255];
 	pthread_mutex_t com_mutex[255];
 	pthread_mutex_t client_list_lock;
