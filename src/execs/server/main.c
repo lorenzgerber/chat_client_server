@@ -8,18 +8,18 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <signal.h>
-#include "client.h"
 #include "server.h"
 #include "pdu_parser.h"
 #include "pdu_creator.h"
 #include "socket_creator.h"
 #include "listener.h"
 
-
+static volatile int keep_running = 1;
 
 void intHandler(int dummy) {
     keep_running = 0;
 }
+
 
 
 
@@ -54,6 +54,7 @@ int main (int argc, char*argv[]){
 		com[i].bail_out = &bail_out;
 		com[i].client_list = server.client_list;
 		pthread_create(&thread_handle[i], NULL, com_loop, &com[i]);
+		com[i].client_name = NULL;
 	}
 
 	// Start Listener thread
@@ -77,6 +78,9 @@ int main (int argc, char*argv[]){
 	pthread_join(thread_listen, NULL);
 	pthread_mutex_destroy(&cond_mutex);
 	pthread_cond_destroy(&cond_var);
+
+	// remove client/participants list
+	list_free(server.client_list);
 
 	return 0;
 }

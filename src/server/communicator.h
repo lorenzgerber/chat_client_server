@@ -21,6 +21,7 @@
 #include "pdu_creator.h"
 #include "socket_creator.h"
 #include "listener.h"
+#include "participant_list_handler.h"
 
 
 #endif /* SRC_SERVER_COMMUNICATOR_H_ */

@@ -16,7 +16,7 @@ void * listen_loop(void* data){
 	io_handler *new_com;
 
 	// listener
-	while(keep_running){
+	while(*server->bail_out != 1){
 		int assigned = 0;
 		new_com = NULL;
 		new_com = server->listener->listen(server->listener);

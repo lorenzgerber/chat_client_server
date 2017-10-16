@@ -20,7 +20,7 @@ pthread_cond_t cond_var;
 
 
 
-static volatile int keep_running = 1;
+
 
 
 
