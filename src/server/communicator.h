@@ -23,6 +23,7 @@
 #include "listener.h"
 #include "participant_list_handler.h"
 #include "join_handler.h"
+#include "pleave_handler.h"
 
 
 void * com_loop(void* data);

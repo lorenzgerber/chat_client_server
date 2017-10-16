@@ -44,23 +44,24 @@ void * com_loop(void* data){
 					join_handler(pdu_receive, com);
 
 
-				// if client sends join while already joined, kick out
+				// if client sends JOIN while already joined, kick out
 				} else if(pdu_receive->type == 12 && com->joined == 1){
 					printf("client sends second join while already joined\n");
-					// we should kill the client
 					shutdown_connection(com);
 
 				} else if(pdu_receive->type == 11){
+					// QUIT, close connection and send PLEAVE to all others
 					shutdown_connection(com);
+					send_pleave(pdu_receive, com);
+
+				} else if(pdu_receive->type == 10){
+					// here we check for MESS message
+					// todo
+
+				}
 
 
-				} else if(pdu_receive->type == 10)
-				// here we check for QUIT message
 
-				// remove client identity from list
-
-				// here we check for MESS message
-				// todo
 
 				pdu_receive->free_pdu(pdu_receive);
 				pdu_receive = NULL;
