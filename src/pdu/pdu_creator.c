@@ -643,6 +643,7 @@ uint8_t mess_set_checksum(pdu *pdu){
 
 	uint16_t message_length = 0;
 	int sum = 0;
+	pdu->checksum = 0;
 	message_byte_array *MBA;
 	MBA = pdu->create_message(pdu);
 	message_length = get_length_mess(pdu);
