@@ -54,7 +54,7 @@ typedef struct threadarg{
     //Or whatever information that you need
     io_handler *com;
     current_user *u;
-    int reading;
+    int* status;
 } threadarg;
 
 #include "client_command.h"
