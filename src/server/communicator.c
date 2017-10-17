@@ -73,14 +73,21 @@ void * com_loop(void* data){
 
 			} else if (com->handler->status != STATUS_RECEIVE_EMPTY){
 				// here we handle connections that were
-				// terminated wihtout notice
-				printf("We shoudld probably shut this one down\n");
+				// terminated without notice
+				printf("We should probably shut this one down\n");
 				shutdown_connection(com);
 			}
 		}
 	}
 
+
 	if(com->handler != NULL){
+		// send quit to client
+		pdu* pdu_quit = create_quit();
+		com->handler->send_pdu(com->handler, pdu_quit);
+		pdu_quit->free_pdu(pdu_quit);
+
+		// clean up
 		free_tcp_server_communicator(com->handler);
 		if(com->client_name != NULL){
 			free(com->client_name);
