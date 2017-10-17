@@ -25,6 +25,7 @@
 #include "join_handler.h"
 #include "pleave_handler.h"
 #include "mess_handler.h"
+#include "client_kicked.h"
 
 
 void * com_loop(void* data);
