@@ -372,6 +372,8 @@ int free_server_entry(pdu_server_entry *server){
  */
 pdu* create_join(uint8_t identity_length){
 	pdu *pdu = malloc(sizeof(struct pdu));
+
+    pdu->identity = NULL;
 	pdu->type = PDU_JOIN;
 	pdu->identity_length = identity_length;
 	pdu->add_identity = join_add_identity;
@@ -550,6 +552,11 @@ int free_quit(pdu* pdu){
  */
 pdu* create_mess(uint8_t identity_length, uint8_t checksum){
 	pdu *pdu = malloc(sizeof(struct pdu));
+
+    pdu->identity = NULL;
+    pdu->time_stamp = NULL;
+    pdu->message = NULL;
+
 	pdu->type = PDU_MESS;
 	pdu->identity_length = identity_length;
 	pdu->checksum = checksum;
@@ -686,6 +693,8 @@ int free_mess(pdu *pdu){
  */
 pdu* create_pjoin(uint8_t identity_length){
 	pdu *pdu = malloc(sizeof(struct pdu));
+    pdu->time_stamp = NULL;
+    pdu->identity = NULL;
 	pdu->type = PDU_PJOIN;
 	pdu->identity_length = identity_length;
 	pdu->add_client_identity_timestamp = pjoin_add_client_identity;
@@ -744,6 +753,8 @@ int free_pjoin(pdu *pdu){
  */
 pdu* create_pleave(uint8_t identity_length){
 	pdu *pdu = malloc(sizeof(struct pdu));
+    pdu->time_stamp = NULL;
+    pdu->identity = NULL;
 	pdu->type = PDU_PLEAVE;
 	pdu->identity_length = identity_length;
 	pdu->add_client_identity_timestamp = pleave_add_client_identity;
