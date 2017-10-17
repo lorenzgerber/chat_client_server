@@ -21,10 +21,8 @@ int mess_handler(pdu* pdu_receive, communicator *com){
 	for(int i = 0; i < NUMBER_HANDLERS; i++){
 		pthread_mutex_lock(com->com_array[i].handler_lock);
 		if(com->com_array[i].handler != NULL){
-			if(i != com->thread_id){
 				com->com_array[i].handler->send_pdu(com->com_array[i].handler, mess);
 				printf("\nsent on %d\n", i);
-			}
 		}
 		pthread_mutex_unlock(com->com_array[i].handler_lock);
 	}
