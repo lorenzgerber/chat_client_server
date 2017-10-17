@@ -75,8 +75,13 @@ int chat_loop(current_user *u) {
             }
             if (receive_pdu != NULL) {
                 //arg->status = 0;
-                receive_pdu->print(receive_pdu);
-                receive_pdu->free_pdu(receive_pdu);
+                if(receive_pdu->identity_length == 0 && receive_pdu->identity == NULL){
+                    printf(RED"%s\n"RESET,receive_pdu->message);
+                }else{
+                    receive_pdu->print(receive_pdu);
+                    receive_pdu->free_pdu(receive_pdu);
+                }
+
             }
 
             chat_server_com->status = 0;
