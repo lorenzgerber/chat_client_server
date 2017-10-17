@@ -572,7 +572,8 @@ pdu* create_mess(uint8_t identity_length, uint8_t checksum){
  * @return 0
  */
 int mess_add_client_identity(pdu *pdu, char* client_identity){
-	pdu->identity = malloc((pdu->identity_length+1)*sizeof(char));
+	pdu->identity = malloc((strlen(client_identity)+1)*sizeof(char));
+	pdu->identity_length = strlen(client_identity);
 	strcpy(pdu->identity, client_identity);
 
 	return 0;

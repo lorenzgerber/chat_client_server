@@ -28,12 +28,17 @@ int main(int argc, char*argv[]){
 	client->connect(client, 50);
 
 
+
 	// create message, should not be echoed as we are not joined
+	// we get kicked out
 	test = create_mess(0, 0);
 	test->add_message(test, 13, 1505933137, "Test Message.");
 	client->send_pdu(client, test);
 	test->free_pdu(test);
 
+	// start again
+	client = create_tcp_client_communicator(address, 2000);
+	client->connect(client, 50);
 
 
 	// join chat session, should be echoed
@@ -62,6 +67,7 @@ int main(int argc, char*argv[]){
 	// send chat message again, should be echoed
 	test = create_mess(0, 0);
 	test->add_message(test, 13, 1505933137, "Test Message.");
+	test->set_checksum(test);
 	client->send_pdu(client, test);
 	test->free_pdu(test);
 	test = NULL;
