@@ -208,8 +208,7 @@ pdu* parse_PARTICIPANTS(struct io_handler* socket){
         //length_of_clients = ntohs(length_of_clients);
     }
     //read sufficient number of words to assign participants
-	socket->request_n_word(socket,
-										   (length_of_clients + 4 - 1)/4);
+	socket->request_n_word(socket, (length_of_clients + 4 - 1)/4);
 
 	pdu *participants = create_participants(nr_of_clients, length_of_clients);
 

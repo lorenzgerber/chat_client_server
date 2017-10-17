@@ -85,10 +85,11 @@ int main (int argc, char*argv[]){
             }else if(strncmp(input,"help",4) == 0){
                 print_help();
                 continue;
-            //invalid command
+            //set name server command
             }else if(strncmp(input,"ns ",3) == 0){
                 user->join_status = set_name_server(user, input+3);
                 continue;
+            //invalid command
             }else{
                 printf("unknown command\n");
                 continue;

@@ -112,6 +112,8 @@ int tcp_send_pdu(struct io_handler *self, pdu* pdu){
 
     if(send(self->sfd_read_write, MBA->array, pdu->get_message_length(pdu), MSG_NOSIGNAL)<0){
         fprintf(stderr, "send failed\n");
+        free_message_byte_array(MBA);
+        return -1;
     }
     free_message_byte_array(MBA);
 

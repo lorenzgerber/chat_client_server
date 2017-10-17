@@ -12,8 +12,6 @@
 
 #include "client_connect.h"
 
-int chat_loop(current_user *server);
-
 list* request_chat_servers(current_user* u, list* server_list) {
 
     if(server_list != NULL){

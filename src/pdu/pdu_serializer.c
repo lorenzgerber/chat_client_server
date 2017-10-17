@@ -243,7 +243,7 @@ message_byte_array* mess_create_message(pdu *self){
 		message->add_uint8(message, 0);
 	}
 
-	if(self->identity_length > 0){
+	if(/*self->identity_length > 0*/self->time_stamp != 0){
 		message->add_chars(message, self->identity, self->identity_length);
 		int padding = calc_word_padding(self->identity_length);
 		for(int i = 0; i < padding; i++){
