@@ -37,7 +37,7 @@ typedef struct current_user{
 	char identity[255];
 	int server_type;
 	int join_status;
-}current_user;
+} current_user;
 
 typedef struct chat_server{
 	char server_name[255];
@@ -49,6 +49,13 @@ typedef struct chat_server{
 typedef struct client{
 	int myId;
 } client;
+
+typedef struct threadarg{
+    //Or whatever information that you need
+    io_handler *com;
+    current_user *u;
+    int reading;
+} threadarg;
 
 #include "client_command.h"
 #include "client_connect.h"

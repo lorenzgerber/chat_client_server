@@ -9,12 +9,9 @@
 #include "chat_loop.h"
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-typedef struct threadarg{
-    //Or whatever information that you need
-    io_handler *com;
-    current_user *u;
-    int reading;
-} threadarg;
+
+
+
 int chat_loop(current_user *u) {
 
     io_handler* chat_server_com = create_tcp_client_communicator(u->join_server->address,
