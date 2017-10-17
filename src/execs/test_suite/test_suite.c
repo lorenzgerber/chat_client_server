@@ -224,13 +224,14 @@ int main(int argc, char*argv[]){
 
     printf("current checksum: %d\n", mess->checksum);
 
+    mess->set_checksum(mess);
     if (mess->verify_checksum(mess)!=0){
     	printf("Checksum is incorrect!\n");
     } else {
     	printf("Checksum is correct!\n");
     }
 
-    mess->set_checksum(mess);
+
 
     printf("Checksum set to: %d\n", mess->checksum);
 

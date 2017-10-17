@@ -46,9 +46,9 @@ list* request_chat_servers(current_user* u, list* server_list) {
 int join_server_in_list(current_user* user, char* input,list* servers){
     list_position p = list_first(servers);
     do{
-        if(p!=list_first(servers)){
+        /*if(p!=list_first(servers)){
             p=list_next(p);
-        }
+        }*/
         chat_server* cs;
         cs = (chat_server *) list_inspect(p);
         if(cs != NULL){
@@ -63,8 +63,9 @@ int join_server_in_list(current_user* user, char* input,list* servers){
                 }
             }
         }
+        p=list_next(p);
 
-    } while(!list_is_end(servers, p));
+    } while(list_inspect(p) != NULL);
     printf("\nCould not find the server in the serverlist\n");
     return JOIN_FAIL;
 
@@ -114,6 +115,7 @@ int direct_connect(current_user* user, const char* input){
     }
     i++;
     cs->port = (uint16_t )strtol(&address[i], &strtol_ptr, 10);
+    user->join_server = NULL;
     user->join_server = cs;
     user->join_status = chat_loop(user);
     if(user->join_status == JOIN_SUCCESS){

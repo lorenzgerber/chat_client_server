@@ -10,7 +10,7 @@
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-
+int senddd;
 
 int chat_loop(current_user *u) {
 
@@ -21,9 +21,9 @@ int chat_loop(current_user *u) {
     threadarg* arg = malloc(sizeof(struct threadarg));
     arg->com = chat_server_com;
     arg->u = u;
-    arg->reading = 1;
+    arg->status = (int *) 1;
 
-
+    senddd = 1;
 
     //join server
     if(chat_server_com->connect(chat_server_com, 5) == 0){
@@ -47,7 +47,7 @@ int chat_loop(current_user *u) {
             return JOIN_FAIL;
         }
         if (receive_part != NULL) {
-            arg->reading = 0;
+            //*arg->reading = 0;
             receive_part->print(receive_part);
             receive_part->free_pdu(receive_part);
         }
@@ -64,13 +64,17 @@ int chat_loop(current_user *u) {
             //pthread_mutex_unlock(&mutex);
             if (chat_server_com->status != STATUS_RECEIVE_OK) {
                 printf("\nsomething wrong with receive in Client\n");
-                //free_tcp_client_communicator(chat_server_com);
+                arg->status = (int*)0;
+                senddd = 0;
+                pthread_join(*thread_handle, NULL);
+                free(thread_handle);
+                free(arg);
                 chat_server_com->close(chat_server_com);
-                //free_tcp_client_communicator(chat_server_com);
+                free_tcp_client_communicator(chat_server_com);
                 return JOIN_FAIL;
             }
             if (receive_pdu != NULL) {
-                arg->reading = 0;
+                //arg->status = 0;
                 receive_pdu->print(receive_pdu);
                 receive_pdu->free_pdu(receive_pdu);
             }
@@ -81,9 +85,12 @@ int chat_loop(current_user *u) {
         }
 
     }
+    pthread_join(*thread_handle, NULL);
+    free(thread_handle);
 
-
+    chat_server_com->close(chat_server_com);
     free_tcp_client_communicator(chat_server_com);
+    free(arg);
     printf("exiting chat server\n");
     return 0;
 }
@@ -100,10 +107,13 @@ void * sendThread(void *data){
         perror("Unable to allocate buffer\n");
         EXIT_FAILURE;
     }
+
     while(true){
         memset(input, 0, (size_t) bufsize);
-        if(!arg->reading){
+        //if(*!arg->reading){
+
             characters = getline(&input, (size_t *) &bufsize, stdin);
+        if(senddd == 1){
             if(characters > bufsize){
                 printf("input too long\n");
             } else if(strcmp(input, "exit\n") == 0){
@@ -112,12 +122,15 @@ void * sendThread(void *data){
                 quit->free_pdu(quit);
                 break;
             }else{
-                pdu* mess = create_mess((uint8_t) strlen(arg->u->identity), 5);
+                pdu* mess = create_mess(0, 0);
                 mess_add_message(mess, (uint16_t) characters, 0, input);
+                mess_set_checksum(mess);
                 arg->com->send_pdu(arg->com, mess);
-                arg->reading = 1;
+                //*arg->reading = 1;
                 mess->free_pdu(mess);
             }
+        }else{
+            break;
         }
 
     }
