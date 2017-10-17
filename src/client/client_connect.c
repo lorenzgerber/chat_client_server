@@ -114,6 +114,7 @@ int direct_connect(current_user* user, const char* input){
     }
     i++;
     cs->port = (uint16_t )strtol(&address[i], &strtol_ptr, 10);
+    user->join_server = NULL;
     user->join_server = cs;
     user->join_status = chat_loop(user);
     if(user->join_status == JOIN_SUCCESS){
