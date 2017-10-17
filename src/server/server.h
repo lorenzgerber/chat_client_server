@@ -10,6 +10,7 @@
 
 #define NUMBER_HANDLERS 255
 
+#include <pthread.h>
 #include "linked_list.h"
 #include "queue.h"
 #include "socket_templates.h"
@@ -20,6 +21,10 @@ pthread_cond_t cond_var;
 
 typedef struct server {
 	uint16_t our_id;
+	uint16_t our_port;
+	char* our_host;
+	uint16_t nameserver_port;
+	char* nameserver_host;
 	io_handler *client_array[255];
 	pthread_mutex_t com_mutex[255];
 	pthread_mutex_t client_list_lock;
@@ -42,6 +47,7 @@ typedef struct communicator {
 	int joined;
 	int *bail_out;
 } communicator;
+
 
 
 #endif /* SRC_SERVER_SERVER_H_ */

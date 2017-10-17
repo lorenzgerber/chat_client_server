@@ -10,11 +10,11 @@ void* name_server_loop(void *data){
 	server* server = data;
 	int registered = 0;
 
-	char* address = NAME_SERVER;
+	char* address = server->nameserver_host;
 	io_handler *udp_com;
 
 	// create udp communicator
-	udp_com = create_udp_communicator(address, NAME_SERVER_PORT);
+	udp_com = create_udp_communicator(address, server->nameserver_port);
 	udp_com->connect(udp_com, 5);
 	udp_com->status = 0;
 

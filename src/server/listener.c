@@ -10,9 +10,10 @@
 
 
 void * listen_loop(void* data){
-	char* address = "localhost";
+
 	server *server = data;
-	server->listener = create_tcp_server_listener(address, 2000);
+	char* address = server->our_host;
+	server->listener = create_tcp_server_listener(address, server->our_port);
 	io_handler *new_com;
 
 	// listener

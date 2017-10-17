@@ -8,7 +8,9 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <signal.h>
+#include "cmd_args.h"
 #include "server.h"
+
 
 
 static volatile int keep_running = 1;
@@ -17,11 +19,16 @@ void intHandler(int dummy) {
     keep_running = 0;
 }
 
-void * com_loop(void* data);
-void * listen_loop(void* data);
-void* name_server_loop(void *data);
+void *com_loop(void* data);
+void *listen_loop(void* data);
+void *name_server_loop(void *data);
+int check_cmd_args(int argc, char*arv[]);
 
 int main (int argc, char*argv[]){
+
+
+	check_cmd_args(argc, argv);
+
 
 	// setup variables for listener and communication server
 	pthread_t thread_handle[NUMBER_HANDLERS];
@@ -32,6 +39,11 @@ int main (int argc, char*argv[]){
 
 	// Server Struct
 	server server;
+	server.our_port = strtol(argv[1], NULL, 10);
+	server.nameserver_port = strtol(argv[4], NULL, 10);
+	server.our_host = argv[2];
+	server.nameserver_host = argv[3];
+
 	server.bail_out = &bail_out;
 	server.client_list = list_empty();
 	server.number_of_clients = 0;
