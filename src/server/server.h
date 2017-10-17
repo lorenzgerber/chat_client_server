@@ -26,6 +26,7 @@ typedef struct server {
 	struct communicator *com_array;
 	io_handler *listener;
 	list *client_list;
+	int number_of_clients;
 	int *bail_out;
 }server;
 
@@ -37,6 +38,7 @@ typedef struct communicator {
 	list *client_list;
 	pthread_mutex_t *client_list_lock;
 	char *client_name;
+	int *number_of_clients;
 	int joined;
 	int *bail_out;
 } communicator;

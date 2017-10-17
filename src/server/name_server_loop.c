@@ -20,7 +20,7 @@ void* name_server_loop(void *data){
 
 	while(*server->bail_out != 1){
 
-		if(registered == 0){
+		if(registered == 0 && *server->bail_out != 1){
 			//send REG to name server
 			pdu* reg = create_reg(13, 2000);
 			reg->add_server_name(reg,"ljugarbaenken");
@@ -54,8 +54,9 @@ void* name_server_loop(void *data){
 			}
 		}
 
-		while(registered){
-			pdu *alive = create_alive(100, (uint16_t) server->our_id);
+		while(registered && *server->bail_out != 1){
+			pdu *alive = create_alive(server->number_of_clients,
+					(uint16_t) server->our_id);
 			udp_com->send_pdu(udp_com, alive);
 			alive->free_pdu(alive);
 
@@ -86,7 +87,10 @@ void* name_server_loop(void *data){
 				return NULL;
 			}
 
-			sleep(15);
+			if(*server->bail_out != 1){
+				sleep(15);
+			}
+
 
 		}
 	}

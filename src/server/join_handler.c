@@ -21,6 +21,7 @@ int join_handler(pdu* pdu_receive, communicator *com){
 
 	pthread_mutex_lock(com->client_list_lock);
 	uint8_t number_identities = get_number_identities(com->client_list);
+	*com->number_of_clients = number_identities;
 	uint16_t length_identities = calc_length_identities(com->client_list);
 	char *identities = build_identities(com->client_list, length_identities);
 	pthread_mutex_unlock(com->client_list_lock);

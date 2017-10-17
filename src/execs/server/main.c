@@ -34,6 +34,7 @@ int main (int argc, char*argv[]){
 	server server;
 	server.bail_out = &bail_out;
 	server.client_list = list_empty();
+	server.number_of_clients = 0;
 	pthread_mutex_init(&server.client_list_lock, NULL);
 	list_set_mem_handler(server.client_list, free);
 	signal(SIGINT, intHandler);
@@ -51,6 +52,7 @@ int main (int argc, char*argv[]){
 		com[i].com_array = com;
 		com[i].bail_out = &bail_out;
 		com[i].client_list = server.client_list;
+		com[i].number_of_clients = &server.number_of_clients;
 		pthread_create(&thread_handle[i], NULL, com_loop, &com[i]);
 		com[i].client_name = NULL;
 	}
