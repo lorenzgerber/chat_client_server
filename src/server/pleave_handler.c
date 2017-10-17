@@ -16,7 +16,7 @@ int send_pleave(pdu *pdu_receive, communicator *com, int server_message){
 
 	} else {
 		pdu_response = create_pleave(pdu_receive->identity_length);
-		pdu_response->add_client_identity_timestamp(pdu_response, time(NULL), pdu_receive->identity);
+		pdu_response->add_client_identity_timestamp(pdu_response, time(NULL), com->client_name);
 	}
 
 
