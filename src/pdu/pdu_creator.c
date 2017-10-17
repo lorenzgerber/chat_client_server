@@ -617,7 +617,7 @@ int mess_verify_checksum(pdu *pdu){
 	uint8_t checksum = 0;
 	message_byte_array *MBA;
 	MBA = pdu->create_message(pdu);
-	message_length = pdu->message_length;
+	message_length = get_length_mess(pdu);
 	for(int i = 0; i < message_length; i++){
 		sum += MBA->array[i];
 	}
@@ -645,7 +645,7 @@ uint8_t mess_set_checksum(pdu *pdu){
 	int sum = 0;
 	message_byte_array *MBA;
 	MBA = pdu->create_message(pdu);
-	message_length = pdu->message_length;
+	message_length = get_length_mess(pdu);
 	for(int i = 0; i < message_length; i++){
 		sum += MBA->array[i];
 	}
