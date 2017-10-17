@@ -16,7 +16,6 @@
 #include "pdu_templates.h"
 #include "pdu_print.h"
 
-
 // REG
 pdu* create_reg(uint8_t server_name_length, uint16_t tcp_port);
 

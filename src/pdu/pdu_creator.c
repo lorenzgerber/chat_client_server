@@ -554,7 +554,7 @@ pdu* create_mess(uint8_t identity_length, uint8_t checksum){
 	pdu *pdu = malloc(sizeof(struct pdu));
 
     pdu->identity = NULL;
-    pdu->time_stamp = NULL;
+    pdu->time_stamp = 0;
     pdu->message = NULL;
 
 	pdu->type = PDU_MESS;
@@ -693,7 +693,7 @@ int free_mess(pdu *pdu){
  */
 pdu* create_pjoin(uint8_t identity_length){
 	pdu *pdu = malloc(sizeof(struct pdu));
-    pdu->time_stamp = NULL;
+    pdu->time_stamp = 0;
     pdu->identity = NULL;
 	pdu->type = PDU_PJOIN;
 	pdu->identity_length = identity_length;
@@ -753,7 +753,7 @@ int free_pjoin(pdu *pdu){
  */
 pdu* create_pleave(uint8_t identity_length){
 	pdu *pdu = malloc(sizeof(struct pdu));
-    pdu->time_stamp = NULL;
+    pdu->time_stamp = 0;
     pdu->identity = NULL;
 	pdu->type = PDU_PLEAVE;
 	pdu->identity_length = identity_length;
