@@ -52,9 +52,13 @@ int chat_loop(current_user *u) {
                 if (receive_pdu != NULL) {
                     //print messages, server messages in red
                     if(receive_pdu->identity_length == 0 && receive_pdu->identity == NULL){
+                    	fflush(stdout);
                         printf(RED"%s\n"RESET,receive_pdu->message);
+                        fflush(stdout);
                     }else{
-                        printf("%s>%s",receive_pdu->identity, receive_pdu->message);
+                    	fflush(stdout);
+                        printf("%s>%s \n",receive_pdu->identity, receive_pdu->message);
+                        fflush(stdout);
                         //receive_pdu->print(receive_pdu);
                         receive_pdu->free_pdu(receive_pdu);
                     }
@@ -106,7 +110,9 @@ int server_hand_shake(io_handler *chat_server_com, current_user *u){
     if (receive_partticipants != NULL) {
 
         receive_partticipants->print(receive_partticipants);
+        fflush(stdout);
         receive_partticipants->free_pdu(receive_partticipants);
+        fflush(stdout);
     }
     return JOIN_SUCCESS;
 }
