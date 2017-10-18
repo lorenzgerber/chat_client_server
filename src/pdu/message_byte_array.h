@@ -11,8 +11,10 @@
  */
 #ifndef MESSAGE_BYTE_ARRAY_H_
 #define MESSAGE_BYTE_ARRAY_H_
+#define _BSD_SOURCE
 
 #include "pdu_templates.h"
+#include <endian.h>
 
 /**
  * Struct for storing and retrieving symbols of varius bitsizes in

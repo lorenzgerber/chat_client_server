@@ -10,7 +10,7 @@
 
 void server_usage_error(void){
     fprintf(stderr, "\nInvalid arguments.\n");
-    fprintf(stderr, "Correct usage: server PORT SERVERNAME NAMESERVER_HOST NAMESERVER_PORT");
+    fprintf(stderr, "Correct usage: server PORT SERVERNAME NAMESERVER_HOST NAMESERVER_PORT\n");
 }
 
 void invalid_port(void){

@@ -22,7 +22,7 @@ void* name_server_loop(void *data){
 
 		if(registered == 0 && *server->bail_out != 1){
 			//send REG to name server
-			pdu* reg = create_reg(13, 2000);
+			pdu* reg = create_reg(13, server->our_port);
 			reg->add_server_name(reg,"ljugarbaenken");
 			udp_com->send_pdu(udp_com, reg);
 			reg->free_pdu(reg);

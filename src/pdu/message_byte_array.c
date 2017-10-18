@@ -41,11 +41,12 @@ int message_byte_array_add_uint8(message_byte_array *self, uint8_t data){
  */
 int message_byte_array_add_uint16(message_byte_array *self, uint16_t data){
 
-	uint16_t value = data;
+	uint16_t value = htobe16(data);
 	uint8_t result[2];
 
 	result[0] = (uint8_t) (value & 0xff);
 	result[1] = (uint8_t) (value >> 8);
+
 
 	for(int i = 0; i < 2; i++){
 		self->array[self->current_write_position] = result[i];

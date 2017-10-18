@@ -78,7 +78,7 @@ pdu* parse_header(struct io_handler *socket){
  */
 pdu* parse_ACK(struct io_handler* socket){
     //assemble the 16 bit id number from two 8 bits read
-	uint16_t id_nr = (*(socket->read_head+2) << 8) | *(socket->read_head+3);
+	uint16_t id_nr = (*(socket->read_head+3) << 8) | *(socket->read_head+2);
 	id_nr = ntohs(id_nr);
     pdu *ack = create_ack(id_nr);
 
@@ -95,7 +95,7 @@ pdu* parse_ACK(struct io_handler* socket){
  */
 pdu* parse_NOTREG(struct io_handler* socket){
     //assemble the 16 bit id number from two 8 bits read
-	uint16_t id_nr = (*(socket->read_head+2) << 8) | *(socket->read_head+3);
+	uint16_t id_nr = (*(socket->read_head+3) << 8) | *(socket->read_head+2);
 	id_nr = ntohs(id_nr);
     pdu* notreg = create_notreg(id_nr);
 
@@ -205,7 +205,7 @@ pdu* parse_PARTICIPANTS(struct io_handler* socket){
     //assemble 16 bit number of clients from two 8 bits
 	uint16_t length_of_clients = *(socket->read_head+3) << 8 | *(socket->read_head+2);
     if(socket->socket_entity != ENTITY_DUMMY){
-        //length_of_clients = ntohs(length_of_clients);
+        length_of_clients = ntohs(length_of_clients);
     }
     //read sufficient number of words to assign participants
 	socket->request_n_word(socket, (length_of_clients + 4 - 1)/4);
@@ -258,7 +258,7 @@ pdu* parse_MESS(struct io_handler* socket){
 	socket->request_n_word(socket, 1);
 
     //assemble 16 bit message length
-	uint16_t message_length = (*socket->read_head << 8) | *(socket->read_head+1);
+	uint16_t message_length = (*(socket->read_head+1) << 8) | *(socket->read_head);
 	message_length = ntohs(message_length);
 
     //read 1 additional word and assemble 32 bit time stamp
