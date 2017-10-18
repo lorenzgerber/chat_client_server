@@ -116,7 +116,7 @@ int set_name_server(current_user* user, const char* input){
     }
     if(!status){
         printf("\nSpecify address with 'serveraddress:port'\n");
-        return JOIN_FAIL;
+        return JOIN_ABORT;
     }
     i = 0;
     while(input[i] != ':'){
@@ -127,7 +127,7 @@ int set_name_server(current_user* user, const char* input){
     while(input[i] != '\n'){
         if(!isdigit(input[i])){
             printf("\nPort number must be integers\n");
-            return JOIN_FAIL;
+            return JOIN_ABORT;
         }
         i++;
     }

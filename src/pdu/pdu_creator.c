@@ -612,24 +612,24 @@ int mess_add_message(pdu *pdu, uint16_t message_length, uint32_t time_stamp, cha
  * @return 0
  */
 int mess_verify_checksum(pdu *pdu){
-	uint16_t message_length = 0;
-	int sum = 0;
-	uint8_t checksum = 0;
-	message_byte_array *MBA;
-	MBA = pdu->create_message(pdu);
-	message_length = get_length_mess(pdu);
-	for(int i = 0; i < message_length; i++){
-		sum += MBA->array[i];
-	}
+    uint16_t message_length = 0;
+    int sum = 0;
+    uint8_t checksum = 0;
+    message_byte_array *MBA;
+    MBA = pdu->create_message(pdu);
+    message_length = get_length_mess(pdu);
+    for(int i = 0; i < message_length; i++){
+        sum += MBA->array[i];
+    }
 
-	free_message_byte_array(MBA);
+    free_message_byte_array(MBA);
 
-	checksum = sum % 255;
+    checksum = sum % 255;
 
-	if(checksum != 0){
-		return -1;
-	}
-	return 0;
+    if(checksum != 0){
+        return -1;
+    }
+    return 0;
 }
 
 /**
@@ -641,20 +641,20 @@ int mess_verify_checksum(pdu *pdu){
  */
 uint8_t mess_set_checksum(pdu *pdu){
 
-	uint16_t message_length = 0;
-	int sum = 0;
-	pdu->checksum = 0;
-	message_byte_array *MBA;
-	MBA = pdu->create_message(pdu);
-	message_length = get_length_mess(pdu);
-	for(int i = 0; i < message_length; i++){
-		sum += MBA->array[i];
-	}
-	free_message_byte_array(MBA);
+    uint16_t message_length = 0;
+    int sum = 0;
+    pdu->checksum = 0;
+    message_byte_array *MBA;
+    MBA = pdu->create_message(pdu);
+    message_length = get_length_mess(pdu);
+    for(int i = 0; i < message_length; i++){
+        sum += MBA->array[i];
+    }
+    free_message_byte_array(MBA);
 
-	pdu->checksum = 255 - ((sum - pdu->checksum) % 255);
+    pdu->checksum = 255 - ((sum - pdu->checksum) % 255);
 
-	return 0;
+    return 0;
 }
 
 /**

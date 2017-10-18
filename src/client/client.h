@@ -17,8 +17,11 @@
 #define TYPE_NAME_SERVER 0
 
 #define JOIN_INITIAL -2
-#define JOIN_FAIL -1
+#define JOIN_ABORT -1
 #define JOIN_SUCCESS 0
+
+#define ACTIVE 0
+#define DONE 1
 
 #define NAME_SERVER "itchy.cs.umu.se"
 #define NAME_SERVER_PORT 1337
@@ -51,9 +54,7 @@ typedef struct client{
 } client;
 
 typedef struct threadarg{
-    //Or whatever information that you need
     io_handler *com;
-    current_user *u;
     int* status;
 } threadarg;
 

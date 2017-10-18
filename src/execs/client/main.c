@@ -51,7 +51,7 @@ int main (int argc, char*argv[]){
             }else if(user->server_type == TYPE_NAME_SERVER){
                 servers = request_chat_servers(user, servers);
                 free(user->join_server);
-                user->join_status = JOIN_FAIL;
+                user->join_status = JOIN_ABORT;
             }
         //all other iterations
         }else{

@@ -5,108 +5,120 @@
  *      Author: lgerber
  */
 
-
 #include "chat_loop.h"
 
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+int server_hand_shake(io_handler *chat_server_com, current_user *u);
 
-int senddd;
+void chat_loop_cleanup(pthread_t *th, threadarg *arg, io_handler *com);
 
 int chat_loop(current_user *u) {
 
     io_handler* chat_server_com = create_tcp_client_communicator(u->join_server->address,
                                                                  u->join_server->port);
-    pthread_t* thread_handle;
-    thread_handle = malloc(sizeof(pthread_t));
+    pthread_t* thread_handle = malloc(sizeof(pthread_t));
     threadarg* arg = malloc(sizeof(struct threadarg));
     arg->com = chat_server_com;
-    arg->u = u;
-    arg->status = (int *) 1;
+    arg->status = malloc(sizeof(int*));
+    *arg->status = ACTIVE;
 
-    senddd = 1;
-
-    //join server
+    //connect to server
     if(chat_server_com->connect(chat_server_com, 5) == 0){
-        pdu *join = create_join((uint8_t) strlen(u->identity));
-        join->add_identity(join, u->identity);
 
-        chat_server_com->send_pdu(chat_server_com, join);
-        free_join(join);
-        chat_server_com->status = 0;
-        pdu *receive_part = NULL;
-        while (chat_server_com->status == STATUS_RECEIVE_EMPTY ||
-               chat_server_com->status == 0) {
-            receive_part = parse_header(chat_server_com);
-        }
-        //pthread_mutex_unlock(&mutex);
-        if (chat_server_com->status != STATUS_RECEIVE_OK) {
-            printf("\nsomething wrong with receive in Client\n");
-            //free_tcp_client_communicator(chat_server_com);
-            chat_server_com->close(chat_server_com);
-            //free_tcp_client_communicator(chat_server_com);
-            return JOIN_FAIL;
-        }
-        if (receive_part != NULL) {
-            //*arg->reading = 0;
-            receive_part->print(receive_part);
-            receive_part->free_pdu(receive_part);
-        }
-        pthread_create(thread_handle, NULL, sendThread, arg);
-        // looping until an error happens or we get data
-        while (true) {
+        //join server
+        if((chat_server_com->status = server_hand_shake(chat_server_com, u) == JOIN_SUCCESS)){
 
-            pdu *receive_pdu = NULL;
-            //pthread_mutex_lock(&mutex);
-            while (chat_server_com->status == STATUS_RECEIVE_EMPTY ||
-                   chat_server_com->status == 0) {
-                receive_pdu = parse_header(chat_server_com);
-            }
-            //pthread_mutex_unlock(&mutex);
-            if (chat_server_com->status != STATUS_RECEIVE_OK) {
-                printf("\nsomething wrong with receive in Client\n");
-                arg->status = (int*)0;
-                senddd = 0;
-                pthread_join(*thread_handle, NULL);
-                free(thread_handle);
-                free(arg);
-                chat_server_com->close(chat_server_com);
-                free_tcp_client_communicator(chat_server_com);
-                return JOIN_FAIL;
-            }
-            if (receive_pdu != NULL) {
-                //arg->status = 0;
-                if(receive_pdu->identity_length == 0 && receive_pdu->identity == NULL){
-                    printf(RED"%s\n"RESET,receive_pdu->message);
-                }else{
-                    receive_pdu->print(receive_pdu);
-                    receive_pdu->free_pdu(receive_pdu);
+            //send thread
+            pthread_create(thread_handle, NULL, sendThread, arg);
+
+            //listen thread
+            while (true) {
+
+                pdu *receive_pdu = NULL;
+                while (chat_server_com->status == STATUS_RECEIVE_EMPTY ||
+                       chat_server_com->status == 0) {
+
+                    //parse incomming pdu's
+                    receive_pdu = parse_header(chat_server_com);
                 }
 
+                if (chat_server_com->status != STATUS_RECEIVE_OK) {
+                    //parsing until receive error or done signal from send thread
+                    if(*arg->status != DONE){
+                        printf("\nsomething wrong with receive in Client\n");
+                    }
+                    chat_loop_cleanup(thread_handle, arg, chat_server_com);
+                    return JOIN_ABORT;
+                }
+                if (receive_pdu != NULL) {
+                    //print messages, server messages in red
+                    if(receive_pdu->identity_length == 0 && receive_pdu->identity == NULL){
+                        printf(RED"%s\n"RESET,receive_pdu->message);
+                    }else{
+                        printf("%s>%s",receive_pdu->identity, receive_pdu->message);
+                        //receive_pdu->print(receive_pdu);
+                        receive_pdu->free_pdu(receive_pdu);
+                    }
+
+                }
+                //reset receive status before next iteration
+                chat_server_com->status = 0;
             }
-
-            chat_server_com->status = 0;
-
-
+        }else{
+            printf("\nsomething wrong with receive in Client\n");
+            chat_loop_cleanup(thread_handle,arg,chat_server_com);
         }
-
+    }else{
+        printf("Failed to connect to chat server\n");
     }
-    pthread_join(*thread_handle, NULL);
-    free(thread_handle);
 
-    chat_server_com->close(chat_server_com);
-    free_tcp_client_communicator(chat_server_com);
-    free(arg);
+    chat_loop_cleanup(thread_handle,arg,chat_server_com);
     printf("exiting chat server\n");
+
     return 0;
+}
+
+void chat_loop_cleanup(pthread_t *th, threadarg *arg, io_handler *com) {
+    pthread_join(*th, NULL);
+    free(th);
+    free(arg->status);
+    free(arg);
+    com->close(com);
+    free_tcp_client_communicator(com);
+}
+
+int server_hand_shake(io_handler *chat_server_com, current_user *u){
+
+    pdu *join = create_join((uint8_t) strlen(u->identity));
+    join->add_identity(join, u->identity);
+    chat_server_com->send_pdu(chat_server_com, join);
+    free_join(join);
+    chat_server_com->status = 0;
+    pdu *receive_partticipants = NULL;
+    while (chat_server_com->status == STATUS_RECEIVE_EMPTY ||
+           chat_server_com->status == 0) {
+        receive_partticipants = parse_header(chat_server_com);
+    }
+
+    if (chat_server_com->status != STATUS_RECEIVE_OK) {
+
+        return JOIN_ABORT;
+    }
+    if (receive_partticipants != NULL) {
+
+        receive_partticipants->print(receive_partticipants);
+        receive_partticipants->free_pdu(receive_partticipants);
+    }
+    return JOIN_SUCCESS;
 }
 
 void * sendThread(void *data){
 
     threadarg* arg = data;
+
     //allocate resources for getline
     char *input;
     int bufsize = 255;
-    __ssize_t characters;
+    uint16_t characters;
     input = (char *)malloc(bufsize * sizeof(char));
     if( input == NULL) {
         perror("Unable to allocate buffer\n");
@@ -114,28 +126,24 @@ void * sendThread(void *data){
     }
 
     while(true){
-        memset(input, 0, (size_t) bufsize);
-        //if(*!arg->reading){
 
-            characters = getline(&input, (size_t *) &bufsize, stdin);
-        if(senddd == 1){
-            if(characters > bufsize){
-                printf("input too long\n");
-            } else if(strcmp(input, "exit\n") == 0){
-                pdu* quit = create_quit();
-                arg->com->send_pdu(arg->com, quit);
-                quit->free_pdu(quit);
-                break;
-            }else{
-                pdu* mess = create_mess(0, 0);
-                mess_add_message(mess, (uint16_t) characters, 0, input);
-                mess_set_checksum(mess);
-                arg->com->send_pdu(arg->com, mess);
-                //*arg->reading = 1;
-                mess->free_pdu(mess);
-            }
-        }else{
+        memset(input, 0, (size_t) bufsize);
+        characters = (uint16_t) getline(&input, (size_t *) &bufsize, stdin);
+
+        if(characters > bufsize){
+            printf("input too long\n");
+        } else if(strcmp(input, "exit\n") == 0){
+            pdu* quit = create_quit();
+            arg->com->send_pdu(arg->com, quit);
+            quit->free_pdu(quit);
+            *arg->status = DONE;
             break;
+        }else{
+            pdu* mess = create_mess(0, 0);
+            mess_add_message(mess, characters, 0, input);
+            mess_set_checksum(mess);
+            arg->com->send_pdu(arg->com, mess);
+            mess->free_pdu(mess);
         }
 
     }

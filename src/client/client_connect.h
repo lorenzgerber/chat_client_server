@@ -16,8 +16,6 @@
 #include "client.h"
 #include "chat_loop.h"
 
-
-
 list* request_chat_servers(current_user* u, list* server_list);
 
 int join_server_in_list(current_user* user, char* input, list* servers);

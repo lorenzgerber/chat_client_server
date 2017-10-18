@@ -59,7 +59,7 @@ int join_server_in_list(current_user* user, char* input,list* servers){
                     return JOIN_SUCCESS;
                 }else{
                     printf("\nError connecting to server\n");
-                    return JOIN_FAIL;
+                    return JOIN_ABORT;
                 }
             }
         }
@@ -67,7 +67,7 @@ int join_server_in_list(current_user* user, char* input,list* servers){
 
     } while(list_inspect(p) != NULL);
     printf("\nCould not find the server in the serverlist\n");
-    return JOIN_FAIL;
+    return JOIN_ABORT;
 
 }
 
@@ -92,7 +92,7 @@ int direct_connect(current_user* user, const char* input){
     }
     if(!status){
         printf("\nSpecify address with 'serveraddress:port'\n");
-        return JOIN_FAIL;
+        return JOIN_ABORT;
     }
     i = 0;
     while(input[i] != ':'){
@@ -103,7 +103,7 @@ int direct_connect(current_user* user, const char* input){
     while(input[i] != '\n'){
         if(!isdigit(input[i])){
             printf("\nPort number must be integers\n");
-            return JOIN_FAIL;
+            return JOIN_ABORT;
         }
         i++;
     }
@@ -124,6 +124,6 @@ int direct_connect(current_user* user, const char* input){
     }else{
         free(cs);
         printf("\nError connecting to server\n");
-        return JOIN_FAIL;
+        return JOIN_ABORT;
     }
 }
