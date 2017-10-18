@@ -469,10 +469,14 @@ int participants_add_identities(pdu *pdu, char* identities){
 			strncpy(pdu->identities[found], &identities[lower], i-lower+1);
 			lower = i+1;
 			found++;
+			if(found > pdu->number_identities){
+				fprintf(stderr, "too many identities provided");
+				return -1;
+			}
 		}
 	}
-	if (found < pdu->number_identities){
-		perror("not enough identities provided");
+	if (found != pdu->number_identities){
+		fprintf(stderr, "incorrect number of identities provided");
 		return -1;
 	}
 
