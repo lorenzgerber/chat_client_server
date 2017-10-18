@@ -56,9 +56,21 @@ int chat_loop(current_user *u) {
                         printf(RED"%s\n"RESET,receive_pdu->message);
                         fflush(stdout);
                     }else{
-                    	fflush(stdout);
-                        printf("%s>%s \n",receive_pdu->identity, receive_pdu->message);
                         fflush(stdout);
+                        switch(receive_pdu->type){
+                            case 16:
+                                printf("**%u:%s has joined the server**\n",receive_pdu->time_stamp, receive_pdu->identity);
+                                fflush(stdout);
+                                break;
+                            case 17:
+                                printf("**%u:%s has left the server**\n",receive_pdu->time_stamp, receive_pdu->identity);
+                                fflush(stdout);
+                                break;
+                            case 10:
+                                printf("%u:%s>%s \n",receive_pdu->time_stamp ,receive_pdu->identity, receive_pdu->message);
+                                fflush(stdout);
+                                break;
+                        }
                         //receive_pdu->print(receive_pdu);
                         receive_pdu->free_pdu(receive_pdu);
                     }
