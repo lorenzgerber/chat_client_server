@@ -75,8 +75,10 @@ int chat_loop(current_user *u) {
                                 fflush(stdout);
                                 break;
                             case 10:
-                                printf("%u:%s>%s \n",receive_pdu->time_stamp ,receive_pdu->identity, receive_pdu->message);
+                            	unix_to_localtime(receive_pdu->time_stamp);
+                            	printf(" %s> %s \n",receive_pdu->identity, receive_pdu->message);
                                 receive_pdu->free_pdu(receive_pdu);
+
                                 fflush(stdout);
                                 break;
                             default:

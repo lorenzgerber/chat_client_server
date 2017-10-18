@@ -144,3 +144,18 @@ int set_name_server(current_user* user, const char* input){
     printf("\nName server changed\n");
     return JOIN_STATUS_CONTINUE;
 }
+
+int unix_to_localtime(uint32_t unix_time){
+	time_t     now = unix_time;
+	struct tm  ts;
+	char       buf[80];
+
+	// Get current time
+	time(&now);
+
+	// Format time, "ddd yyyy-mm-dd hh:mm:ss zzz"
+	ts = *localtime(&now);
+	strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", &ts);
+	printf("%s", buf);
+	return 0;
+}

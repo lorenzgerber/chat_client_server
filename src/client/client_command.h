@@ -14,6 +14,9 @@
 #define CHAT_PDU_PARSER_GENERATOR_CLIENT_COMMAND_H
 
 #include "client.h"
+#include <time.h>
+
+int unix_to_localtime(uint32_t unix_time);
 
 void print_main(void);
 
