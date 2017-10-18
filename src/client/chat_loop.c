@@ -120,8 +120,12 @@ int server_hand_shake(io_handler *chat_server_com, current_user *u){
         return JOIN_ABORT;
     }
     if (receive_partticipants != NULL) {
-
-        receive_partticipants->print(receive_partticipants);
+        printf("\nConnected to chat server\n");
+        printf("Users currently in this chat:\n\n");
+        for(int i = 0; i < receive_partticipants->number_identities;i++){
+            printf("%s\n", receive_partticipants->identities[i]);
+        }
+        printf("\n");
         fflush(stdout);
         receive_partticipants->free_pdu(receive_partticipants);
         fflush(stdout);
@@ -153,7 +157,7 @@ void * sendThread(void *data){
 
 
 
-        if(strcmp(message, "exit\n") == 0){
+        if(strcmp(message, "exit") == 0){
             pdu* quit = create_quit();
             arg->com->send_pdu(arg->com, quit);
             quit->free_pdu(quit);
