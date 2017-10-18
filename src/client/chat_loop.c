@@ -117,8 +117,8 @@ void * sendThread(void *data){
 
     //allocate resources for getline
     char *input;
-    int bufsize = 255;
-    uint16_t characters;
+    int bufsize = 65535;
+    //uint16_t characters;
     input = (char *)malloc(bufsize * sizeof(char));
     if( input == NULL) {
         perror("Unable to allocate buffer\n");
@@ -128,11 +128,14 @@ void * sendThread(void *data){
     while(true){
 
         memset(input, 0, (size_t) bufsize);
-        characters = (uint16_t) getline(&input, (size_t *) &bufsize, stdin);
+        fgets (input, bufsize, stdin);
+        uint16_t length = strlen(input);
+        char*message = calloc(length, sizeof(char));
+        memcpy(message, input, length-1);
 
-        if(characters > bufsize){
-            printf("input too long\n");
-        } else if(strcmp(input, "exit\n") == 0){
+
+
+        if(strcmp(message, "exit\n") == 0){
             pdu* quit = create_quit();
             arg->com->send_pdu(arg->com, quit);
             quit->free_pdu(quit);
@@ -140,11 +143,12 @@ void * sendThread(void *data){
             break;
         }else{
             pdu* mess = create_mess(0, 0);
-            mess_add_message(mess, characters, 0, input);
+            mess_add_message(mess, length, 0, message);
             mess_set_checksum(mess);
             arg->com->send_pdu(arg->com, mess);
             mess->free_pdu(mess);
         }
+        free(message);
 
     }
 
