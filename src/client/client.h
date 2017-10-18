@@ -16,12 +16,13 @@
 #define TYPE_CHAT_SERVER 1
 #define TYPE_NAME_SERVER 0
 
-#define JOIN_INITIAL -2
-#define JOIN_ABORT -1
-#define JOIN_SUCCESS 0
+#define JOIN_STATUS_INITIAL -2
+#define JOIN_STATUS_QUIT -1
+#define JOIN_STATUS_CONTINUE 0
 
 #define ACTIVE 0
 #define DONE 1
+#define DONE_EXIT 2
 
 #define NAME_SERVER "itchy.cs.umu.se"
 #define NAME_SERVER_PORT 1337

@@ -55,11 +55,11 @@ int join_server_in_list(current_user* user, char* input,list* servers){
             if(strncmp(input, cs->server_name, strlen(cs->server_name))==0){
                 user->join_server = cs;
                 user->join_status = chat_loop(user);
-                if(user->join_status == JOIN_SUCCESS){
-                    return JOIN_SUCCESS;
+                if(user->join_status == JOIN_STATUS_CONTINUE){
+                    return JOIN_STATUS_CONTINUE;
                 }else{
                     printf("\nError connecting to server\n");
-                    return JOIN_ABORT;
+                    return JOIN_STATUS_QUIT;
                 }
             }
         }
@@ -67,7 +67,7 @@ int join_server_in_list(current_user* user, char* input,list* servers){
 
     } while(list_inspect(p) != NULL);
     printf("\nCould not find the server in the serverlist\n");
-    return JOIN_ABORT;
+    return JOIN_STATUS_QUIT;
 
 }
 
@@ -92,7 +92,7 @@ int direct_connect(current_user* user, const char* input){
     }
     if(!status){
         printf("\nSpecify address with 'serveraddress:port'\n");
-        return JOIN_ABORT;
+        return JOIN_STATUS_QUIT;
     }
     i = 0;
     while(input[i] != ':'){
@@ -103,7 +103,7 @@ int direct_connect(current_user* user, const char* input){
     while(input[i] != '\n'){
         if(!isdigit(input[i])){
             printf("\nPort number must be integers\n");
-            return JOIN_ABORT;
+            return JOIN_STATUS_QUIT;
         }
         i++;
     }
@@ -118,12 +118,12 @@ int direct_connect(current_user* user, const char* input){
     user->join_server = NULL;
     user->join_server = cs;
     user->join_status = chat_loop(user);
-    if(user->join_status == JOIN_SUCCESS){
+    if(user->join_status == JOIN_STATUS_CONTINUE){
         free(cs);
-        return JOIN_SUCCESS;
+        return JOIN_STATUS_CONTINUE;
     }else{
         free(cs);
         printf("\nError connecting to server\n");
-        return JOIN_ABORT;
+        return JOIN_STATUS_QUIT;
     }
 }

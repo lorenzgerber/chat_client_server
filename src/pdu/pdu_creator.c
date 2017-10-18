@@ -464,7 +464,7 @@ int participants_add_identities(pdu *pdu, char* identities){
 	for(int i = 0 ; i < pdu->length;i++){
 		//read until null termination (detect length)
 		if(identities[i]=='\0'){
-			printf("%d\n", i-lower+1);
+			//printf("%d\n", i-lower+1);
 			if(i-lower+1 == 1){
 				pdu->number_identities = found;
 				fprintf(stderr,"malformated identities found");
@@ -498,17 +498,16 @@ int participants_add_identities(pdu *pdu, char* identities){
  */
 int free_participants(pdu *pdu){
 
-    if(pdu->number_identities !=0){
+	if(pdu->number_identities !=0){
         for(int i = 0; i < pdu->number_identities;i++){
         	free(pdu->identities[i]);
         }
     }
 
-    free(pdu->identities);
-    free(pdu);
-    return 0;
+	free(pdu->identities);
+	free(pdu);
+	return 0;
 }
-
 
 
 /*

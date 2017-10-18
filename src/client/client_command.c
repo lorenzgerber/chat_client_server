@@ -63,7 +63,7 @@ int parse_arguments(int argc, char *argv[], current_user* u) {
 }
 
 void get_list_to_user(pdu* slist, list* servers){
-
+    list_position p = list_first(servers);
     printf("\nAvaliable chat servers from the name server\n");
     for(int i = 0; i< slist->number_servers;i++){
 
@@ -85,7 +85,8 @@ void get_list_to_user(pdu* slist, list* servers){
         strcpy(server->server_name, slist->current_servers[i]->name);
         server->port = slist->current_servers[i]->port;
 
-        list_insert(list_first(servers),server);
+        list_insert(p,server);
+        p = list_next(p);
         printf("\nNAME: %s\nADDRESS: %d.%d.%d.%d\nPORT: %d\n",
                slist->current_servers[i]->name,
                slist->current_servers[i]->address[0],
@@ -116,7 +117,7 @@ int set_name_server(current_user* user, const char* input){
     }
     if(!status){
         printf("\nSpecify address with 'serveraddress:port'\n");
-        return JOIN_ABORT;
+        return JOIN_STATUS_QUIT;
     }
     i = 0;
     while(input[i] != ':'){
@@ -127,7 +128,7 @@ int set_name_server(current_user* user, const char* input){
     while(input[i] != '\n'){
         if(!isdigit(input[i])){
             printf("\nPort number must be integers\n");
-            return JOIN_ABORT;
+            return JOIN_STATUS_QUIT;
         }
         i++;
     }
@@ -141,5 +142,5 @@ int set_name_server(current_user* user, const char* input){
     i++;
     user->name_server->port = (uint16_t )strtol(&address[i], &strtol_ptr, 10);
     printf("\nName server changed\n");
-    return JOIN_SUCCESS;
+    return JOIN_STATUS_CONTINUE;
 }

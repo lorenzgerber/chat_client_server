@@ -25,7 +25,7 @@ int chat_loop(current_user *u) {
     if(chat_server_com->connect(chat_server_com, 5) == 0){
 
         //join server
-        if((chat_server_com->status = server_hand_shake(chat_server_com, u) == JOIN_SUCCESS)){
+        if((chat_server_com->status = server_hand_shake(chat_server_com, u) == JOIN_STATUS_CONTINUE)){
 
             //send thread
             pthread_create(thread_handle, NULL, sendThread, arg);
@@ -34,8 +34,8 @@ int chat_loop(current_user *u) {
             while (true) {
 
                 pdu *receive_pdu = NULL;
-                while (chat_server_com->status == STATUS_RECEIVE_EMPTY ||
-                       chat_server_com->status == 0) {
+                while ((chat_server_com->status == STATUS_RECEIVE_EMPTY ||
+                       chat_server_com->status == 0) && *arg->status != DONE) {
 
                     //parse incomming pdu's
                     receive_pdu = parse_header(chat_server_com);
@@ -43,11 +43,17 @@ int chat_loop(current_user *u) {
 
                 if (chat_server_com->status != STATUS_RECEIVE_OK) {
                     //parsing until receive error or done signal from send thread
-                    if(*arg->status != DONE){
+                    if(*arg->status == DONE){
+                        chat_loop_cleanup(thread_handle, arg, chat_server_com);
+                        return JOIN_STATUS_CONTINUE;
+                    }else if(*arg->status == DONE_EXIT){
+                        chat_loop_cleanup(thread_handle, arg, chat_server_com);
+                        return JOIN_STATUS_QUIT;
+                    }else{
                         printf("\nsomething wrong with receive in Client\n");
+                        chat_loop_cleanup(thread_handle, arg, chat_server_com);
+                        return JOIN_STATUS_CONTINUE;
                     }
-                    chat_loop_cleanup(thread_handle, arg, chat_server_com);
-                    return JOIN_ABORT;
                 }
                 if (receive_pdu != NULL) {
                     //print messages, server messages in red
@@ -60,21 +66,34 @@ int chat_loop(current_user *u) {
                         switch(receive_pdu->type){
                             case 16:
                                 printf("**%u:%s has joined the server**\n",receive_pdu->time_stamp, receive_pdu->identity);
+                                receive_pdu->free_pdu(receive_pdu);
                                 fflush(stdout);
                                 break;
                             case 17:
                                 printf("**%u:%s has left the server**\n",receive_pdu->time_stamp, receive_pdu->identity);
+                                receive_pdu->free_pdu(receive_pdu);
                                 fflush(stdout);
                                 break;
                             case 10:
                                 printf("%u:%s>%s \n",receive_pdu->time_stamp ,receive_pdu->identity, receive_pdu->message);
+                                receive_pdu->free_pdu(receive_pdu);
                                 fflush(stdout);
                                 break;
-                        }
-                        //receive_pdu->print(receive_pdu);
-                        receive_pdu->free_pdu(receive_pdu);
-                    }
+                            default:
+                                printf("invalid data read from incomming socket\n");
+                                receive_pdu->free_pdu(receive_pdu);
+                                fflush(stdout);
+                                break;
 
+                        }
+                    }
+                }
+                if(*arg->status == DONE){
+                    chat_loop_cleanup(thread_handle, arg, chat_server_com);
+                    return JOIN_STATUS_CONTINUE;
+                }else if(*arg->status == DONE_EXIT){
+                    chat_loop_cleanup(thread_handle, arg, chat_server_com);
+                    return JOIN_STATUS_QUIT;
                 }
                 //reset receive status before next iteration
                 chat_server_com->status = 0;
@@ -90,7 +109,7 @@ int chat_loop(current_user *u) {
     chat_loop_cleanup(thread_handle,arg,chat_server_com);
     printf("exiting chat server\n");
 
-    return 0;
+    return JOIN_STATUS_CONTINUE;
 }
 
 void chat_loop_cleanup(pthread_t *th, threadarg *arg, io_handler *com) {
@@ -117,10 +136,10 @@ int server_hand_shake(io_handler *chat_server_com, current_user *u){
 
     if (chat_server_com->status != STATUS_RECEIVE_OK) {
 
-        return JOIN_ABORT;
+        return JOIN_STATUS_QUIT;
     }
     if (receive_partticipants != NULL) {
-        printf("\nConnected to chat server\n");
+        printf("\nConnected to chat server at %s:%d\n", u->join_server->address, u->join_server->port);
         printf("Users currently in this chat:\n\n");
         for(int i = 0; i < receive_partticipants->number_identities;i++){
             printf("%s\n", receive_partticipants->identities[i]);
@@ -130,7 +149,7 @@ int server_hand_shake(io_handler *chat_server_com, current_user *u){
         receive_partticipants->free_pdu(receive_partticipants);
         fflush(stdout);
     }
-    return JOIN_SUCCESS;
+    return JOIN_STATUS_CONTINUE;
 }
 
 void * sendThread(void *data){
@@ -147,21 +166,27 @@ void * sendThread(void *data){
         EXIT_FAILURE;
     }
 
-    while(true){
+    while(*arg->status != DONE && *arg->status != DONE_EXIT){
 
         memset(input, 0, (size_t) bufsize);
         fgets (input, bufsize, stdin);
-        uint16_t length = strlen(input);
+        uint16_t length = (uint16_t) strlen(input);
         char*message = calloc(length, sizeof(char));
-        memcpy(message, input, length-1);
+        memcpy(message, input, (size_t) (length - 1));
 
 
 
-        if(strcmp(message, "exit") == 0){
+        if(strcmp(message, "quit") == 0){
             pdu* quit = create_quit();
             arg->com->send_pdu(arg->com, quit);
             quit->free_pdu(quit);
             *arg->status = DONE;
+            break;
+        }else if(strcmp(message, "exit") ==0){
+            pdu* quit = create_quit();
+            arg->com->send_pdu(arg->com, quit);
+            quit->free_pdu(quit);
+            *arg->status = DONE_EXIT;
             break;
         }else{
             pdu* mess = create_mess(0, 0);

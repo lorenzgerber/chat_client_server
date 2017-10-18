@@ -30,7 +30,7 @@ int main (int argc, char*argv[]){
         return EXIT_FAILURE;
     }
 
-    user->join_status = JOIN_INITIAL;
+    user->join_status = JOIN_STATUS_INITIAL;
     char *input;
     int bufsize = 255;
     __ssize_t characters;
@@ -42,16 +42,16 @@ int main (int argc, char*argv[]){
     }
     list* servers = list_empty();
 
-    while(true){
+    while(user->join_status != JOIN_STATUS_QUIT){
         //first time connect from argument line
-        if(user->join_status == JOIN_INITIAL){
+        if(user->join_status == JOIN_STATUS_INITIAL){
             if(user->server_type == TYPE_CHAT_SERVER){
                 user->join_status = chat_loop(user);
                 free(user->join_server);
             }else if(user->server_type == TYPE_NAME_SERVER){
                 servers = request_chat_servers(user, servers);
                 free(user->join_server);
-                user->join_status = JOIN_ABORT;
+                user->join_status = JOIN_STATUS_QUIT;
             }
         //all other iterations
         }else{
