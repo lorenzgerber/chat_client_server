@@ -20,11 +20,11 @@ list* request_chat_servers(current_user* u, list* server_list) {
     list* servers = list_empty();
     list_set_mem_handler(servers,free);
 
-    io_handler* name_server_com = create_tcp_client_communicator(u->name_server->server_name, u->name_server->port);
+    io_handler* name_server_com = create_tcp_client_communicator(u->name_server->address, u->name_server->port);
     name_server_com->connect(name_server_com, 5);
     pdu *getlist = create_getlist();
     name_server_com->send_pdu(name_server_com, getlist);
-    free_getlist(getlist);
+    getlist->free_pdu(getlist);
 
     name_server_com->status = 0;
     pdu* slist = NULL;
@@ -36,11 +36,11 @@ list* request_chat_servers(current_user* u, list* server_list) {
         printf("\nsomething wrong with receive in Client\n");
         free_tcp_client_communicator(name_server_com);
         return servers;
-    }else{
-        get_list_to_user(slist, servers);
-        free_tcp_client_communicator(name_server_com);
-        return servers;
     }
+    get_list_to_user(slist, servers);
+    free_tcp_client_communicator(name_server_com);
+    return servers;
+
 }
 
 int join_server_in_list(current_user* user, char* input,list* servers){
@@ -58,7 +58,6 @@ int join_server_in_list(current_user* user, char* input,list* servers){
                 if(user->join_status == JOIN_STATUS_CONTINUE){
                     return JOIN_STATUS_CONTINUE;
                 }else{
-                    printf("\nError connecting to server\n");
                     return JOIN_STATUS_QUIT;
                 }
             }
@@ -67,7 +66,7 @@ int join_server_in_list(current_user* user, char* input,list* servers){
 
     } while(list_inspect(p) != NULL);
     printf("\nCould not find the server in the serverlist\n");
-    return JOIN_STATUS_QUIT;
+    return JOIN_STATUS_CONTINUE;
 
 }
 
@@ -92,7 +91,7 @@ int direct_connect(current_user* user, const char* input){
     }
     if(!status){
         printf("\nSpecify address with 'serveraddress:port'\n");
-        return JOIN_STATUS_QUIT;
+        return JOIN_STATUS_CONTINUE;
     }
     i = 0;
     while(input[i] != ':'){
@@ -103,7 +102,7 @@ int direct_connect(current_user* user, const char* input){
     while(input[i] != '\n'){
         if(!isdigit(input[i])){
             printf("\nPort number must be integers\n");
-            return JOIN_STATUS_QUIT;
+            return JOIN_STATUS_CONTINUE;
         }
         i++;
     }
@@ -123,7 +122,6 @@ int direct_connect(current_user* user, const char* input){
         return JOIN_STATUS_CONTINUE;
     }else{
         free(cs);
-        printf("\nError connecting to server\n");
         return JOIN_STATUS_QUIT;
     }
 }

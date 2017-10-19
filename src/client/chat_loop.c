@@ -60,16 +60,19 @@ int chat_loop(current_user *u) {
                     if(receive_pdu->identity_length == 0 && receive_pdu->identity == NULL){
                     	fflush(stdout);
                         printf(RED"%s\n"RESET,receive_pdu->message);
+                        receive_pdu->free_pdu(receive_pdu);
                         fflush(stdout);
                     }else{
                         fflush(stdout);
                         switch(receive_pdu->type){
                             case 16:
+                                unix_to_localtime(receive_pdu->time_stamp);
                                 printf("**%u:%s has joined the server**\n",receive_pdu->time_stamp, receive_pdu->identity);
                                 receive_pdu->free_pdu(receive_pdu);
                                 fflush(stdout);
                                 break;
                             case 17:
+                                unix_to_localtime(receive_pdu->time_stamp);
                                 printf("**%u:%s has left the server**\n",receive_pdu->time_stamp, receive_pdu->identity);
                                 receive_pdu->free_pdu(receive_pdu);
                                 fflush(stdout);
@@ -78,11 +81,9 @@ int chat_loop(current_user *u) {
                             	unix_to_localtime(receive_pdu->time_stamp);
                             	printf(" %s> %s \n",receive_pdu->identity, receive_pdu->message);
                                 receive_pdu->free_pdu(receive_pdu);
-
                                 fflush(stdout);
                                 break;
                             default:
-                                printf("invalid data read from incomming socket\n");
                                 receive_pdu->free_pdu(receive_pdu);
                                 fflush(stdout);
                                 break;
@@ -183,12 +184,14 @@ void * sendThread(void *data){
             arg->com->send_pdu(arg->com, quit);
             quit->free_pdu(quit);
             *arg->status = DONE;
+            free(message);
             break;
         }else if(strcmp(message, "exit") ==0){
             pdu* quit = create_quit();
             arg->com->send_pdu(arg->com, quit);
             quit->free_pdu(quit);
             *arg->status = DONE_EXIT;
+            free(message);
             break;
         }else{
             pdu* mess = create_mess(0, 0);
@@ -198,7 +201,6 @@ void * sendThread(void *data){
             mess->free_pdu(mess);
         }
         free(message);
-
     }
 
     free(input);

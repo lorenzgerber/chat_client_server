@@ -113,9 +113,8 @@ pdu* parse_NOTREG(struct io_handler* socket){
 pdu* parse_SLIST(struct io_handler* socket){
     //assemble the 16 bit number of servers from two 8 bits read
 	uint16_t nr_of_servers =   (*(socket->read_head+3) << 8) | *(socket->read_head+2);
-	if(socket->socket_entity != ENTITY_DUMMY){
-		nr_of_servers = ntohs(nr_of_servers);
-	}
+	nr_of_servers = ntohs(nr_of_servers);
+
 
     pdu *slist = create_slist(nr_of_servers);
 
@@ -129,11 +128,7 @@ pdu* parse_SLIST(struct io_handler* socket){
 							  *(socket->read_head+3)};
 
 		uint16_t port = (*(socket->read_head+5) << 8) | *(socket->read_head+4);
-		if(socket->socket_entity != ENTITY_DUMMY){
-			port = ntohs(port);
-		}
-
-
+		port = ntohs(port);
 
 
 		uint8_t number_of_clients = *(socket->read_head+6);
@@ -204,9 +199,8 @@ pdu* parse_PARTICIPANTS(struct io_handler* socket){
 	uint8_t nr_of_clients = *(socket->read_head+1);
     //assemble 16 bit number of clients from two 8 bits
 	uint16_t length_of_clients = *(socket->read_head+3) << 8 | *(socket->read_head+2);
-    if(socket->socket_entity != ENTITY_DUMMY){
-        length_of_clients = ntohs(length_of_clients);
-    }
+	length_of_clients = ntohs(length_of_clients);
+
     //read sufficient number of words to assign participants
 	socket->request_n_word(socket, (length_of_clients + 4 - 1)/4);
 

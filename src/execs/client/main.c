@@ -20,7 +20,7 @@ int main (int argc, char*argv[]){
     //get the initial join address and assign default name server
     current_user* user = malloc(sizeof(struct current_user));
     chat_server* ns = malloc(sizeof(struct chat_server));
-    strcpy(ns->server_name, NAME_SERVER);
+    strcpy(ns->address, NAME_SERVER);
     ns->port = NAME_SERVER_PORT;
     user->name_server = ns;
 
@@ -50,8 +50,8 @@ int main (int argc, char*argv[]){
                 free(user->join_server);
             }else if(user->server_type == TYPE_NAME_SERVER){
                 servers = request_chat_servers(user, servers);
-                free(user->join_server);
-                user->join_status = JOIN_STATUS_QUIT;
+                //free(user->join_server);
+                user->join_status = JOIN_STATUS_CONTINUE;
             }
         //all other iterations
         }else{

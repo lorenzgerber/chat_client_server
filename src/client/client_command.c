@@ -37,8 +37,7 @@ int parse_arguments(int argc, char *argv[], current_user* u) {
         print_usage_error();
         return -1;
     }
-    chat_server* join_server = malloc(sizeof(chat_server));
-    memset(join_server->address,0,255);
+
     memset(u->identity,0,255);
     strcpy(u->identity, argv[1]);
     if(strcmp(argv[2], "ns") == 0){
@@ -50,14 +49,18 @@ int parse_arguments(int argc, char *argv[], current_user* u) {
         return -1;
     }
     if(u->server_type == TYPE_CHAT_SERVER){
+        chat_server* join_server = malloc(sizeof(chat_server));
+        memset(join_server->address,0,255);
         strcpy(join_server->address,argv[3]);
         join_server->port = (uint16_t )strtol(argv[4],&strtol_ptr,10);
+        u->join_server = join_server;
     }else if(u->server_type == TYPE_NAME_SERVER){
-        memset(u->name_server->server_name, 0, 255);
-        strcpy(u->name_server->server_name,argv[3]);
+        memset(u->name_server->address, 0, 255);
+        strcpy(u->name_server->address,argv[3]);
         u->name_server->port = (uint16_t )strtol(argv[4],&strtol_ptr,10);
+        //u->join_server = u->name_server;
     }
-    u->join_server = join_server;
+
 
     return 0;
 }
@@ -117,7 +120,7 @@ int set_name_server(current_user* user, const char* input){
     }
     if(!status){
         printf("\nSpecify address with 'serveraddress:port'\n");
-        return JOIN_STATUS_QUIT;
+        return JOIN_STATUS_CONTINUE;
     }
     i = 0;
     while(input[i] != ':'){
@@ -128,7 +131,7 @@ int set_name_server(current_user* user, const char* input){
     while(input[i] != '\n'){
         if(!isdigit(input[i])){
             printf("\nPort number must be integers\n");
-            return JOIN_STATUS_QUIT;
+            return JOIN_STATUS_CONTINUE;
         }
         i++;
     }
