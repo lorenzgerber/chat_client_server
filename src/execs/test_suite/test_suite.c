@@ -407,7 +407,7 @@ int main(int argc, char*argv[]){
     }
 
     MBA = mess->create_message(mess);
-    if(quit->get_message_length(quit) != 36){
+    if(mess->get_message_length(mess) != 36){
         passed_mess = 0;
         errors++;
     }
