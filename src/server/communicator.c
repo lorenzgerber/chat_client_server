@@ -43,31 +43,39 @@ void * com_loop(void* data){
 				// if client sends JOIN while already joined, kick out
 				} else if(pdu_receive->type == 12 && com->joined == 1){
 					printf("client sends second join while already joined\n");
+					com->joined = 0;
 					//send_pleave(pdu_receive, com, 1);
 					client_kicked(com);
 					shutdown_connection(com);
 
+
 				} else if(pdu_receive->type == 11){
 					// QUIT, close connection and send PLEAVE to all others
+					com->joined = 0;
 					send_pleave(pdu_receive, com, 0);
 					shutdown_connection(com);
+
 
 				} else if(pdu_receive->type == 10 && com->joined == 1){
 					// here we check for MESS message
 					if(pdu_receive->verify_checksum(pdu_receive)!=0){
 						//Checksum incorrect
 						printf("checksum incorrect!\n Shutting down client\n");
+						com->joined = 0;
 						client_kicked(com);
 						//send_pleave(pdu_receive, com, 1);
 						shutdown_connection(com);
+
 					} else {
 						mess_handler(pdu_receive, com);
 					}
 				} else {
 					// unrecognized / wrong message. shutting down
+					com->joined = 0;
 					client_kicked(com);
 					//send_pleave(pdu_receive, com, 1);
 					shutdown_connection(com);
+
 				}
 
 				pdu_receive->free_pdu(pdu_receive);
@@ -79,6 +87,7 @@ void * com_loop(void* data){
 				printf("We should probably shut this one down\n");
 				client_kicked(com);
 				shutdown_connection(com);
+				com->joined = 0;
 			}
 		}
 	}

@@ -21,7 +21,6 @@ void * listen_loop(void* data){
 		int assigned = 0;
 		new_com = NULL;
 		new_com = server->listener->listen(server->listener);
-		sleep(2);
 
 		// implement here transfer of io_handler to com_array
 		if(*server->bail_out != 1){
@@ -38,6 +37,7 @@ void * listen_loop(void* data){
 			// if iterated over whole array and still not assigned
 			if(assigned == 0){
 				printf("no more free client slots on server\n");
+				new_com->close(new_com);
 			}
 
 			// after transfer - signal all threads
