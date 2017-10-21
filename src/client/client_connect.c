@@ -12,6 +12,17 @@
 
 #include "client_connect.h"
 
+/**
+ * This function establishes a temporary udp connection to the users current
+ * name server defined in the current_user struct. It then sends a getlist
+ * request and parses the response slist pdu. The list of active chat servers
+ * is updated.
+ *
+ * @param u current_user, Struct containing the name server information.
+ * @param server_list list, This is the chat server list that is used by
+ * the menus "servers" and "join" commands.
+ * @return list, A new list containing updated information.
+ */
 list* request_chat_servers(current_user* u, list* server_list) {
 
     if(server_list != NULL){
@@ -43,12 +54,20 @@ list* request_chat_servers(current_user* u, list* server_list) {
 
 }
 
+/**
+ * This function is used when the user invokes the "join" command. It searches
+ * the active chat server list for a chat server with the passed name. The user
+ * may update this list with the "servers" command should the list be
+ * out of date.
+ *
+ * @param user current_user, This structs "join_server" is updated.
+ * @param input char, The argument passed with "join" from the menu.
+ * @param servers list, The list of active chat servers.
+ * @return int, Status variable.
+ */
 int join_server_in_list(current_user* user, char* input,list* servers){
     list_position p = list_first(servers);
     do{
-        /*if(p!=list_first(servers)){
-            p=list_next(p);
-        }*/
         chat_server* cs;
         cs = (chat_server *) list_inspect(p);
         if(cs != NULL){
@@ -70,6 +89,14 @@ int join_server_in_list(current_user* user, char* input,list* servers){
 
 }
 
+/**
+ * This function is used to directly connect to an address without using its
+ * name. This is done via the "connect" command from the menu.
+ *
+ * @param user current_user, This structs join_server is updated.
+ * @param input char, The argument passed with the "connect" command.
+ * @return int, Status variable.
+ */
 int direct_connect(current_user* user, const char* input){
 
     chat_server* cs = malloc(sizeof(struct chat_server));

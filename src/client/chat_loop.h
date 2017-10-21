@@ -19,6 +19,4 @@
 
 void *sendThread(void *data);
 
-
-
 #endif /* SRC_CLIENT_CHAT_LOOP_H_ */

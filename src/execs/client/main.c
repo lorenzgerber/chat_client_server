@@ -35,11 +35,11 @@ int main (int argc, char*argv[]){
     int bufsize = 255;
     __ssize_t characters;
 
-    input = (char *)malloc(bufsize * sizeof(char));
-    if( input == NULL) {
+    if((input = (char *)malloc(bufsize * sizeof(char))) == NULL){
         perror("Unable to allocate buffer\n");
         EXIT_FAILURE;
     }
+
     list* servers = list_empty();
 
     while(user->join_status != JOIN_STATUS_QUIT){

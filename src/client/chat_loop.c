@@ -11,6 +11,19 @@ int server_hand_shake(io_handler *chat_server_com, current_user *u);
 
 void chat_loop_cleanup(pthread_t *th, threadarg *arg, io_handler *com);
 
+/**
+ * This function controls a chat session the user starts from the menu.
+ * First, a connection is established with the chat server, followed by
+ * a launch of the input thread which will handle outgoing communication
+ * with the chat server. This function then handles the receiving and
+ * parsing and displaying of the incomming messages. It is also resposible
+ * for getting the user to the correct state in the main program depending
+ * on errors or user input.
+ *
+ * @param u current_user, Struct containing the chat server address and
+ * user information.
+ * @return int, The chat sessions ending state.
+ */
 int chat_loop(current_user *u) {
 
     io_handler* chat_server_com = create_tcp_client_communicator(u->join_server->address,
@@ -56,7 +69,8 @@ int chat_loop(current_user *u) {
                     }
                 }
                 if (receive_pdu != NULL) {
-                    //print messages, server messages in red
+                    //print messages in "else", server messages in "if" are
+                    //printed in red.
                     if(receive_pdu->identity_length == 0 && receive_pdu->identity == NULL){
                     	fflush(stdout);
                         printf(RED"%s\n"RESET,receive_pdu->message);
@@ -91,6 +105,7 @@ int chat_loop(current_user *u) {
                         }
                     }
                 }
+                //check for status changes from send thread.
                 if(*arg->status == DONE){
                     chat_loop_cleanup(thread_handle, arg, chat_server_com);
                     return JOIN_STATUS_CONTINUE;
@@ -115,6 +130,13 @@ int chat_loop(current_user *u) {
     return JOIN_STATUS_CONTINUE;
 }
 
+/**
+ * This function free's memory used by the chat loop.
+ *
+ * @param th p_thread_t, The sending thread handle.
+ * @param arg threadarg, The threadarg struct passed to the sending thread.
+ * @param com io_handler, The chat server communicator from chat loop.
+ */
 void chat_loop_cleanup(pthread_t *th, threadarg *arg, io_handler *com) {
     pthread_join(*th, NULL);
     free(th);
@@ -124,6 +146,17 @@ void chat_loop_cleanup(pthread_t *th, threadarg *arg, io_handler *com) {
     free_tcp_client_communicator(com);
 }
 
+/**
+ * This function initializes the agree'd starting premises for joining the
+ * chat server by first sending a getlist pdu and receiving an slist pdu.
+ * The function also presents this to the user, signifying that the session
+ * is active.
+ *
+ * @param chat_server_com io_handler, The chat server communicator.
+ * @param u current_user, Struct containing the chat server address and
+ * user information.
+ * @return int, Status of the getlist-slist starting communication.
+ */
 int server_hand_shake(io_handler *chat_server_com, current_user *u){
 
     pdu *join = create_join((uint8_t) strlen(u->identity));
@@ -155,6 +188,17 @@ int server_hand_shake(io_handler *chat_server_com, current_user *u){
     return JOIN_STATUS_CONTINUE;
 }
 
+/**
+ * This is the sending thread. It handles the input from the user and packets
+ * these into pdu messages that are sent to the chat server. It also
+ * handles local commands that the user might want to perform("quit" etc).
+ * The chat loop and send thread communicates via the passed threadarg struct.
+ * This struct contains the io_handler to the chat server and a status pointer
+ * that controls the current chat session.
+ *
+ * @param data threadarg, This contains the io_handler and chat status pointer.
+ * @return void.
+ */
 void * sendThread(void *data){
 
     threadarg* arg = data;

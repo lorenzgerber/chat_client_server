@@ -12,25 +12,50 @@
 
 #include "client_command.h"
 
+/**
+ * This function prints the main message to the user that shows up each time
+ * the program waits for input.
+ */
 void print_main(void){
     printf("\n---Super chat client---\n");
     printf("type 'help' to get a list of commands\n");
     printf(">");
 }
 
+/**
+ * This function informs the user how to correctly start the program if wrong
+ * or invalid parameters were passed.
+ */
 void print_usage_error(void){
     printf("\nInvalid arguments.\n");
     printf("Correct usage: client [user name] [ns|cs] [server name] [server port]");
 }
 
+/**
+ * This function prints a list over the menu and chat sessions different
+ * system commands.
+ */
 void print_help(void){
     printf("\n'servers' updates the current active chat servers from the name server\n");
     printf("'join x' joins a chat server \"x\" from the name server list\n");
     printf("'connect serveraddress:port' connects directly to a chat server without using name server\n");
     printf("'ns serveraddress:port' sets the name server address\n");
+    printf("'quit' leaves an active chat session\n");
     printf("'exit' shuts down the client\n");
 }
 
+/**
+ * This function parses the program arguments and passes them into a
+ * current_user struct. It also overwrites the users default name server
+ * if a name server was passed as the argument. The default name server is
+ * defined in "client.h".
+ *
+ * @param argc int, Number of arguments from main.
+ * @param argv char**, The arguments from main.
+ * @param u current_user, The current_user struct to be filled with
+ * information from argument line.
+ * @return int, Status of parse_arguments.
+ */
 int parse_arguments(int argc, char *argv[], current_user* u) {
     char* strtol_ptr;
     if(argc != 5){
@@ -58,13 +83,20 @@ int parse_arguments(int argc, char *argv[], current_user* u) {
         memset(u->name_server->address, 0, 255);
         strcpy(u->name_server->address,argv[3]);
         u->name_server->port = (uint16_t )strtol(argv[4],&strtol_ptr,10);
-        //u->join_server = u->name_server;
     }
 
 
     return 0;
 }
 
+/**
+ * This function fills a list of chat_servers from a parsed slist pdu and
+ * also displays the lists information to the user.
+ * @param slist pdu, Parsed slist pdu containing the active chat servers
+ * obtained from the name server.
+ * @param servers list, The list to be refreshed with information from
+ * the pdu.
+ */
 void get_list_to_user(pdu* slist, list* servers){
     list_position p = list_first(servers);
     printf("\nAvaliable chat servers from the name server\n");
@@ -101,6 +133,14 @@ void get_list_to_user(pdu* slist, list* servers){
     slist->free_pdu(slist);
 }
 
+/**
+ * This function changes the active name server for the current user.
+ *
+ * @param user current_user, This struct has the current name server
+ * information.
+ * @param input char, The string passed by user with the "ns" command.
+ * @return int, the state of the menu session.
+ */
 int set_name_server(current_user* user, const char* input){
 
     char address[strlen(input)];
@@ -148,6 +188,12 @@ int set_name_server(current_user* user, const char* input){
     return JOIN_STATUS_CONTINUE;
 }
 
+/**
+ * This function formats a unix timestamp into a more user friendly format
+ * before displaying them in chat sessions.
+ * @param unix_time uint32_t, Timestamp in unix format.
+ * @return int, 0.
+ */
 int unix_to_localtime(uint32_t unix_time){
 	time_t     now = unix_time;
 	struct tm  ts;
