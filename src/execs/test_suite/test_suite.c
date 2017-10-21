@@ -10,6 +10,10 @@
  *	GPLv3
  */
 
+#define RED   "\x1B[31m"
+#define RESET "\x1B[0m"
+#define GREEN   "\033[32m"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,21 +29,40 @@
 int main(int argc, char*argv[]){
 
 	message_byte_array *MBA;
+    int passed_reg = 1;
+    int passed_alive = 1;
 
     /*
 	 * Test REG
 	 */
-	printf("\n\nREG\n");
+	//printf("\n\nREG\n");
 
     // -------REG using new struct-----------------
 	pdu *reg = create_reg(10,2000);
 	reg->add_server_name(reg,"servername");
+    uint8_t expected_reg[16] = {0,10,7,208,115,101,114,118,101,114,110,97,109,101,0,0};
 
 	MBA = reg->create_message(reg);
-    printf("Length of message = %d\n", reg->get_message_length(reg));
+    //printf("Length of message = %d\n", reg->get_message_length(reg));
+    if(reg->get_message_length(reg) != 16){
+        passed_reg = 0;
+        //gather error to present at end
+    }
     for(int i = 0;i < reg->get_message_length(reg);i++){
-		printf("%d, ", MBA->array[i]);
+		//printf("%d, ", MBA->array[i]);
+        if(MBA->array[i] != expected_reg[i]){
+            //gather error to present at end
+            passed_reg = 0;
+            break;
+        }
 	}
+    if(passed_reg){
+        printf("REG pdu serializing : ");
+        printf(GREEN"OK\n"RESET);
+    }else{
+        printf("REG pdu serializing : ");
+        printf(RED"FAILED\n"RESET);
+    }
 	reg->free_pdu(reg);
 	free_message_byte_array(MBA);
 
@@ -47,7 +70,6 @@ int main(int argc, char*argv[]){
 	 * Test ALIVE
 	 */
 	printf("\n\nALIVE\n");
-
 
     //------ALIVE using new struct------
     pdu *alive = create_alive(100, 10000);
