@@ -16,7 +16,7 @@
 #include "pdu_parser.h"
 #include "pdu_creator.h"
 
-#define NUMBER_OF_CLIENTS 255
+#define NUMBER_OF_CLIENTS 256
 
 void * stress_test(void* data);
 
@@ -41,6 +41,7 @@ int main(int argc, char*argv[]){
 
 
 
+	sleep(15);
 
 	char* address = "localhost";
 
