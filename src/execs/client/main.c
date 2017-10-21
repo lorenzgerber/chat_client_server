@@ -70,7 +70,7 @@ int main (int argc, char*argv[]){
                 continue;
             //exit command
             }else if(strcmp(input,"exit\n") == 0) {
-                list_free(servers);
+                //list_free(servers);
                 break;
             //join command
             }else if(strncmp(input,"join ",5) == 0){
@@ -96,6 +96,7 @@ int main (int argc, char*argv[]){
             }
         }
     }
+    list_free(servers);
     free(ns);
     free(user);
     free(input);

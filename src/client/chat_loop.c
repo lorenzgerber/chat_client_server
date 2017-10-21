@@ -118,7 +118,6 @@ int chat_loop(current_user *u) {
             }
         }else{
             printf("\nsomething wrong with receive in Client\n");
-            chat_loop_cleanup(thread_handle,arg,chat_server_com);
         }
     }else{
         printf("Failed to connect to chat server\n");
