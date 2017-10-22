@@ -1,11 +1,17 @@
 /*
- * test_server.c
+ *  main.c
  *
- *  Created on: Oct 14, 2017
- *      Author: lgerber
+ *	Main file for server tests
+ *
+ *	build with: make EXEC=test_server
+ *
+ *  Created on: Oct 1, 2017
+ *  Authors: Lorenz Gerber, Niklas Königsson
+ *
+ *  Chat client server project
+ *  5DV197 Datakom course
+ *	GPLv3
  */
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>

@@ -1,9 +1,12 @@
 /*
- * test_suite.c
+ *  main.c
  *
+ *	Main file for test_suite
+ *
+ *	build with: make EXEC=test_suite
  *
  *  Created on: Oct 1, 2017
- *     Authors: Lorenz Gerber, Niklas Königsson
+ *  Authors: Lorenz Gerber, Niklas Königsson
  *
  *  Chat client server project
  *  5DV197 Datakom course

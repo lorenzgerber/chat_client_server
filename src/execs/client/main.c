@@ -1,9 +1,12 @@
 /*
- * main.c
+ * 	main.c
  *
+ * 	Main file for Client
+ *
+ *  Build with: make EXEC=client
  *
  *  Created on: Oct 1, 2017
- *     Authors: Lorenz Gerber, Niklas Königsson
+ *  Authors: Lorenz Gerber, Niklas Königsson
  *
  *  Chat client server project
  *  5DV197 Datakom course

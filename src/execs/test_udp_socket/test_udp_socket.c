@@ -1,9 +1,12 @@
 /*
- * test_udp_socket.c
+ *  main.c
  *
+ *	Main file for udp socket tests
+ *
+ *	build with: make EXEC=test_udp_socket
  *
  *  Created on: Oct 1, 2017
- *     Authors: Lorenz Gerber, Niklas Königsson
+ *  Authors: Lorenz Gerber, Niklas Königsson
  *
  *  Chat client server project
  *  5DV197 Datakom course
