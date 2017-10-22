@@ -11,7 +11,20 @@
  */
 #include "../message_handlers/pleave_handler.h"
 
-
+/**
+ * send_pleave
+ *
+ * Function that sends out pleave messages
+ * to all active clients. In case the server
+ * itself announces quit, the flat server_message
+ * should be set and no client_name will be added
+ * to the messages.
+ * @param pdu_receive, either quit message from client
+ * or empty pdu in case of server message
+ * @param com communicator struct, the communicator thread to
+ * send the message
+ * @param server_message int 0 = normal client quit, 1 = server message
+ */
 int send_pleave(pdu *pdu_receive, communicator *com, int server_message){
 	pdu* pdu_response;
 	// prepare and send PLEAVE to all other clients
