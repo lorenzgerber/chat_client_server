@@ -1,8 +1,13 @@
 /*
- * client_kicked.c
+ *  client_kicked.c
  *
- *  Created on: Oct 17, 2017
- *      Author: lgerber
+ *
+ *  Created on: Oct 1, 2017
+ *  Authors: Lorenz Gerber, Niklas Königsson
+ *
+ *  Chat client server project
+ *  5DV197 Datakom course
+ *	GPLv3
  */
 
 #include "client_kicked.h"

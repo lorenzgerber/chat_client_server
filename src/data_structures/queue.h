@@ -1,8 +1,13 @@
 /*
  * queue.h
  *
- *  Created on: Oct 11, 2017
- *      Author: lgerber
+ *
+ *  Created on: Oct 1, 2017
+ *     Authors: Lorenz Gerber, Niklas Königsson
+ *
+ *  Chat client server project
+ *  5DV197 Datakom course
+ *	GPLv3
  */
 
 #ifndef SRC_DATA_STRUCTURES_QUEUE_H_

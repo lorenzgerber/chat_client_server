@@ -1,5 +1,5 @@
 /*
- * list.c
+ * linked_list.c
  *
  * Lorenz Gerber
  *

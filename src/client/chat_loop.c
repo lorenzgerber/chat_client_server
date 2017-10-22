@@ -1,8 +1,13 @@
 /*
  * chat_loop.c
  *
- *  Created on: Oct 16, 2017
- *      Author: lgerber
+ *
+ *  Created on: Oct 1, 2017
+ *     Authors: Lorenz Gerber, Niklas Königsson
+ *
+ *  Chat client server project
+ *  5DV197 Datakom course
+ *	GPLv3
  */
 
 #include "chat_loop.h"
