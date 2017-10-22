@@ -2,7 +2,7 @@
 compile and run Server:
 ```bash
 make EXEC=server
-./build/server localhost 2000 itchy.cs.umu.se 1337
+./build/server 2000 localhost itchy.cs.umu.se 1337
 ```
 compile and run Client:
 ```bash
