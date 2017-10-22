@@ -26,6 +26,9 @@ void * stress_test(void* data);
  * Test program for the chat server. To
  * run the tests, a chat server has to be
  * running on localhost, port 2000.
+ * Else, modify the variable address and
+ * port to a suitable value (both in main
+ * and stress_test().)
  */
 int main(int argc, char*argv[]){
 
@@ -44,6 +47,7 @@ int main(int argc, char*argv[]){
 	sleep(15);
 
 	char* address = "localhost";
+	int port = 2000;
 
 
 
@@ -53,7 +57,7 @@ int main(int argc, char*argv[]){
 
 
 	// establish connection
-	client = create_tcp_client_communicator(address, 2000);
+	client = create_tcp_client_communicator(address, port);
 	client->connect(client, 50);
 
 
@@ -68,7 +72,7 @@ int main(int argc, char*argv[]){
 
 
 	// start again
-	client = create_tcp_client_communicator(address, 2000);
+	client = create_tcp_client_communicator(address, port);
 	client->connect(client, 50);
 
 
@@ -120,18 +124,25 @@ void * stress_test(void* data){
 	printf("thread %d running \n", rank);
 
 	char* address = "localhost";
+	int port = 2000;
 
 	io_handler *client;
 	pdu *test;
 
 	// establish connection
-	client = create_tcp_client_communicator(address, 2000);
+	client = create_tcp_client_communicator(address, port);
 	client->connect(client, 50);
 
 
 	// join chat session, should be echoed
 	test = create_join(7);
 	test->add_identity(test, "client1");
+	client->send_pdu(client, test);
+	test->free_pdu(test);
+
+	test = create_mess(0, 0);
+	test->add_message(test, 15, 1505933137, "Test Message 1.");
+	test->set_checksum(test);
 	client->send_pdu(client, test);
 	test->free_pdu(test);
 

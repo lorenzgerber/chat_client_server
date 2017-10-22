@@ -10,7 +10,7 @@
 #
 # argument EXEC=maindir is used to choose which
 # executable to build. It depicts a subdirectory
-# of test/. 
+# of execs/. 
  
 CC = gcc
 CFLAGS = -Wall -std=c99 -g 

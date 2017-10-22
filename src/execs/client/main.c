@@ -9,8 +9,6 @@
  *  5DV197 Datakom course
  *	GPLv3
  */
-
-
 #define _GNU_SOURCE
 
 #include "client.h"
