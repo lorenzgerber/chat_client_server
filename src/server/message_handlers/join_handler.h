@@ -24,6 +24,18 @@
 #include "listener.h"
 #include "participant_list_handler.h"
 
+/**
+ * join_handler
+ *
+ * function that adds a new user to the
+ * client_identity list, then sends a
+ * PARTICIPANT message to the new user and
+ * finally sends a PJOIN message to all
+ * other users on the server.
+ *
+ * @param pdu struct pdu_receive, join pdu upon to send a pjoin
+ * @param communicator struct com, communicator to handle a join message
+ */
 int join_handler(pdu* pdu_receive, communicator *com);
 
 #endif /* SRC_SERVER_JOIN_HANDLER_H_ */

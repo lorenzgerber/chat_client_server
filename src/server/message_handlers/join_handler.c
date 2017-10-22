@@ -9,8 +9,20 @@
  *  5DV197 Datakom course
  *	GPLv3
  */
-#include "join_handler.h"
+#include "../message_handlers/join_handler.h"
 
+/**
+ * join_handler
+ *
+ * function that adds a new user to the
+ * client_identity list, then sends a
+ * PARTICIPANT message to the new user and
+ * finally sends a PJOIN message to all
+ * other users on the server.
+ *
+ * @param pdu struct pdu_receive, join pdu upon to send a pjoin
+ * @param communicator struct com, communicator to handle a join message
+ */
 int join_handler(pdu* pdu_receive, communicator *com){
 	// add new client identity to list
 	char * client_identity = malloc((pdu_receive->identity_length+1)*sizeof(char));

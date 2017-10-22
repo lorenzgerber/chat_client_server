@@ -22,6 +22,15 @@
 #include "pdu_creator.h"
 #include "socket_creator.h"
 
+/**
+ * client_kicked
+ *
+ * Function that sends a 'kicked'
+ * message to all clients except
+ * the calling one (com).
+ *
+ * @param communicator com, the client to be kicked
+ */
 int client_kicked(communicator *com);
 
 #endif /* SRC_SERVER_CLIENT_KICKED_H_ */

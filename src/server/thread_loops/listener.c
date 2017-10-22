@@ -13,7 +13,26 @@
 #include "listener.h"
 
 
-
+/**
+ * listen_loop
+ *
+ * This function is run as a separate thread. It
+ * contains the functionality to listen and accept
+ * new chat clients to the server. The used function
+ * tcp_server_listener returns a new tcp_server_communicator
+ * each time a new client connects to the server. Here in
+ * the listen_loop, the newly created tcp_server_communicator
+ * object is then transferred to a free communicator
+ * thread. This happens by writing a pointer to the new
+ * connection into an empty communicator thread. Then
+ * a broadcast call to all communicator threads on conditional
+ * wait will wake up all sleeping communicator threads. Having
+ * now an active tcp_server_communicator object, the thread in
+ * question will become running.
+ *
+ * If all threads are already working, new connections are
+ * accepted but shutdown again immediately.
+ */
 void * listen_loop(void* data){
 
 	server *server = data;

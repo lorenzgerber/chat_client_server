@@ -10,8 +10,18 @@
  *	GPLv3
  */
 
-#include "mess_handler.h"
+#include "../message_handlers/mess_handler.h"
 
+/**
+ * mess_handler
+ *
+ * This function composes the MESS pdu to be
+ * sent to all clients upon reception of a MESS pdu
+ * from one client.
+ * @param pdu_receive pdu, the incoming message to react upon
+ * @param com communicator struct of the communicator thread
+ * that received the message
+ */
 int mess_handler(pdu* pdu_receive, communicator *com){
 
 	pdu *mess = create_mess(pdu_receive->identity_length, 0);

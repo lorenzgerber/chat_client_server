@@ -32,6 +32,20 @@ void *listen_loop(void* data);
 void *name_server_loop(void *data);
 int check_cmd_args(int argc, char*arv[]);
 
+/**
+ * main of server application
+ *
+ * This is the main function of the server
+ * application. The server is built by
+ * make EXEC=server. The application is
+ * then started by server PORT HOSTNAME NS-HOST NS-PORT
+ *
+ * On startup, the server creates 255 communication
+ * threads that are kept in a conditional wait while
+ * they are not in use. Further, there is a listener
+ * thread to accept connections and a name server
+ * thread to register and send heartbeat to a nameserver.
+ */
 int main (int argc, char*argv[]){
 
 

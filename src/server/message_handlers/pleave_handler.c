@@ -9,7 +9,7 @@
  *  5DV197 Datakom course
  *	GPLv3
  */
-#include "pleave_handler.h"
+#include "../message_handlers/pleave_handler.h"
 
 
 int send_pleave(pdu *pdu_receive, communicator *com, int server_message){

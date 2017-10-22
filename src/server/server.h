@@ -24,6 +24,12 @@
 pthread_mutex_t cond_mutex;
 pthread_cond_t cond_var;
 
+/**
+ * struct server
+ *
+ * Main data container for
+ * server application.
+ */
 typedef struct server {
 	uint16_t our_id;
 	uint16_t our_port;
@@ -40,6 +46,12 @@ typedef struct server {
 	int *bail_out;
 }server;
 
+/**
+ * struct communicator
+ *
+ * Data container for each
+ * communication thread.
+ */
 typedef struct communicator {
 	int thread_id;
 	io_handler * handler;

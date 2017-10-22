@@ -11,6 +11,17 @@
  */
 #include "name_server_loop.h"
 
+/**
+ * name_server_loop
+ *
+ * Function run as separate thread that
+ * connects to the nameserver, registers
+ * and keeps on sending a heartbeat. If
+ * for some reason the name server
+ * registration is lost, a new registration
+ * is send.
+ * @param server struct
+ */
 void* name_server_loop(void *data){
 	server* server = data;
 	int registered = 0;

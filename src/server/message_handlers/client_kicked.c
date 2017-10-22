@@ -12,7 +12,15 @@
 
 #include "client_kicked.h"
 
-
+/**
+ * client_kicked
+ *
+ * Function that sends a 'kicked'
+ * message to all clients except
+ * the calling one (com).
+ *
+ * @param communicator com, the client to be kicked
+ */
 int client_kicked(communicator *com){
 
 	if(com->client_name == NULL){

@@ -11,7 +11,25 @@
  */
 #include "communicator.h"
 
-
+/**
+ * com_loop
+ *
+ * This function is run in a separate
+ * thread and contains the main client/server
+ * communication code. It takes as argument a
+ * pointer to a communicator struct.
+ *
+ * The whole function is contained in a while loop
+ * that depends on a variable in the main server
+ * struct. The function contains a conditional lock
+ * to prevent busy waiting while there is no client
+ * assigned to the current thread.
+ *
+ * When active, the function runs through several
+ * stages of conditionals to handle JOIN, QUIT and
+ * MESS pdu's.
+ * @param data a communication struct
+ */
 void * com_loop(void* data){
 
 	communicator *com = data;
@@ -114,7 +132,17 @@ void * com_loop(void* data){
     return NULL;
 }
 
-
+/**
+ * shutdown_connection
+ *
+ * Function to close down the current connection of
+ * the communication thread. This function frees
+ * up the resources of the thread. However the
+ * thread keeps running and will go to sleep in
+ * the conditional lock until it gets waken up
+ * from the listener.
+ * @param communicator struct of the connection to be closed
+ */
 int shutdown_connection(communicator *com){
 	// we should kill the client
 	com->handler->close(com->handler);

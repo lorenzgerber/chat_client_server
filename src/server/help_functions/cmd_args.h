@@ -17,8 +17,30 @@
 #include <string.h>
 #include <stdlib.h>
 
+/**
+ * server_usage_error
+ *
+ * Function to print a message of the
+ * correct command line args to stderrr.
+ */
 int ceck_cmd_args(int argc, char* argv[]);
+
+/**
+ * invalid_port
+ *
+ * Function to print a message that the
+ * provided commandline arg 'port' was
+ * invalid.
+ */
 void server_usage_error(void);
+
+/**
+ * check_cmd_args
+ *
+ * Function that checks for the correct number
+ * of command line args. Further, it checks
+ * that the args for port can be parsed as numeric.
+ */
 void invalid_port(void);
 
 #endif /* SRC_SERVER_CMD_ARGS_H_ */
