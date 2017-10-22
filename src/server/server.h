@@ -33,6 +33,7 @@ pthread_cond_t cond_var;
 typedef struct server {
 	uint16_t our_id;
 	uint16_t our_port;
+	char* servername;
 	char* our_host;
 	uint16_t nameserver_port;
 	char* nameserver_host;

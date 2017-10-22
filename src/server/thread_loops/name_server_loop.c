@@ -38,8 +38,8 @@ void* name_server_loop(void *data){
 
 		if(registered == 0 && *server->bail_out != 1){
 			//send REG to name server
-			pdu* reg = create_reg(13, server->our_port);
-			reg->add_server_name(reg,"ljugarbaenken");
+			pdu* reg = create_reg(strlen(server->servername), server->our_port);
+			reg->add_server_name(reg,server->servername);
 			udp_com->send_pdu(udp_com, reg);
 			reg->free_pdu(reg);
 

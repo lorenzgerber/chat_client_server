@@ -12,10 +12,13 @@
  *  5DV197 Datakom course
  *	GPLv3
  */
+#define _BSD_SOURCE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include <signal.h>
+#include <unistd.h>
 #include "cmd_args.h"
 #include "server.h"
 
@@ -59,11 +62,13 @@ int main (int argc, char*argv[]){
 	communicator com[NUMBER_HANDLERS];
 	int bail_out = 0;
 
+
+
 	// Server Struct
 	server server;
 	server.our_port = strtol(argv[1], NULL, 10);
 	server.nameserver_port = strtol(argv[4], NULL, 10);
-	server.our_host = argv[2];
+	server.servername = argv[2];
 	server.nameserver_host = argv[3];
 
 	server.bail_out = &bail_out;
@@ -72,6 +77,10 @@ int main (int argc, char*argv[]){
 	pthread_mutex_init(&server.client_list_lock, NULL);
 	list_set_mem_handler(server.client_list, free);
 	signal(SIGINT, intHandler);
+
+	server.our_host = malloc(sizeof(char)*128);
+
+	gethostname(server.our_host, sizeof(char)*128);
 
 
 	// Start Communication threads
@@ -120,6 +129,7 @@ int main (int argc, char*argv[]){
 
 	// remove client/participants list
 	list_free(server.client_list);
+	free(server.our_host);
 
 	return 0;
 }
