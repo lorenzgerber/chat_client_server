@@ -16,6 +16,22 @@
 
 #include "client.h"
 
+/**
+ * main of client application
+ *
+ * This is the main function of the client
+ * application. The client is built by
+ * make EXEC=client. The application is
+ * then started by client USERNAME NS/CS HOST HOST-PORT
+ *
+ * On startup, the client connects the user to the server
+ * put into the command line argument. This can be a chat
+ * session in a chat server or just displaying available
+ * chat servers from a name server. After this initial task
+ * is complete, the user is brought to the main menu where
+ * other commands may be used.
+ *
+ */
 int main (int argc, char*argv[]){
 
     //get the initial join address and assign default name server
