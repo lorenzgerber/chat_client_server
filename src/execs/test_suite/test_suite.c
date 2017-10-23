@@ -71,7 +71,7 @@ int main(int argc, char*argv[]){
         printf(GREEN"OK\n"RESET);
     }else{
         printf("REG pdu serializing :          ");
-        printf(RED"FAILED\n"RESET);
+        printf(RED"FAIL\n"RESET);
         printf("Expected length: 16\n");
         printf("Actual length: %d\n", reg->get_message_length(reg));
         printf("Expected segments:0, 10, 7, 208, 115, 101, 114, 118, 101, 114, 110, 97, 109, 101, 0, 0,\n");
@@ -106,7 +106,7 @@ int main(int argc, char*argv[]){
         printf(GREEN"OK\n"RESET);
     }else{
         printf("ALIVE pdu serializing :        ");
-        printf(RED"FAILED\n"RESET);
+        printf(RED"FAIL\n"RESET);
         printf("Expected length: 4\n");
         printf("Actual length: %d\n", alive->get_message_length(alive));
         printf("Expected segments:2, 100, 39, 16,\n");
@@ -142,7 +142,7 @@ int main(int argc, char*argv[]){
         printf(GREEN"OK\n"RESET);
     }else{
         printf("ACK pdu serializing :          ");
-        printf(RED"FAILED\n"RESET);
+        printf(RED"FAIL\n"RESET);
         printf("Expected length: 4\n");
         printf("Actual length: %d\n", ack->get_message_length(ack));
         printf("Expected segments:1, 0, 39, 16,\n");
@@ -178,7 +178,7 @@ int main(int argc, char*argv[]){
         printf(GREEN"OK\n"RESET);
     }else{
         printf("NOTREG pdu serializing :       ");
-        printf(RED"FAILED\n"RESET);
+        printf(RED"FAIL\n"RESET);
         printf("Expected length: 4\n");
         printf("Actual length: %d\n", notreg->get_message_length(notreg));
         printf("Expected segments:100, 0, 39, 16,\n");
@@ -213,7 +213,7 @@ int main(int argc, char*argv[]){
         printf(GREEN"OK\n"RESET);
     }else{
         printf("GETLIST pdu serializing :      ");
-        printf(RED"FAILED\n"RESET);
+        printf(RED"FAIL\n"RESET);
         printf("Expected length: 4\n");
         printf("Actual length: %d\n", getlist->get_message_length(getlist));
         printf("Expected segments:3, 0, 0, 0,\n");
@@ -258,7 +258,7 @@ int main(int argc, char*argv[]){
         printf(GREEN"OK\n"RESET);
     }else{
         printf("SLIST pdu serializing :        ");
-        printf(RED"FAILED\n"RESET);
+        printf(RED"FAIL\n"RESET);
         printf("Expected length: 4\n");
         printf("Actual length: %d\n", slist->get_message_length(slist));
         printf("Expected segments:4, 0, 0, 2, 127, 0, 0, 1, 7, 208, 4, 10, 115, 101, 114, 118, 101, 114, 110, 97, 109, 101, 0, 0, 127, 0, 0, 2, 7, 209, 4, 11, 115, 101, 114, 118, 101, 114, 110, 97, 109, 101, 50, 0,\n");
@@ -294,7 +294,7 @@ int main(int argc, char*argv[]){
         printf(GREEN"OK\n"RESET);
     }else{
         printf("JOIN pdu serializing :         ");
-        printf(RED"FAILED\n"RESET);
+        printf(RED"FAIL\n"RESET);
         printf("Expected length: 4\n");
         printf("Actual length: %d\n", slist->get_message_length(slist));
         printf("Expected segments:12, 8, 0, 0, 105, 100, 101, 110, 116, 105, 116, 121,\n");
@@ -313,22 +313,7 @@ int main(int argc, char*argv[]){
     pdu *participants = create_participants(3, 15);
     participants->add_identities(participants, "partic\0ipa\0nts\0");
     uint8_t expected_participants[20] = {19, 3, 0, 15, 112, 97, 114, 116, 105, 99, 0, 105, 112, 97, 0, 110, 116, 115, 0, 0};
-    //TODO kollar egentligen inte serialisering men koden kan vara bra o ha till parsningstest kanske
-    char expected_part1[6] = {'p','a','r','t','i','c'};
-    char expected_part2[3] = {'i','p','a'};
-    char expected_part3[3] = {'n','t','s'};
-    char* part_pointer[3];
-    part_pointer[0] = expected_part1;
-    part_pointer[1] = expected_part2;
-    part_pointer[2] = expected_part3;
-    for(int i = 0; i < participants->number_identities;i++){
-        for(int j = 0; j < strlen(participants->identities[i]); j++){
-            if(part_pointer[i][j] != participants->identities[i][j]){
-                passed_participants = 0;
-                errors++;
-            }
-        }
-    }
+    
 
     MBA = participants->create_message(participants);
     if(participants->get_message_length(participants) != 20 ||
@@ -347,7 +332,7 @@ int main(int argc, char*argv[]){
         printf(GREEN"OK\n"RESET);
     }else{
         printf("PARTICIPANTS pdu serializing : ");
-        printf(RED"FAILED\n"RESET);
+        printf(RED"FAIL\n"RESET);
         printf("Expected length: 20\n");
         printf("Actual length: %d\n", participants->get_message_length(participants));
         printf("Expected segments:19, 3, 0, 15, 112, 97, 114, 116, 105, 99, 0, 105, 112, 97, 0, 110, 116, 115, 0, 0,\n");
@@ -382,7 +367,7 @@ int main(int argc, char*argv[]){
         printf(GREEN"OK\n"RESET);
     }else{
         printf("QUIT pdu serializing :         ");
-        printf(RED"FAILED\n"RESET);
+        printf(RED"FAIL\n"RESET);
         printf("Expected length: 4\n");
         printf("Actual length: %d\n", slist->get_message_length(slist));
         printf("Expected segments:11, 0, 0, 0,\n");
@@ -425,7 +410,7 @@ int main(int argc, char*argv[]){
         printf(GREEN"OK\n"RESET);
     }else{
         printf("MESS pdu serializing :         ");
-        printf(RED"FAILED\n"RESET);
+        printf(RED"FAIL\n"RESET);
         if(!passed_mess_checksum){
             printf("checksum calculations failed!\n");
         }
@@ -466,7 +451,7 @@ int main(int argc, char*argv[]){
         printf(GREEN"OK\n"RESET);
     }else{
         printf("PJOIN pdu serializing :        ");
-        printf(RED"FAILED\n"RESET);
+        printf(RED"FAIL\n"RESET);
         printf("Expected length: 16\n");
         printf("Actual length: %d\n", pjoin->get_message_length(pjoin));
         printf("Expected segments:16, 8, 0, 0, 81, 183, 194, 89, 105, 100, 101, 110, 116, 105, 116, 121,\n");
@@ -502,7 +487,7 @@ int main(int argc, char*argv[]){
         printf(GREEN"OK\n"RESET);
     }else{
         printf("PLEAVE pdu serializing :       ");
-        printf(RED"FAILED\n"RESET);
+        printf(RED"FAIL\n"RESET);
         printf("Expected length: 16\n");
         printf("Actual length: %d\n", pleave->get_message_length(pleave));
         printf("Expected segments:17, 8, 0, 0, 81, 183, 194, 89, 105, 100, 101, 110, 116, 105, 116, 121,\n");

@@ -14,7 +14,7 @@
 
 int server_hand_shake(io_handler *chat_server_com, current_user *u);
 
-void chat_loop_cleanup(pthread_t *th, threadarg *arg, io_handler *com);
+void chat_loop_cleanup(threadarg *arg, io_handler *com);
 
 /**
  * This function controls a chat session the user starts from the menu.
@@ -62,23 +62,28 @@ int chat_loop(current_user *u) {
                 if (chat_server_com->status != STATUS_RECEIVE_OK) {
                     //parsing until receive error or done signal from send thread
                     if(*arg->status == DONE){
-                        chat_loop_cleanup(thread_handle, arg, chat_server_com);
+                        pthread_join(*thread_handle, NULL);
+                        chat_loop_cleanup(arg, chat_server_com);
+                        free(thread_handle);
                         return JOIN_STATUS_CONTINUE;
                     }else if(*arg->status == DONE_EXIT){
-                        chat_loop_cleanup(thread_handle, arg, chat_server_com);
+                        pthread_join(*thread_handle, NULL);
+                        chat_loop_cleanup(arg, chat_server_com);
+                        free(thread_handle);
                         return JOIN_STATUS_QUIT;
                     }else{
                         printf("\nsomething wrong with receive in Client\n");
-                        chat_loop_cleanup(thread_handle, arg, chat_server_com);
+                        pthread_join(*thread_handle, NULL);
+                        chat_loop_cleanup(arg, chat_server_com);
+                        free(thread_handle);
                         return JOIN_STATUS_CONTINUE;
                     }
                 }
                 if (receive_pdu != NULL) {
-                    //print messages in "else", server messages in "if" are
-                    //printed in red.
+                    //print messages
                     if(receive_pdu->identity_length == 0 && receive_pdu->identity == NULL){
                     	fflush(stdout);
-                        printf(RED"%s\n"RESET,receive_pdu->message);
+                        printf(RED"Server shutting down connection\n"RESET);
                         receive_pdu->free_pdu(receive_pdu);
                         fflush(stdout);
                     }else{
@@ -86,13 +91,13 @@ int chat_loop(current_user *u) {
                         switch(receive_pdu->type){
                             case 16:
                                 unix_to_localtime(receive_pdu->time_stamp);
-                                printf("**%u:%s has joined the server**\n",receive_pdu->time_stamp, receive_pdu->identity);
+                                printf("**%s has joined the server**\n", receive_pdu->identity);
                                 receive_pdu->free_pdu(receive_pdu);
                                 fflush(stdout);
                                 break;
                             case 17:
                                 unix_to_localtime(receive_pdu->time_stamp);
-                                printf("**%u:%s has left the server**\n",receive_pdu->time_stamp, receive_pdu->identity);
+                                printf("**%s has left the server**\n", receive_pdu->identity);
                                 receive_pdu->free_pdu(receive_pdu);
                                 fflush(stdout);
                                 break;
@@ -112,10 +117,14 @@ int chat_loop(current_user *u) {
                 }
                 //check for status changes from send thread.
                 if(*arg->status == DONE){
-                    chat_loop_cleanup(thread_handle, arg, chat_server_com);
+                    pthread_join(*thread_handle, NULL);
+                    chat_loop_cleanup(arg, chat_server_com);
+                    free(thread_handle);
                     return JOIN_STATUS_CONTINUE;
                 }else if(*arg->status == DONE_EXIT){
-                    chat_loop_cleanup(thread_handle, arg, chat_server_com);
+                    pthread_join(*thread_handle, NULL);
+                    chat_loop_cleanup(arg, chat_server_com);
+                    free(thread_handle);
                     return JOIN_STATUS_QUIT;
                 }
                 //reset receive status before next iteration
@@ -123,12 +132,15 @@ int chat_loop(current_user *u) {
             }
         }else{
             printf("\nsomething wrong with receive in Client\n");
+            pthread_join(*thread_handle, NULL);
         }
     }else{
         printf("Failed to connect to chat server\n");
+        pthread_join(*thread_handle, NULL);
     }
 
-    chat_loop_cleanup(thread_handle,arg,chat_server_com);
+    chat_loop_cleanup(arg,chat_server_com);
+    free(thread_handle);
     printf("exiting chat server\n");
 
     return JOIN_STATUS_CONTINUE;
@@ -141,9 +153,7 @@ int chat_loop(current_user *u) {
  * @param arg threadarg, The threadarg struct passed to the sending thread.
  * @param com io_handler, The chat server communicator from chat loop.
  */
-void chat_loop_cleanup(pthread_t *th, threadarg *arg, io_handler *com) {
-    pthread_join(*th, NULL);
-    free(th);
+void chat_loop_cleanup(threadarg *arg, io_handler *com) {
     free(arg->status);
     free(arg);
     com->close(com);
