@@ -49,11 +49,6 @@ typedef struct chat_server{
 	uint16_t port;
 }chat_server;
 
-
-typedef struct client{
-	int myId;
-} client;
-
 typedef struct threadarg{
     io_handler *com;
     int* status;

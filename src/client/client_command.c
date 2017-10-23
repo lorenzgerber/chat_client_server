@@ -102,7 +102,7 @@ void get_list_to_user(pdu* slist, list* servers){
     printf("\nAvaliable chat servers from the name server\n");
     for(int i = 0; i< slist->number_servers;i++){
 
-        chat_server* server = malloc(sizeof(chat_server));
+        chat_server* server = malloc(sizeof(chat_server) + 510);
         char address1[3], address2[3], address3[3], address4[3] = {0};
         //get address in string format
         sprintf(address1, "%d", slist->current_servers[i]->address[0]);
