@@ -117,6 +117,7 @@ void get_list_to_user(pdu* slist, list* servers){
         strcat(server->address, ".");
         strcat(server->address, address4);
 
+        memset(server->server_name,0,255);
         strcpy(server->server_name, slist->current_servers[i]->name);
         server->port = slist->current_servers[i]->port;
 
