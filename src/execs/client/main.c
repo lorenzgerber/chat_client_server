@@ -19,8 +19,8 @@
 int main (int argc, char*argv[]){
 
     //get the initial join address and assign default name server
-    current_user* user = malloc(sizeof(struct current_user) + 255);
-    chat_server* ns = malloc(sizeof(struct chat_server) + 510);
+    current_user* user = malloc(sizeof(struct current_user));
+    chat_server* ns = malloc(sizeof(struct chat_server));
     strcpy(ns->address, NAME_SERVER);
     ns->port = NAME_SERVER_PORT;
     user->name_server = ns;
