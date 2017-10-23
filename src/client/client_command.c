@@ -116,17 +116,16 @@ void get_list_to_user(pdu* slist, list* servers){
         sprintf(address3, "%d", slist->current_servers[i]->address[2]);
         sprintf(address4, "%d", slist->current_servers[i]->address[3]);
         //slist->current_servers[1]->
-        temp[0] = (char)address1;
+        temp[0] = (unsigned char)address1;
         temp[1] = '.';
-        temp[2] = (char)address2;
+        temp[2] = (unsigned char)address2;
         temp[3] = '.';
-        temp[4] = (char)address3;
+        temp[4] = (unsigned char)address3;
         temp[5] = '.';
-        temp[6] = (char)address4;
-
+        temp[6] = (unsigned char)address4;
 
         server->address = strdup(temp);
-        free(temp);
+
         //memset(server->server_name,0,255);
         //strcpy(server->server_name, slist->current_servers[i]->name);
         server->server_name = strdup(slist->current_servers[i]->name);
@@ -134,13 +133,11 @@ void get_list_to_user(pdu* slist, list* servers){
 
         list_insert(p,server);
         p = list_next(p);
-        printf("\nNAME: %s\nADDRESS: %d.%d.%d.%d\nPORT: %d\n",
+        printf("\nNAME: %s\nADDRESS: %s\nPORT: %d\n",
                slist->current_servers[i]->name,
-               slist->current_servers[i]->address[0],
-               slist->current_servers[i]->address[1],
-               slist->current_servers[i]->address[2],
-               slist->current_servers[i]->address[3],
+               temp,
                slist->current_servers[i]->port);
+        free(temp);
     }
     slist->free_pdu(slist);
 }
