@@ -74,6 +74,8 @@ list_position list_remove(list *l, list_position p);
 // free memory
 void list_free(list *l);
 
+void list_free_servers(list *l);
+
 // check if end of list
 bool list_is_end(list *l, list_position p);
 

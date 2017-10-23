@@ -26,22 +26,7 @@
 list* request_chat_servers(current_user* u, list* server_list) {
 
     if(server_list != NULL){
-        list_position p = list_first(server_list);
-        do{
-            chat_server* cs = NULL;
-            cs = (chat_server *) list_inspect(p);
-            if(cs != NULL){
-                if(cs->address != NULL){
-                    free(cs->address);
-                }
-                if(cs->server_name != NULL){
-                    free(cs->server_name);
-                }
-            }
-            p=list_next(p);
-
-        } while(list_inspect(p) != NULL);
-        list_free(server_list);
+        list_free_servers(server_list);
     }
     list* servers = list_empty();
     list_set_mem_handler(servers,free);

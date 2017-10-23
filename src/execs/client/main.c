@@ -106,24 +106,7 @@ int main (int argc, char*argv[]){
             }
         }
     }
-    if(servers != NULL){
-        list_position p = list_first(servers);
-        do{
-            chat_server* cs = NULL;
-            cs = (chat_server *) list_inspect(p);
-            if(cs != NULL){
-                if(cs->address != NULL){
-                    free(cs->address);
-                }
-                if(cs->server_name != NULL){
-                    free(cs->server_name);
-                }
-            }
-            p=list_next(p);
-
-        } while(list_inspect(p) != NULL);
-        list_free(servers);
-    }
+    list_free_servers(servers);
     if(user->name_server->server_name != NULL){
         free(user->name_server->server_name);
     }

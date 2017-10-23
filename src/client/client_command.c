@@ -106,7 +106,7 @@ void get_list_to_user(pdu* slist, list* servers){
         //char* address = calloc(0,sizeof(char)*256);
         //char* server_name = calloc(0,sizeof(char)*256);
         chat_server* server = malloc(sizeof(chat_server)+512);
-        char* temp = calloc(0,sizeof(char)*8);
+        char* temp = calloc(0,sizeof(char)*155);
         //server->server_name = server_name;
         //server->address = address;
         char address1[3], address2[3], address3[3], address4[3] = {0};
@@ -116,15 +116,15 @@ void get_list_to_user(pdu* slist, list* servers){
         sprintf(address3, "%d", slist->current_servers[i]->address[2]);
         sprintf(address4, "%d", slist->current_servers[i]->address[3]);
         //slist->current_servers[1]->
-        temp[0] = (unsigned char)address1;
-        temp[1] = '.';
-        temp[2] = (unsigned char)address2;
-        temp[3] = '.';
-        temp[4] = (unsigned char)address3;
-        temp[5] = '.';
-        temp[6] = (unsigned char)address4;
+        strcat(temp, address1);
+        strcat(temp, ".");
+        strcat(temp, address2);
+        strcat(temp, ".");
+        strcat(temp, address3);
+        strcat(temp, ".");
+        strcat(temp, address4);
 
-        server->address = strdup(temp);
+        server->address = temp;
 
         //memset(server->server_name,0,255);
         //strcpy(server->server_name, slist->current_servers[i]->name);

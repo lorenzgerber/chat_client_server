@@ -10,6 +10,7 @@
  *
  */
 
+#include <client.h>
 #include "linked_list.h"
 
 
@@ -98,6 +99,17 @@ list_position list_remove(list *l, list_position p) {
 void list_free(list *l){
     list_position current = list_last(l);
     while (list_is_empty(l) != true){
+        current = list_remove(l, current);
+    }
+    free(l->head);
+    free(l);
+};
+
+void list_free_servers(list *l){
+    list_position current = list_last(l);
+    while (list_is_empty(l) != true){
+        free(((chat_server*)list_inspect(current))->address);
+        free(((chat_server*)list_inspect(current))->server_name);
         current = list_remove(l, current);
     }
     free(l->head);
