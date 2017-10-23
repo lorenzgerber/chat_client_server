@@ -12,9 +12,11 @@
  *  5DV197 Datakom course
  *	GPLv3
  */
+#define _BSD_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <unistd.h>
 
 #include "tcp_socket.h"
 #include "socket_creator.h"
@@ -39,6 +41,7 @@ void * stress_test(void* data);
 int main(int argc, char*argv[]){
 
 
+
 	pthread_t thread_handle[NUMBER_OF_CLIENTS];
 	for(int i = 0; i < NUMBER_OF_CLIENTS; i++){
 		pthread_create(&thread_handle[i], NULL, stress_test, &i);
@@ -50,9 +53,13 @@ int main(int argc, char*argv[]){
 
 
 
+
 	sleep(15);
 
-	char* address = "localhost";
+	char address[128];
+
+	gethostname(address, sizeof address);
+	//char* address = "hplinuxbox"; // use in case of fixed host name
 	int port = 2000;
 
 
@@ -75,6 +82,18 @@ int main(int argc, char*argv[]){
 	client->send_pdu(client, test);
 	test->free_pdu(test);
 
+
+
+	// start again
+	client = create_tcp_client_communicator(address, port);
+	client->connect(client, 50);
+
+
+	// try login with emtpy id, should be kicked
+	test = create_join(0);
+	test->add_identity(test, "");
+	client->send_pdu(client, test);
+	test->free_pdu(test);
 
 
 	// start again
@@ -129,7 +148,11 @@ void * stress_test(void* data){
 	int rank = *(int*) data;
 	printf("thread %d running \n", rank);
 
-	char* address = "localhost";
+
+	char address[128];
+
+	gethostname(address, sizeof address);
+	//char* address = "hplinuxbox"; // use in case of fixed host name
 	int port = 2000;
 
 	io_handler *client;

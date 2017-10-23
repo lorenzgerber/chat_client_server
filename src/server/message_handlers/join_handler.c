@@ -24,6 +24,14 @@
  * @param communicator struct com, communicator to handle a join message
  */
 int join_handler(pdu* pdu_receive, communicator *com){
+
+	// check if new client has given an id, if not shut him down
+	if(pdu_receive->identity == NULL || pdu_receive->identity_length == 0){
+		printf("Client with id NULL or length 0 tries to register -> shut down client connection.\n");
+		return -1;
+	}
+
+
 	// add new client identity to list
 	char * client_identity = malloc((pdu_receive->identity_length+1)*sizeof(char));
 	strcpy(client_identity, pdu_receive->identity);

@@ -61,7 +61,10 @@ void * com_loop(void* data){
 					com->joined = 1;
 
 					// handling JOIN messages
-					join_handler(pdu_receive, com);
+					if(join_handler(pdu_receive, com) < 0){
+						shutdown_connection(com);
+						com->joined = 0;
+					}
 
 				// if client sends JOIN while already joined, kick out
 				} else if(pdu_receive->type == 12 && com->joined == 1){
