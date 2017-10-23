@@ -19,8 +19,15 @@
 int main (int argc, char*argv[]){
 
     //get the initial join address and assign default name server
-    current_user* user = malloc(sizeof(struct current_user) + 255);
-    chat_server* ns = malloc(sizeof(struct chat_server) + 510);
+    //char* identity = calloc(0,sizeof(char)*256);
+    current_user* user = malloc(sizeof(struct current_user)+256);
+    //user->identity = identity;
+
+    chat_server* ns = malloc(sizeof(struct chat_server)+512);
+    char* server_name = malloc(sizeof(char)*256);
+    char* address = malloc(sizeof(char)*256);
+    ns->server_name = server_name;
+    ns->address = address;
     strcpy(ns->address, NAME_SERVER);
     ns->port = NAME_SERVER_PORT;
     user->name_server = ns;
@@ -48,6 +55,8 @@ int main (int argc, char*argv[]){
         if(user->join_status == JOIN_STATUS_INITIAL){
             if(user->server_type == TYPE_CHAT_SERVER){
                 user->join_status = chat_loop(user);
+                free(user->join_server->server_name);
+                free(user->join_server->address);
                 free(user->join_server);
             }else if(user->server_type == TYPE_NAME_SERVER){
                 servers = request_chat_servers(user, servers);
@@ -97,8 +106,32 @@ int main (int argc, char*argv[]){
             }
         }
     }
-    list_free(servers);
+    if(servers != NULL){
+        list_position p = list_first(servers);
+        do{
+            chat_server* cs = NULL;
+            cs = (chat_server *) list_inspect(p);
+            if(cs != NULL){
+                if(cs->address != NULL){
+                    free(cs->address);
+                }
+                if(cs->server_name != NULL){
+                    free(cs->server_name);
+                }
+            }
+            p=list_next(p);
+
+        } while(list_inspect(p) != NULL);
+        list_free(servers);
+    }
+    if(user->name_server->server_name != NULL){
+        free(user->name_server->server_name);
+    }
+    if(user->name_server->address != NULL){
+        free(user->name_server->address);
+    }
     free(ns);
+    free(user->identity);
     free(user);
     free(input);
 }

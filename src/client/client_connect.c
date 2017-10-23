@@ -26,6 +26,21 @@
 list* request_chat_servers(current_user* u, list* server_list) {
 
     if(server_list != NULL){
+        list_position p = list_first(server_list);
+        do{
+            chat_server* cs = NULL;
+            cs = (chat_server *) list_inspect(p);
+            if(cs != NULL){
+                if(cs->address != NULL){
+                    free(cs->address);
+                }
+                if(cs->server_name != NULL){
+                    free(cs->server_name);
+                }
+            }
+            p=list_next(p);
+
+        } while(list_inspect(p) != NULL);
         list_free(server_list);
     }
     list* servers = list_empty();
@@ -100,12 +115,11 @@ int join_server_in_list(current_user* user, char* input,list* servers){
 int direct_connect(current_user* user, const char* input){
 
     chat_server* cs = malloc(sizeof(struct chat_server));
-    char address[strlen(input)];
+    char* address = calloc(0,sizeof(char)*255);
+    cs->address = address;
     char* strtol_ptr;
     int status = 0;
 
-    memset(address,0,strlen(input));
-    memset(cs->address,0,255);
     int i = 0;
 
     //make sure format is correct
@@ -145,9 +159,11 @@ int direct_connect(current_user* user, const char* input){
     user->join_server = cs;
     user->join_status = chat_loop(user);
     if(user->join_status == JOIN_STATUS_CONTINUE){
+        free(cs->address);
         free(cs);
         return JOIN_STATUS_CONTINUE;
     }else{
+        free(cs->address);
         free(cs);
         return JOIN_STATUS_QUIT;
     }

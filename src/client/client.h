@@ -38,14 +38,14 @@
 typedef struct current_user{
 	struct chat_server* join_server;
 	struct chat_server* name_server;
-	char identity[255];
+	char* identity;
 	int server_type;
 	int join_status;
 } current_user;
 
 typedef struct chat_server{
-	char server_name[255];
-	char address[255];
+	char* server_name;
+	char* address;
 	uint16_t port;
 }chat_server;
 

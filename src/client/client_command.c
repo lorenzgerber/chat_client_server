@@ -62,9 +62,9 @@ int parse_arguments(int argc, char *argv[], current_user* u) {
         print_usage_error();
         return -1;
     }
-
-    memset(u->identity,0,255);
-    strcpy(u->identity, argv[1]);
+    u->identity = strdup(argv[1]);
+    //memset(u->identity,0,255);
+    //memcpy(u->identity, argv[1], strlen(argv[1])+1);
     if(strcmp(argv[2], "ns") == 0){
         u->server_type = TYPE_NAME_SERVER;
     }else if(strcmp(argv[2], "cs") == 0){
@@ -74,13 +74,14 @@ int parse_arguments(int argc, char *argv[], current_user* u) {
         return -1;
     }
     if(u->server_type == TYPE_CHAT_SERVER){
+        char* address = malloc( sizeof(char)*256);
         chat_server* join_server = malloc(sizeof(chat_server));
-        memset(join_server->address,0,255);
-        strcpy(join_server->address,argv[3]);
+        join_server->address = address;
+        memcpy(join_server->address,argv[3],strlen(argv[3])+1);
         join_server->port = (uint16_t )strtol(argv[4],&strtol_ptr,10);
         u->join_server = join_server;
     }else if(u->server_type == TYPE_NAME_SERVER){
-        memset(u->name_server->address, 0, 255);
+        //memset(u->name_server->address, 0, 255);
         strcpy(u->name_server->address,argv[3]);
         u->name_server->port = (uint16_t )strtol(argv[4],&strtol_ptr,10);
     }
@@ -102,23 +103,32 @@ void get_list_to_user(pdu* slist, list* servers){
     printf("\nAvaliable chat servers from the name server\n");
     for(int i = 0; i< slist->number_servers;i++){
 
-        chat_server* server = malloc(sizeof(chat_server) + 510);
+        //char* address = calloc(0,sizeof(char)*256);
+        //char* server_name = calloc(0,sizeof(char)*256);
+        chat_server* server = malloc(sizeof(chat_server)+512);
+        char* temp = calloc(0,sizeof(int)*8);
+        //server->server_name = server_name;
+        //server->address = address;
         char address1[3], address2[3], address3[3], address4[3] = {0};
         //get address in string format
         sprintf(address1, "%d", slist->current_servers[i]->address[0]);
         sprintf(address2, "%d", slist->current_servers[i]->address[1]);
         sprintf(address3, "%d", slist->current_servers[i]->address[2]);
         sprintf(address4, "%d", slist->current_servers[i]->address[3]);
-        strcpy(server->address, address1);
-        strcat(server->address, ".");
-        strcat(server->address, address2);
-        strcat(server->address, ".");
-        strcat(server->address, address3);
-        strcat(server->address, ".");
-        strcat(server->address, address4);
+        slist->current_servers[1]->
+        strcat(temp, address1);
+        strcat(temp, ".");
+        strcat(temp, address2);
+        strcat(temp, ".");
+        strcat(temp, address3);
+        strcat(temp, ".");
+        strcat(temp, address4);
 
-        memset(server->server_name,0,255);
-        strcpy(server->server_name, slist->current_servers[i]->name);
+        server->address = strdup(temp);
+        free(temp);
+        //memset(server->server_name,0,255);
+        //strcpy(server->server_name, slist->current_servers[i]->name);
+        server->server_name = strdup(slist->current_servers[i]->name);
         server->port = slist->current_servers[i]->port;
 
         list_insert(p,server);
