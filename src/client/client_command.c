@@ -115,7 +115,7 @@ void get_list_to_user(pdu* slist, list* servers){
         sprintf(address2, "%d", slist->current_servers[i]->address[1]);
         sprintf(address3, "%d", slist->current_servers[i]->address[2]);
         sprintf(address4, "%d", slist->current_servers[i]->address[3]);
-        slist->current_servers[1]->
+        //slist->current_servers[1]->
         strcat(temp, address1);
         strcat(temp, ".");
         strcat(temp, address2);
